@@ -1,0 +1,38 @@
+.app-container.workspace-page.legacy-app-page {
+  background: #f5f6f8;
+  color: #252b33;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+  letter-spacing: 0;
+}
+.workspace-page > .workspace-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 0 0 auto;
+  min-height: 66px;
+  padding: 16px 20px;
+  background: #fff;
+  border-bottom: 1px solid #e9ebef;
+}
+.workspace-header h1 { margin: 0; font-size: 22px; font-weight: 700; line-height: 1.4; }
+.workspace-header .header-mark { font-size: 11px; color: #717780; font-weight: 600; }
+.workspace-page button { font-family: inherit; cursor: pointer; }
+.workspace-page button:focus-visible, .workspace-page input:focus-visible {
+  outline: 2px solid #2563eb; outline-offset: 3px;
+}
+.workspace-scroll { flex: 1; min-height: 0; overflow-y: auto; }
+.workspace-page .workspace-icon-button {
+  width: 40px; height: 40px; display: grid; place-items: center;
+  flex: 0 0 40px; border: 0; border-radius: 8px;
+  background: #2563eb; color: white; font-size: 23px;
+}
+.workspace-page .workspace-icon-button:hover { background: #1d4ed8; }
+.workspace-page .account-avatar {
+  display: grid; place-items: center; width: 44px; height: 44px;
+  flex: 0 0 44px; border-radius: 50%; background: #e8eefb;
+  color: #2856b5; font-size: 18px; font-weight: 650;
+}
+.workspace-page .account-copy { flex: 1; min-width: 0; }
+.workspace-page .account-copy strong { display: block; font-size: 17px; overflow-wrap: anywhere; }
+.workspace-page .account-copy small { display: block; margin-top: 4px; color: #737983; font-size: 12px; overflow-wrap: anywhere; }
+.workspace-page .row-chevron { flex: 0 0 18px; font-size: 18px; color: #9299a3; }

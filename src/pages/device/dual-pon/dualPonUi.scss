@@ -1,0 +1,62 @@
+$primary: #2563eb;
+$primary-soft: #eff6ff;
+$cyan: #0891b2;
+$cyan-soft: #e8f8fb;
+$screen: #0b1423;
+$screen-2: #132238;
+$bg: #f4f7fb;
+$surface: #ffffff;
+$text: #0f172a;
+$sub: #64748b;
+$border: #d8e2ef;
+$success: #16a34a;
+$warning: #f59e0b;
+$danger: #dc2626;
+$disabled: #a8b5c7;
+
+@mixin reset-button {
+  appearance: none;
+  border: 0;
+  font: inherit;
+  letter-spacing: 0;
+  cursor: pointer;
+}
+
+@mixin surface {
+  border: 1px solid $border;
+  border-radius: 8px;
+  background: $surface;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, .06);
+}
+
+@mixin focus-ring {
+  outline: 3px solid rgba(37, 99, 235, .24);
+  outline-offset: 2px;
+}
+
+@mixin page-padding {
+  padding: 14px 16px max(24px, env(safe-area-inset-bottom));
+}
+
+@mixin data-number {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+@mixin primary-button {
+  @include reset-button;
+  min-height: 48px;
+  border-radius: 8px;
+  background: $primary;
+  color: #fff;
+  font-weight: 750;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, .2);
+  &:active { transform: scale(.985); }
+  &:focus-visible { @include focus-ring; }
+  &:disabled { cursor: not-allowed; background: #b7c5d9; box-shadow: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}

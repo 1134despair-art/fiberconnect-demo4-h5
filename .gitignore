@@ -1,0 +1,51 @@
+# Dependencies and generated builds
+node_modules/
+dist/
+dist-vue/
+unpackage/dist/
+*.tsbuildinfo
+
+# Local settings and credentials
+.env
+.env.*
+!.env.example
+!.env.*.example
+.npmrc
+.vercel/
+.vscode/
+.idea/
+.hbuilderx/
+.codex/
+.trae/
+.DS_Store
+Thumbs.db
+*.log
+*.pem
+*.key
+
+# Local caches, exports, and old project copies
+.codex-tmp/
+.rollback-backups/
+.tmp/
+.trae_tmp/
+tmp/
+releases/
+screenshots/
+smart-otdr-source-*/
+codex-*.md
+
+# Local validation output
+.prototype-validation/
+
+# Design references and exports not required by the H5 build
+/docs/
+/img/
+/智能otdr需求汇总/
+/*.png
+/*.docx
+/*.md
+!/README.md
+/package-screenshot.json
+*.xlsx
+*.psd
+~$*

@@ -1,0 +1,83 @@
+$primary: #2563eb;
+$primary-dark: #1d4ed8;
+$primary-soft: #eff6ff;
+$bg: #f7f9fc;
+$surface: #ffffff;
+$text: #0f172a;
+$text-sub: #64748b;
+$border: #d8e2ef;
+$success: #16a34a;
+$warning: #d97706;
+$danger: #dc2626;
+$instrument: #0b1423;
+$instrument-surface: #132238;
+$trace: #f59e0b;
+$shadow: 0 4px 14px rgba(37, 99, 235, 0.07);
+
+@mixin page-surface {
+  min-height: 100%;
+  box-sizing: border-box;
+  padding: 14px;
+  background: $bg;
+  color: $text;
+}
+
+@mixin card {
+  border: 1px solid $border;
+  border-radius: 12px;
+  background: $surface;
+  box-shadow: $shadow;
+}
+
+@mixin button-reset {
+  min-height: 44px;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+
+  &:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.24);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.46;
+  }
+}
+
+@mixin primary-button {
+  @include button-reset;
+  border-radius: 8px;
+  background: $primary;
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.2);
+
+  &:active:not(:disabled) {
+    background: $primary-dark;
+    transform: translateY(1px);
+  }
+}
+
+@mixin secondary-button {
+  @include button-reset;
+  border: 1px solid $border;
+  border-radius: 8px;
+  background: $surface;
+  color: $text;
+  font-weight: 700;
+
+  &:active:not(:disabled) {
+    border-color: #bfdbfe;
+    background: $primary-soft;
+  }
+}
+
+@mixin metric-number {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+  letter-spacing: 0;
+}
+

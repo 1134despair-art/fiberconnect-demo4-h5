@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="126" viewBox="0 0 180 126" fill="none">
+  <rect x="29" y="4" width="122" height="116" rx="18" fill="#172337" stroke="#33445D" stroke-width="2"/>
+  <rect x="41" y="16" width="98" height="73" rx="8" fill="#070D16" stroke="#344359"/>
+  <path d="M41 42h98" stroke="#0891B2" stroke-width="13"/>
+  <text x="50" y="34" fill="#F59E0B" font-family="Consolas, monospace" font-size="20" font-weight="700">1550</text>
+  <text x="105" y="34" fill="#CBD5E1" font-family="Arial, sans-serif" font-size="8">nm</text>
+  <text x="50" y="63" fill="#F59E0B" font-family="Consolas, monospace" font-size="18" font-weight="700">1.0</text>
+  <text x="87" y="63" fill="#E2E8F0" font-family="Arial, sans-serif" font-size="8">dBm</text>
+  <text x="111" y="62" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="9">CW</text>
+  <circle cx="69" cy="103" r="8" fill="#25354D"/><circle cx="90" cy="103" r="8" fill="#2563EB"/><circle cx="111" cy="103" r="8" fill="#25354D"/>
+  <path d="m71 100-3 3 3 3M109 100l3 3-3 3" stroke="#CBD5E1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="90" cy="103" r="2" fill="#FFFFFF"/>
+</svg>

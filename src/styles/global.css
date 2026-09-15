@@ -1,0 +1,478 @@
+/* =====================================
+   全局样式统一 - 马六达小程序
+   =====================================
+   色彩系统 | 字体规范 | 组件风格
+   ===================================== */
+
+/* ============ 色彩系统 ============ */
+:root {
+  /* 移动端应用外壳 */
+  --ds-mobile-shell-width: 375px;
+  --ds-mobile-shell-height: 812px;
+  --ds-mobile-shell-radius: 22px;
+  --ds-mobile-shell-viewport-gap: 40px;
+
+  /* 主色 */
+  --color-primary: #1E40AF;
+  --color-primary-hover: #1E3A8A;
+  
+  /* 辅助色 */
+  --color-success: #065F46;
+  --color-warning: #92400E;
+  --color-error: #991B1B;
+  --color-info: #1D4ED8;
+  
+  /* 中性色 */
+  --color-bg: #F9FAFB;
+  --color-border: #E5E7EB;
+  --color-text-primary: #1F2937;
+  --color-text-secondary: #6B7280;
+  --color-text-tertiary: #9CA3AF;
+  --color-white: #FFFFFF;
+  
+  /* 状态标签色 */
+  --color-status-active: var(--color-success);
+  --color-status-inactive: var(--color-warning);
+  --color-status-expired: var(--color-error);
+  --color-status-connected: var(--color-info);
+  
+  /* 提示卡片色 */
+  --color-hint-bg: #FFFBEB;
+  --color-hint-border: #FEF3C7;
+  --color-hint-text: #92400E;
+}
+
+@media (max-width: 430px) {
+  :root {
+    --ds-mobile-shell-viewport-gap: 24px;
+  }
+}
+
+/* ============ 字体规范 ============ */
+* {
+  font-family: 'PingFang SC', 'Microsoft YaHei', '微软雅黑', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 标题 */
+.text-title {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
+  color: var(--color-text-primary);
+}
+
+/* 正文 */
+.text-body {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--color-text-primary);
+}
+
+/* 小字/辅助文本 */
+.text-small {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--color-text-secondary);
+}
+
+/* 状态标签文本 */
+.text-status {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+/* ============ 组件风格 ============ */
+
+/* 按钮 - 主按钮 */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 按钮 - 次要按钮 */
+.btn-secondary {
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #E5E7EB;
+}
+
+/* 卡片 */
+.card {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* 列表项 */
+.list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color 0.2s ease;
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+.list-item:hover {
+  background-color: var(--color-bg);
+}
+
+/* 状态标签 */
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.status-badge.active {
+  background-color: #ECFDF5;
+  color: var(--color-success);
+}
+
+.status-badge.connected {
+  background-color: #EFF6FF;
+  color: var(--color-info);
+}
+
+.status-badge.disconnected {
+  background-color: #FEE2E2;
+  color: var(--color-error);
+}
+
+.status-badge.expired {
+  background-color: #FECACA;
+  color: var(--color-error);
+}
+
+/* 输入框 */
+.input-field {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 16px;
+  color: var(--color-text-primary);
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.input-field::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+/* 文本域 */
+.textarea-field {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 16px;
+  color: var(--color-text-primary);
+  font-family: inherit;
+  resize: vertical;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.textarea-field:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* 搜索栏 */
+.search-bar {
+  width: 100%;
+  height: 40px;
+  padding: 0 16px;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.search-bar:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  background-color: var(--color-white);
+}
+
+/* 提示卡片 */
+.hint-card {
+  background-color: var(--color-hint-bg);
+  border: 1px solid var(--color-hint-border);
+  border-radius: 8px;
+  padding: 16px;
+  color: var(--color-hint-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ============ 布局工具 ============ */
+
+/* 间距 */
+.mt-4 {
+  margin-top: 16px;
+}
+
+.mb-4 {
+  margin-bottom: 16px;
+}
+
+.mt-8 {
+  margin-top: 32px;
+}
+
+.mb-8 {
+  margin-bottom: 32px;
+}
+
+.p-4 {
+  padding: 16px;
+}
+
+.p-8 {
+  padding: 32px;
+}
+
+/* 对齐方式 */
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+/* Flex布局 */
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============ 页面容器 ============ */
+
+.page-container {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+.page-header {
+  height: 56px;
+  background-color: var(--color-white);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.page-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.page-content {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+/* ============ 底部导航栏 ============ */
+
+.nav-bar {
+  height: 80px;
+  background-color: var(--color-white);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 16px;
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-item.active {
+  color: var(--color-primary);
+}
+
+.nav-icon {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 4px;
+  transition: all 0.2s ease;
+}
+
+.nav-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  transition: all 0.2s ease;
+}
+
+.nav-item.active .nav-text {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* ============ 通用样式 ============ */
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: 'PingFang SC', 'Microsoft YaHei', '微软雅黑', sans-serif;
+  background-color: var(--color-bg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (max-width: 430px) {
+  body {
+    padding: 12px;
+  }
+}
+
+button {
+  font-family: inherit;
+}
+
+input, textarea {
+  font-family: inherit;
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-tertiary);
+}
+
+/* ============ 响应式调整 ============ */
+
+@media (max-width: 375px) {
+  .nav-bar {
+    padding: 0 8px;
+  }
+  
+  .nav-icon {
+    width: 22px;
+    height: 22px;
+  }
+  
+  .nav-text {
+    font-size: 11px;
+  }
+}

@@ -1,0 +1,119 @@
+$smart-otdr-shell-width: 375px;
+$smart-otdr-shell-radius: 22px;
+$smart-otdr-card-radius: 8px;
+$smart-otdr-shell-border: 1px solid #d8e2ef;
+$smart-otdr-shell-bg: #ffffff;
+$smart-otdr-card-bg: #ffffff;
+$smart-otdr-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+$smart-otdr-soft-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+$smart-otdr-primary: #2563eb;
+$smart-otdr-primary-soft: #eff6ff;
+$smart-otdr-text-main: #0f172a;
+$smart-otdr-text-sub: #64748b;
+$smart-otdr-line-soft: rgba(59, 130, 246, 0.1);
+$smart-otdr-line-subtle: rgba(148, 163, 184, 0.12);
+$smart-otdr-surface-muted: #f4f7fb;
+
+@mixin smart-otdr-shell-container {
+  width: min(100%, $smart-otdr-shell-width);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+@mixin smart-otdr-shell-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 48px;
+  padding: 12px 2px 6px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+@mixin smart-otdr-shell-body {
+  flex: 1;
+  min-height: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 6px 0 110px;
+}
+
+@mixin smart-otdr-card-surface {
+  border-radius: $smart-otdr-card-radius;
+  border: $smart-otdr-shell-border;
+  background: $smart-otdr-card-bg;
+  box-shadow: $smart-otdr-soft-shadow;
+}
+
+@mixin smart-otdr-app-surface {
+  border-radius: $smart-otdr-shell-radius;
+  border: 1px solid $smart-otdr-line-soft;
+  background: $smart-otdr-surface-muted;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
+}
+
+@mixin smart-otdr-soft-surface {
+  border-radius: 8px;
+  border: 1px solid #d8e2ef;
+  background: #f8fafc;
+}
+
+@mixin smart-otdr-section-surface {
+  border-radius: 12px;
+  border: 1px solid #d8e2ef;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+}
+
+@mixin smart-otdr-setting-card {
+  border-radius: 8px;
+  border: 1px solid #d8e2ef;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+}
+
+@mixin smart-otdr-sticky-action-surface {
+  border-radius: 12px;
+  border: 1px solid #d8e2ef;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+}
+
+@mixin smart-otdr-dialog-surface {
+  width: min(100%, $smart-otdr-shell-width);
+  max-height: calc(100vh - 96px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  border: 1px solid #d8e2ef;
+  background: #ffffff;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
+}
+
+@mixin smart-otdr-plain-button {
+  border: none;
+  background: transparent;
+  color: $smart-otdr-primary;
+  cursor: pointer;
+}
+
+@mixin smart-otdr-primary-button {
+  border: none;
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.18);
+}
+
+@mixin smart-otdr-secondary-button {
+  border: 1px solid $smart-otdr-line-soft;
+  background: #f8fbff;
+  color: #1d4ed8;
+}

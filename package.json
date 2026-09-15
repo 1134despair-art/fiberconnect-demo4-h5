@@ -1,0 +1,34 @@
+{
+  "name": "h5-mobile-app",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "scripts": {
+    "predev": "node ./scripts/check-dev-port.mjs",
+    "dev": "vite --config vite.vue.config.js",
+    "build": "vue-tsc && vite build --config vite.vue.config.js",
+    "build:prod": "npm run build",
+    "preview": "vite preview --config vite.vue.config.js"
+  },
+  "dependencies": {
+    "echarts": "^6.0.0",
+    "typescript": "^5.9.3",
+    "vue": "^3.5.22",
+    "vue-i18n": "^11.2.8",
+    "vue-router": "^4.6.3",
+    "vue-tsc": "^2.2.12"
+  },
+  "devDependencies": {
+    "@types/node": "^24.8.1",
+    "@vitejs/plugin-legacy": "^7.2.1",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/tsconfig": "^0.5.1",
+    "puppeteer": "^24.34.0",
+    "sass-embedded": "^1.100.0",
+    "terser": "^5.46.0",
+    "vite": "^7.1.10"
+  }
+}

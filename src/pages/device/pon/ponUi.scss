@@ -1,0 +1,92 @@
+$pon-primary: #2563eb;
+$pon-primary-dark: #1d4ed8;
+$pon-primary-soft: #eff6ff;
+$pon-cyan: #0891b2;
+$pon-bg: #f7f9fc;
+$pon-surface: #ffffff;
+$pon-text: #0f172a;
+$pon-text-sub: #64748b;
+$pon-border: #d8e2ef;
+$pon-success: #16a34a;
+$pon-warning: #d97706;
+$pon-danger: #dc2626;
+$pon-radius-shell: 22px;
+$pon-radius-card: 12px;
+$pon-shadow: 0 4px 14px rgba(37, 99, 235, 0.07);
+
+@mixin page-surface {
+  min-height: 100%;
+  padding: 14px;
+  background: $pon-bg;
+  color: $pon-text;
+}
+
+@mixin card {
+  border: 1px solid $pon-border;
+  border-radius: $pon-radius-card;
+  background: $pon-surface;
+  box-shadow: $pon-shadow;
+}
+
+@mixin button-reset {
+  min-height: 44px;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+
+  &:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.24);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.46;
+  }
+}
+
+@mixin primary-button {
+  @include button-reset;
+  border-radius: 8px;
+  background: $pon-primary;
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.2);
+
+  &:active:not(:disabled) {
+    background: $pon-primary-dark;
+    transform: translateY(1px);
+  }
+}
+
+@mixin secondary-button {
+  @include button-reset;
+  border: 1px solid $pon-border;
+  border-radius: 8px;
+  background: $pon-surface;
+  color: $pon-text;
+  font-weight: 700;
+
+  &:active:not(:disabled) {
+    background: $pon-primary-soft;
+    border-color: #bfdbfe;
+  }
+}
+
+@mixin metric-number {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+  letter-spacing: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

@@ -1,0 +1,1198 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-08-07T01:34:40.958Z",
+  "designSystem": "docs/APP_DESIGN_SYSTEM.md",
+  "iconSpec": {
+    "sourceGrid": "24x24",
+    "pngSize": "96x96",
+    "recommendedDisplaySize": "24x24",
+    "stroke": "2px rounded line at 24px source grid",
+    "background": "transparent"
+  },
+  "colors": {
+    "primary": "#2563EB",
+    "primaryPressed": "#1D4ED8",
+    "channel": "#0891B2",
+    "reading": "#F59E0B",
+    "success": "#16A34A",
+    "warning": "#D97706",
+    "danger": "#DC2626",
+    "text": "#0F172A",
+    "secondary": "#475569",
+    "tertiary": "#64748B",
+    "disabled": "#94A3B8",
+    "border": "#D8E2EF",
+    "page": "#F4F7FB",
+    "surface": "#FFFFFF",
+    "instrument": "#0B1423",
+    "instrumentRaised": "#132238"
+  },
+  "files": [
+    {
+      "type": "icon",
+      "category": "auth",
+      "name": "phone",
+      "path": "icons/auth/phone.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "auth",
+      "name": "lock",
+      "path": "icons/auth/lock.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "auth",
+      "name": "verification-code",
+      "path": "icons/auth/verification-code.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "auth",
+      "name": "eye",
+      "path": "icons/auth/eye.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "auth",
+      "name": "eye-off",
+      "path": "icons/auth/eye-off.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "auth",
+      "name": "user-add",
+      "path": "icons/auth/user-add.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "auth",
+      "name": "agreement-check",
+      "path": "icons/auth/agreement-check.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "navigation",
+      "name": "home-default",
+      "path": "icons/navigation/home-default.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "navigation",
+      "name": "home-active",
+      "path": "icons/navigation/home-active.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "navigation",
+      "name": "product-default",
+      "path": "icons/navigation/product-default.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "navigation",
+      "name": "product-active",
+      "path": "icons/navigation/product-active.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "navigation",
+      "name": "profile-default",
+      "path": "icons/navigation/profile-default.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "navigation",
+      "name": "profile-active",
+      "path": "icons/navigation/profile-active.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "common",
+      "name": "back",
+      "path": "icons/common/back.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "common",
+      "name": "close",
+      "path": "icons/common/close.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "common",
+      "name": "chevron-right",
+      "path": "icons/common/chevron-right.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "common",
+      "name": "more",
+      "path": "icons/common/more.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "common",
+      "name": "search",
+      "path": "icons/common/search.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "common",
+      "name": "add",
+      "path": "icons/common/add.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "common",
+      "name": "refresh",
+      "path": "icons/common/refresh.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "common",
+      "name": "check",
+      "path": "icons/common/check.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "common",
+      "name": "download",
+      "path": "icons/common/download.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "common",
+      "name": "delete",
+      "path": "icons/common/delete.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "common",
+      "name": "edit",
+      "path": "icons/common/edit.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "common",
+      "name": "settings",
+      "path": "icons/common/settings.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "common",
+      "name": "filter",
+      "path": "icons/common/filter.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "common",
+      "name": "calendar",
+      "path": "icons/common/calendar.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "common",
+      "name": "save",
+      "path": "icons/common/save.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "connection",
+      "name": "bluetooth",
+      "path": "icons/connection/bluetooth.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "connection",
+      "name": "bluetooth-off",
+      "path": "icons/connection/bluetooth-off.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "connection",
+      "name": "scan",
+      "path": "icons/connection/scan.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "connection",
+      "name": "signal-strong",
+      "path": "icons/connection/signal-strong.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "connection",
+      "name": "signal-medium",
+      "path": "icons/connection/signal-medium.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "connection",
+      "name": "connect",
+      "path": "icons/connection/connect.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "connection",
+      "name": "connected",
+      "path": "icons/connection/connected.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "connection",
+      "name": "disconnected",
+      "path": "icons/connection/disconnected.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "connection",
+      "name": "duplicate-device",
+      "path": "icons/connection/duplicate-device.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "connection",
+      "name": "permission",
+      "path": "icons/connection/permission.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "connection",
+      "name": "retry",
+      "path": "icons/connection/retry.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "connection",
+      "name": "device",
+      "path": "icons/connection/device.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "connection",
+      "name": "device-manager",
+      "path": "icons/connection/device-manager.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "connection",
+      "name": "battery",
+      "path": "icons/connection/battery.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "connection",
+      "name": "location",
+      "path": "icons/connection/location.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "product",
+      "name": "category-all",
+      "path": "icons/product/category-all.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "product",
+      "name": "category-fiber",
+      "path": "icons/product/category-fiber.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "product",
+      "name": "category-cable",
+      "path": "icons/product/category-cable.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "product",
+      "name": "feature",
+      "path": "icons/product/feature.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "product",
+      "name": "specification",
+      "path": "icons/product/specification.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "product",
+      "name": "document",
+      "path": "icons/product/document.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "product",
+      "name": "support",
+      "path": "icons/product/support.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "product",
+      "name": "download-file",
+      "path": "icons/product/download-file.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "product",
+      "name": "comparison",
+      "path": "icons/product/comparison.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "profile",
+      "name": "account",
+      "path": "icons/profile/account.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "profile",
+      "name": "account-edit",
+      "path": "icons/profile/account-edit.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "profile",
+      "name": "my-devices",
+      "path": "icons/profile/my-devices.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "profile",
+      "name": "records",
+      "path": "icons/profile/records.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "profile",
+      "name": "app-settings",
+      "path": "icons/profile/app-settings.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "profile",
+      "name": "after-sales",
+      "path": "icons/profile/after-sales.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "profile",
+      "name": "language",
+      "path": "icons/profile/language.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "profile",
+      "name": "notification",
+      "path": "icons/profile/notification.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "profile",
+      "name": "privacy",
+      "path": "icons/profile/privacy.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "profile",
+      "name": "cache",
+      "path": "icons/profile/cache.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "profile",
+      "name": "logout",
+      "path": "icons/profile/logout.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "profile",
+      "name": "camera",
+      "path": "icons/profile/camera.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "profile",
+      "name": "email",
+      "path": "icons/profile/email.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "profile",
+      "name": "help",
+      "path": "icons/profile/help.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "profile",
+      "name": "info",
+      "path": "icons/profile/info.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "profile",
+      "name": "feedback",
+      "path": "icons/profile/feedback.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "measurement",
+      "path": "icons/device/measurement.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "power-meter",
+      "path": "icons/device/power-meter.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "vfl",
+      "path": "icons/device/vfl.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "flashlight",
+      "path": "icons/device/flashlight.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "history",
+      "path": "icons/device/history.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "output",
+      "path": "icons/device/output.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "calibration",
+      "path": "icons/device/calibration.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "timer",
+      "path": "icons/device/timer.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "batch",
+      "path": "icons/device/batch.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "network-test",
+      "path": "icons/device/network-test.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "cable-length",
+      "path": "icons/device/cable-length.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "wiremap",
+      "path": "icons/device/wiremap.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "trace",
+      "path": "icons/device/trace.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "records",
+      "path": "icons/device/records.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "fid",
+      "path": "icons/device/fid.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "onu",
+      "path": "icons/device/onu.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "rfid",
+      "path": "icons/device/rfid.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "upload",
+      "path": "icons/device/upload.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "cellular",
+      "path": "icons/device/cellular.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "event-map",
+      "path": "icons/device/event-map.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "loss-test",
+      "path": "icons/device/loss-test.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "file-manager",
+      "path": "icons/device/file-manager.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "light-source",
+      "path": "icons/device/light-source.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "cable-test",
+      "path": "icons/device/cable-test.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "endface",
+      "path": "icons/device/endface.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "screenshot",
+      "path": "icons/device/screenshot.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "quick-menu",
+      "path": "icons/device/quick-menu.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "test-mode",
+      "path": "icons/device/test-mode.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "device",
+      "name": "power-off",
+      "path": "icons/device/power-off.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "status",
+      "name": "success",
+      "path": "icons/status/success.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "status",
+      "name": "warning",
+      "path": "icons/status/warning.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "status",
+      "name": "error",
+      "path": "icons/status/error.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "status",
+      "name": "information",
+      "path": "icons/status/information.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "status",
+      "name": "loading",
+      "path": "icons/status/loading.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "icon",
+      "category": "status",
+      "name": "offline",
+      "path": "icons/status/offline.png",
+      "width": 96,
+      "height": 96,
+      "transparent": true,
+      "displaySize": "24x24px"
+    },
+    {
+      "type": "illustration",
+      "name": "empty-device",
+      "path": "illustrations/empty-device.png",
+      "width": 400,
+      "height": 360,
+      "transparent": true
+    },
+    {
+      "type": "illustration",
+      "name": "scanning",
+      "path": "illustrations/scanning.png",
+      "width": 400,
+      "height": 360,
+      "transparent": true
+    },
+    {
+      "type": "illustration",
+      "name": "permission",
+      "path": "illustrations/permission.png",
+      "width": 400,
+      "height": 360,
+      "transparent": true
+    },
+    {
+      "type": "illustration",
+      "name": "connection-failed",
+      "path": "illustrations/connection-failed.png",
+      "width": 400,
+      "height": 360,
+      "transparent": true
+    },
+    {
+      "type": "illustration",
+      "name": "empty-product",
+      "path": "illustrations/empty-product.png",
+      "width": 400,
+      "height": 360,
+      "transparent": true
+    },
+    {
+      "type": "illustration",
+      "name": "empty-records",
+      "path": "illustrations/empty-records.png",
+      "width": 400,
+      "height": 360,
+      "transparent": true
+    },
+    {
+      "type": "product",
+      "name": "fusion-splicer",
+      "path": "products/fusion-splicer.png",
+      "width": 512,
+      "height": 512,
+      "transparent": true
+    },
+    {
+      "type": "product",
+      "name": "portable-otdr",
+      "path": "products/portable-otdr.png",
+      "width": 512,
+      "height": 512,
+      "transparent": true
+    },
+    {
+      "type": "product",
+      "name": "multi-opm",
+      "path": "products/multi-opm.png",
+      "width": 512,
+      "height": 512,
+      "transparent": true
+    },
+    {
+      "type": "product",
+      "name": "smart-otdr",
+      "path": "products/smart-otdr.png",
+      "width": 512,
+      "height": 512,
+      "transparent": true
+    },
+    {
+      "type": "product",
+      "name": "pon-power-meter",
+      "path": "products/pon-power-meter.png",
+      "width": 512,
+      "height": 512,
+      "transparent": true
+    },
+    {
+      "type": "product",
+      "name": "dual-pon",
+      "path": "products/dual-pon.png",
+      "width": 512,
+      "height": 512,
+      "transparent": true
+    },
+    {
+      "type": "product",
+      "name": "stable-light-source",
+      "path": "products/stable-light-source.png",
+      "width": 512,
+      "height": 512,
+      "transparent": true
+    },
+    {
+      "type": "product",
+      "name": "port-audit",
+      "path": "products/port-audit.png",
+      "width": 512,
+      "height": 512,
+      "transparent": true
+    },
+    {
+      "type": "background",
+      "name": "auth-fiber",
+      "path": "backgrounds/auth-fiber.png",
+      "width": 750,
+      "height": 1624,
+      "transparent": false
+    },
+    {
+      "type": "background",
+      "name": "connection-grid",
+      "path": "backgrounds/connection-grid.png",
+      "width": 750,
+      "height": 420,
+      "transparent": false
+    },
+    {
+      "type": "background",
+      "name": "instrument-grid",
+      "path": "backgrounds/instrument-grid.png",
+      "width": 256,
+      "height": 256,
+      "transparent": true
+    }
+  ]
+}
