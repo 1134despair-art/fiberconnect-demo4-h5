@@ -67,3 +67,9 @@ npm run preview
 - 个人资料、语言、销售联系、关于应用及首页添加设备弹窗统一样式。售后模拟提交显示完成提示；测试订单仅存在当前页面内存中。
 - 新增样式 `src/styles/subpages.css` 仅通过页面标记应用；设备目录文件经 SHA-256 对比保持不变，设备功能与界面不在此次调整范围内。
 - 检查手机尺寸下的表单、弹窗滚动和文字边界。操作手册仍未配置实际 PDF 文件，预览保留无文件状态。
+
+## Jenkins 安装兼容修复（2026-09-16）
+
+- 新增 `.puppeteerrc.cjs`，使标准 `npm install` 默认跳过与 H5 生产构建无关的 Chrome 下载，Jenkins 无需额外设置环境变量。
+- 在未设置 `PUPPETEER_SKIP_DOWNLOAD` 的干净副本中完成 `npm install` 和 `npm run build:prod`；构建生成 `dist/index.html` 及 258 个静态文件。
+- 产物入口继续使用 `./assets/...` 相对路径，页面源码、Hash 路由和业务功能未修改。
