@@ -12,11 +12,7 @@
             <strong>{{ currentDevice?.model || currentDevice?.name || '智能 OTDR' }}</strong>
             <span>{{ currentDevice?.status === 'connected' ? '已连接' : '未连接' }}</span>
           </div>
-          <nav class="view-tabs measurement-function-tabs" aria-label="设备测量功能">
-            <button :disabled="measureStatus === 'running'" @click="router.push(`/device/${deviceId}/vfl`)">红光源</button>
-            <button :disabled="measureStatus === 'running'" @click="router.push(`/device/${deviceId}/smart-opm`)">光功率计</button>
-            <button class="active" aria-current="page">OTDR 测试</button>
-          </nav>
+          <SmartMeasurementTabs :device-id="deviceId" :busy="measureStatus === 'running'" />
           <section class="curve-workspace">
             <div class="curve-layout-heading">
               <strong>OTDR 检测曲线</strong>
@@ -147,7 +143,6 @@
               <button class="action-secondary" type="button" :disabled="measureStatus !== 'done'" @click="saveResult">保存</button>
               <button class="action-secondary" type="button" :disabled="measureStatus === 'running'" @click="openSettingsModal('parameter')">设置</button>
               <button class="action-secondary" type="button" @click="goFileManager">文件</button>
-              <button class="action-secondary" type="button" :disabled="measureStatus !== 'done'" @click="goEventMap">事件地图</button>
             </div>
         </template>
       </SmartOtdrPageShell>
@@ -243,6 +238,7 @@
 </template>
 
 <script setup lang="ts">
+import SmartMeasurementTabs from '../components/SmartMeasurementTabs.vue'
 import { readOtdrResult, storeOtdrResult, isOtdrSnapshot, type OtdrSnapshot } from '@/services/otdrResults'
 import { scopedKey } from '@/services/scopedStorage'
 import { smartOtdrIcons } from '@/assets/icons/iconfont/smart-otdr'
@@ -1380,7 +1376,6 @@ const restoreCurrentResult = () => {
 
 const goBack = () => router.push(`/device/${deviceId.value}`)
 const goFileManager = () => router.push(`/device/${deviceId.value}/files`)
-const goEventMap = () => router.push(`/device/${deviceId.value}/event-map`)
 
 restoreCurrentResult()
 readLoadedFile()
@@ -1417,7 +1412,7 @@ onBeforeUnmount(() => {
 .measurement-device-bar { display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:36px;padding:0 12px;border:1px solid #dfe6ee;border-radius:10px;background:#fff; }
 .measurement-device-bar strong { min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;color:#203c60; }
 .measurement-device-bar span { flex-shrink:0;font-size:11px;color:#6c7b8e; }
-.measurement-function-tabs { margin-top:-4px; }
+
 .curve-layout-heading { min-height:52px;padding:0 10px;display:flex;align-items:center;justify-content:space-between;color:#e5edf8; }
 .curve-layout-heading strong { font-size:12px; }
 .curve-layout-heading button { min-height:44px;padding:0 8px;border:1px solid #34445b;border-radius:6px;background:#1a2c44;color:#e5edf8;font-size:11px; }
@@ -1428,7 +1423,7 @@ onBeforeUnmount(() => {
 .parameter-strip { grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:8px; }
 .parameter-strip button { min-height:48px; }
 .parameter-strip strong { font-size:11px; }
-.portrait-actions { margin:8px 0 0; }
+.portrait-actions { margin:8px 0 0; grid-template-columns:repeat(3,minmax(0,1fr)); }
 .portrait-actions .action-secondary { min-height:44px; }
 @media(max-height:720px) { .otdr-workbench { gap:8px; }.measurement-summary { padding:10px 6px; } }
 @media(max-height:650px) { .workbench-curve-card :deep(.curve-stage) { height:160px; } }

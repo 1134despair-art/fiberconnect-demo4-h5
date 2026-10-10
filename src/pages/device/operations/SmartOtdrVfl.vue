@@ -10,6 +10,7 @@
       </template>
 
       <main class="smart-vfl-page">
+        <SmartMeasurementTabs :device-id="device.id" />
         <section v-if="!connected" class="smart-vfl-offline" role="status">
           <div><strong>设备连接已断开</strong><span>重新连接后可控制VFL输出</span></div>
           <button type="button" @click="router.push(`/device/${device.id}/system`)">设备设置</button>
@@ -76,6 +77,7 @@
 </template>
 
 <script setup lang="ts">
+import SmartMeasurementTabs from '../components/SmartMeasurementTabs.vue'
 import { vSmartOtdrOverlay } from '@/directives/smartOtdrOverlay'
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'

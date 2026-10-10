@@ -3,6 +3,7 @@
     <div class="content-flex hide-scrollbar">
       <SmartOtdrPageShell :title="t('device.opm.title')" @back="goBack">
         <main class="opm-app-main">
+          <SmartMeasurementTabs :device-id="String(route.params.id || '')" :busy="isSavingCalibration || isSettingReference || isResettingReference" />
           <section class="reading-card">
             <div class="meter-screen">
               <div class="screen-head">
@@ -163,6 +164,7 @@
 </template>
 
 <script setup lang="ts">
+import SmartMeasurementTabs from '../components/SmartMeasurementTabs.vue'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'

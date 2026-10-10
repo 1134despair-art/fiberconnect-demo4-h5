@@ -11,6 +11,7 @@
         </template>
 
         <main class="event-map-workbench">
+          <SmartMeasurementTabs :device-id="deviceId" :busy="isRunning" />
           <p class="portrait-file">{{ eventMapResult.filename }}</p>
           <aside class="event-control-rail">
             <div class="rail-section-title">链路摘要</div>
@@ -137,10 +138,9 @@
           </section>
         </main>
         <template #footer>
-            <div class="portrait-actions">
+            <div class="portrait-actions" style="grid-template-columns:repeat(3,minmax(0,1fr))">
               <button class="action-secondary" type="button" @click="saveEventMapResult">{{ t('deviceDetail.eventMapSave') }}</button>
               <button class="action-secondary" type="button" :disabled="isRunning" @click="openSettingsDialog('parameter')">{{ t('deviceDetail.eventMapSettings') }}</button>
-              <button class="action-secondary" type="button" @click="goToOtdr">返回OTDR</button>
               <button class="action-secondary" type="button" @click="goToFiles">文件</button>
             </div>
             <button class="action-primary" type="button" :disabled="isRunning" @click="runEventMapTest">
@@ -248,6 +248,7 @@
 </template>
 
 <script setup lang="ts">
+import SmartMeasurementTabs from '../components/SmartMeasurementTabs.vue'
 import { readOtdrResult, type OtdrSnapshot } from '@/services/otdrResults'
 import { scopedKey } from '@/services/scopedStorage'
 import SmartOtdrQuickPanel from '../components/SmartOtdrQuickPanel.vue'
@@ -695,10 +696,6 @@ const loadSavedState = () => {
 
 const goBack = () => {
   router.push(`/device/${deviceId}`)
-}
-
-const goToOtdr = () => {
-  router.push(`/device/${route.params.id}/smart-otdr`)
 }
 
 const goToFiles = () => {
