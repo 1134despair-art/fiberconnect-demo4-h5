@@ -1,11 +1,15 @@
 <template>
-  <svg :viewBox="compact ? '0 0 40 24' : '0 0 48 48'" fill="none" stroke="currentColor" :stroke-width="compact ? 1.5 : 2" stroke-linecap="round" stroke-linejoin="round" :class="['otdr-event-symbol', { compact }]" role="img" :aria-label="type">
+  <svg :viewBox="compact ? '0 0 24 24' : '0 0 48 48'" fill="none" stroke="currentColor" :stroke-width="compact ? 1.5 : 2" stroke-linecap="round" stroke-linejoin="round" :class="['otdr-event-symbol', { compact }]" role="img" :aria-label="type" :data-event-kind="kind">
+    <title>{{ type }}</title>
     <template v-if="compact">
-      <path v-if="kind === 'connector' || kind === 'start'" d="M2 15h12V4h4v12h20" />
-      <path v-else-if="kind === 'end'" d="M2 9h15V3h4v18h17" />
-      <path v-else-if="kind === 'splice' || kind === 'splitter'" d="M2 8h16v8h20" />
-      <path v-else-if="kind === 'bend'" d="M2 8h9c8 0 8 9 16 9h11" />
-      <path v-else d="M2 12h12l4-5 5 10 4-5h11" />
+      <!-- Hardware-style line symbols; event labels stay available to assistive technology. -->
+      <path v-if="kind === 'connector'" d="M3 17h5V7h8v10h5" />
+      <path v-else-if="kind === 'start'" d="M21 5v14M3 12h17M8 8l-5 4 5 4" />
+      <path v-else-if="kind === 'end'" d="M3 5v14M4 12h17m-5-4 5 4-5 4" />
+      <path v-else-if="kind === 'splice'" d="M3 17h6l6-10h6" />
+      <path v-else-if="kind === 'splitter'" d="M3 12h7m0 0 7-6h4m-11 6 7 6h4" />
+      <path v-else-if="kind === 'bend'" d="M3 7h5l8 10h5" />
+      <g v-else><circle cx="12" cy="12" r="9" /><path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 5m0 3v.1" /></g>
     </template>
     <template v-else>
       <g v-if="kind === 'start'" stroke="none"><rect x="2" y="14" width="44" height="20" rx="3" fill="#64748b"/><text x="24" y="28" text-anchor="middle" font-size="10" fill="white">START</text></g>
@@ -25,12 +29,12 @@ const kind = computed(() => {
   if (/末端|终点|end/i.test(props.type)) return 'end'
   if (/分路|splitter/i.test(props.type)) return 'splitter'
   if (/熔接|非反射|splice/i.test(props.type)) return 'splice'
-  if (/微弯|宏弯|bend/i.test(props.type)) return 'bend'
+  if (/微弯|宏弯|弯折|bend/i.test(props.type)) return 'bend'
   if (/起始|起点|start/i.test(props.type)) return 'start'
   if (/连接|反射|connector/i.test(props.type)) return 'connector'
   return 'unknown'
 })
 </script>
 <style scoped>
-.otdr-event-symbol { display:inline-block;width:40px;height:40px;color:#2563eb;vertical-align:middle;flex-shrink:0; }.otdr-event-symbol.compact { width:32px;height:20px;margin-right:4px; }
+.otdr-event-symbol { display:inline-block;width:40px;height:40px;color:#2563eb;vertical-align:middle;flex-shrink:0; }.otdr-event-symbol.compact { width:28px;height:24px;margin:0;color:inherit; }
 </style>

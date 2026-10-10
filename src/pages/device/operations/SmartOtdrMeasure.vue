@@ -95,7 +95,12 @@
             <div ref="resultListBody" class="smart-result-scroll" role="region" :aria-label="`${resultViewTitle}，可左右滑动`" tabindex="0">
               <table class="smart-result-table" :class="{ 'is-comparison': resultViewMode === 'event-compare' }" :aria-label="resultViewTitle">
                 <thead>
-                  <tr><th v-for="header in resultTableHeaders" :key="header" scope="col">{{ header }}</th></tr>
+                  <tr><th v-for="(header, index) in resultTableHeaders" :key="header" scope="col">
+                    <span v-if="resultViewMode === 'event-compare' && measureStatus === 'done' && comparisonEventTypes[index - 1] && (index === 1 || index === 2)" class="smart-comparison-heading">
+                      <span>{{ header }}</span><OtdrEventSymbol :type="comparisonEventTypes[index - 1]" compact />
+                    </span>
+                    <template v-else>{{ header }}</template>
+                  </th></tr>
                 </thead>
                 <tbody>
                   <tr
@@ -108,7 +113,10 @@
                     @keydown.enter.prevent="handleResultRowClick(row)"
                     @keydown.space.prevent="handleResultRowClick(row)"
                   >
-                    <td v-for="(cell, index) in row.cells" :key="`${row.id}-${index}`">{{ cell }}</td>
+                    <td v-for="(cell, index) in row.cells" :key="`${row.id}-${index}`">
+                      <OtdrEventSymbol v-if="resultViewMode !== 'event-compare' && index === 1 && row.eventId !== null" :type="cell" compact />
+                      <template v-else>{{ cell }}</template>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -238,6 +246,7 @@
 import { readOtdrResult, storeOtdrResult, isOtdrSnapshot, type OtdrSnapshot } from '@/services/otdrResults'
 import { scopedKey } from '@/services/scopedStorage'
 import { smartOtdrIcons } from '@/assets/icons/iconfont/smart-otdr'
+import OtdrEventSymbol from '../components/OtdrEventSymbol.vue'
 import SmartOtdrQuickPanel from '../components/SmartOtdrQuickPanel.vue'
 import { computed, onBeforeUnmount, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -846,6 +855,11 @@ const eventRows = computed<ResultTableRow[]>(() => {
     ]
   }))
 })
+
+const comparisonEventTypes = computed(() => [
+  resultData.events[0]?.type || '',
+  resultData.events[resultData.events.length - 1]?.type || ''
+])
 
 const compareRows = computed<ResultTableRow[]>(() => {
   const first = resultData.events[0]

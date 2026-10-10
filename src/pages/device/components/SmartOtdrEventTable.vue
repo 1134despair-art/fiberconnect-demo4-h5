@@ -21,7 +21,7 @@
       </div>
       <div v-for="row in rows" :key="row.id" class="row table-row">
         <span>{{ row.id }}</span>
-        <span><OtdrEventSymbol :type="row.type" compact />{{ row.type }}</span>
+        <span class="event-type-cell"><OtdrEventSymbol :type="row.type" compact /></span>
         <span>{{ row.distance }}</span>
         <span>{{ row.loss }}</span>
         <span>{{ row.reflect }}</span>
@@ -84,7 +84,7 @@ const { t } = useI18n()
 
 .row {
   display: grid;
-  grid-template-columns: 56px 1.1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 56px 64px 1fr 1fr 1fr 1fr;
   gap: 10px;
   align-items: center;
   min-width: 640px;
@@ -105,4 +105,5 @@ const { t } = useI18n()
   font-size: 13px;
   color: #0f172a;
 }
+.event-type-cell, .table-head span:nth-child(2) { text-align: center; }
 </style>

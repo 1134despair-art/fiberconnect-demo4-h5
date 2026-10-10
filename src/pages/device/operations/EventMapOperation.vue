@@ -123,7 +123,7 @@
                     @keydown.enter.prevent="selectedNodeId = `event-${item.id}`"
                     @keydown.space.prevent="selectedNodeId = `event-${item.id}`">
                     <td>{{ item.id }}</td>
-                    <td><span class="smart-result-type"><OtdrEventSymbol :type="item.type" compact />{{ item.type }}</span></td>
+                    <td><span class="smart-result-type"><OtdrEventSymbol :type="item.type" compact /></span></td>
                     <td>{{ item.distance }}</td>
                     <td>{{ item.section }}</td>
                     <td>{{ item.loss }}</td>
