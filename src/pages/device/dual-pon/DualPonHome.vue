@@ -33,19 +33,14 @@
       </section>
 
       <section class="task-section">
-        <header><h2>{{ t('dualPon.fieldWork') }}</h2><p>{{ t('dualPon.fieldWorkHint') }}</p></header>
-        <button class="network-entry" type="button" @click="open('dual-pon-network')">
-          <span class="entry-icon"><img :src="networkIcon" alt="" /></span>
-          <span><strong>{{ t('dualPon.networkTitle') }}</strong><small>{{ t('dualPon.networkHint') }}</small></span><i>›</i>
-        </button>
-        <button class="wide-entry" type="button" @click="open('dual-pon-power')">
-          <span class="entry-icon"><img :src="powerIcon" alt="" /></span>
-          <span><strong>{{ t('dualPon.powerTitle') }}</strong><small>{{ t('dualPon.powerHint') }}</small></span><i>›</i>
-        </button>
-        <div class="tool-grid">
-          <button type="button" @click="open('dual-pon-cable-length')"><span class="entry-icon"><img :src="lengthIcon" alt="" /></span><strong>{{ t('dualPon.cableLength') }}</strong><small>8 PIN · m</small></button>
-          <button type="button" @click="open('dual-pon-wiremap')"><span class="entry-icon"><img :src="wiremapIcon" alt="" /></span><strong>{{ t('dualPon.wiremap') }}</strong><small>{{ state.persisted.cableStandard }}</small></button>
-          <button type="button" @click="open('dual-pon-trace')"><span class="entry-icon"><img :src="traceIcon" alt="" /></span><strong>{{ t('dualPon.trace') }}</strong><small>{{ t('dualPon.traceHint') }}</small></button>
+        <header><h2>{{ t('dualPon.fieldWork') }}</h2></header>
+        <div class="instrument-function-grid">
+          <button type="button" @click="open('dual-pon-network')"><span class="instrument-tool-icon"><img :src="networkIcon" alt="" /></span><strong>{{ t('dualPon.networkTitle') }}</strong></button>
+          <button type="button" @click="open('dual-pon-power')"><span class="instrument-tool-icon teal"><img :src="powerIcon" alt="" /></span><strong>{{ t('dualPon.powerTitle') }}</strong></button>
+          <button type="button" @click="open('dual-pon-records')"><span class="instrument-tool-icon"><img :src="recordsIcon" alt="" /></span><strong>{{ t('dualPon.recordsTitle') }}</strong></button>
+          <button type="button" @click="open('dual-pon-cable-length')"><span class="instrument-tool-icon teal"><img :src="lengthIcon" alt="" /></span><strong>{{ t('dualPon.cableLength') }}</strong></button>
+          <button type="button" @click="open('dual-pon-wiremap')"><span class="instrument-tool-icon teal"><img :src="wiremapIcon" alt="" /></span><strong>{{ t('dualPon.wiremap') }}</strong></button>
+          <button type="button" @click="open('dual-pon-trace')"><span class="instrument-tool-icon teal"><img :src="traceIcon" alt="" /></span><strong>{{ t('dualPon.trace') }}</strong></button>
         </div>
       </section>
 
@@ -60,9 +55,7 @@
         @toggle-flashlight="toggleLight"
       />
 
-      <section class="utility-section">
-        <button type="button" @click="open('dual-pon-records')"><span class="entry-icon"><img :src="recordsIcon" alt="" /></span><span><strong>{{ t('dualPon.recordsTitle') }}</strong><small>{{ t('dualPon.recordCount', { count: state.persisted.records.length }) }}</small></span></button>
-      </section>
+
       <div v-if="feedback" class="feedback" role="status">{{ feedback }}</div>
     </div>
   </DualPonPageShell>
@@ -76,17 +69,17 @@ import { useAuth, type Device } from '@/composables/useAuth'
 import DualPonPageShell from './DualPonPageShell.vue'
 import DualPonFunctionNav from './DualPonFunctionNav.vue'
 import { useDualPonState } from './useDualPonState'
-import deviceImage from '@/assets/app/products/dual-pon.png'
-import bluetoothIcon from '@/assets/app/icons/connection/bluetooth.png'
-import batteryIcon from '@/assets/app/icons/connection/battery.png'
-import networkIcon from '@/assets/app/icons/device/network-test.png'
-import powerIcon from '@/assets/app/icons/device/power-meter.png'
-import vflIcon from '@/assets/app/icons/device/vfl.png'
-import lengthIcon from '@/assets/app/icons/device/cable-length.png'
-import wiremapIcon from '@/assets/app/icons/device/wiremap.png'
-import traceIcon from '@/assets/app/icons/device/trace.png'
-import flashlightIcon from '@/assets/app/icons/device/flashlight.png'
-import recordsIcon from '@/assets/app/icons/device/records.png'
+import deviceImage from '@/assets/app/products/dual-pon-realistic.jpg'
+import bluetoothIcon from '@/assets/icons/iconfont/smart-otdr/bluetooth.svg'
+import batteryIcon from '@/assets/icons/iconfont/smart-otdr/battery.svg'
+import networkIcon from '@/assets/icons/iconfont/instrument/network.svg'
+import powerIcon from '@/assets/icons/iconfont/smart-otdr/power.svg'
+import vflIcon from '@/assets/icons/iconfont/smart-otdr/vfl.svg'
+import lengthIcon from '@/assets/icons/iconfont/smart-otdr/ruler.svg'
+import wiremapIcon from '@/assets/icons/iconfont/smart-otdr/cable.svg'
+import traceIcon from '@/assets/icons/iconfont/instrument/radar.svg'
+import flashlightIcon from '@/assets/icons/iconfont/smart-otdr/flashlight.svg'
+import recordsIcon from '@/assets/icons/iconfont/smart-otdr/records.svg'
 import DeviceUtilityControlGrid from '../components/DeviceUtilityControlGrid.vue'
 
 const props = defineProps<{ device: Device }>()
@@ -123,7 +116,7 @@ const open = (path: string) => router.push(`/device/${props.device.id}/${path}`)
 .topology-hero { min-height: 0; padding: 0; border: 1px solid #dbe7f5; border-radius: 12px; background: #fff; color: ui.$text; box-shadow: 0 8px 22px rgba(37,99,235,.08); }
 .topology-hero > header { min-height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; border-bottom: 1px solid #e7eef8; }
 .topology-hero > header strong { color: ui.$primary; font-size: 13px; }
-.topology-hero > header span { padding: 3px 7px; border-radius: 999px; background: #eef2f7; color: ui.$sub; font-size: 10px; font-weight: 800; }
+.topology-hero > header span { padding: 3px 7px; border-radius: 999px; background: #eef2f7; color: ui.$sub; font-size:12px; font-weight: 800; }
 .topology-hero > header span.online { background: #dcfce7; color: #15803d; }
 .topology { grid-template-columns: 46px 1fr 76px 1fr 46px; min-height: 112px; margin: 0; padding: 10px 12px; }
 .topology > img { width: 76px; }
@@ -135,7 +128,7 @@ const open = (path: string) => router.push(`/device/${props.device.id}/${path}`)
 .topology-hero > footer button { @include ui.reset-button; min-height: 44px; padding: 0; background: transparent; color: ui.$primary; font-size: 11px; font-weight: 700; white-space: nowrap; }
 .network-entry { min-height: 72px; border-color: #93c5fd; }
 .entry-icon { border-radius: 10px; }
-.network-entry small, .wide-entry small, .tool-grid small, .utility-section small { font-size: 10px; }
+.network-entry small, .wide-entry small, .tool-grid small, .utility-section small { font-size:12px; }
 .feedback { bottom: 92px; }
 @media (max-width: 340px) { .topology { grid-template-columns: 42px 1fr 72px 1fr 42px; }.topology > img { width: 72px; } }
 </style>

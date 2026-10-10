@@ -18,33 +18,44 @@
         <h1 class="smart-otdr-shell__title">{{ title }}</h1>
         <p v-if="subtitle">{{ subtitle }}</p>
       </div>
-      <div v-if="$slots.actions" class="smart-otdr-shell__actions">
+      <div v-if="$slots.actions || (showQuickPanel && !blocked)" class="smart-otdr-shell__actions">
         <slot name="actions" />
+        <SmartOtdrQuickPanel v-if="showQuickPanel && !blocked" inline-trigger />
       </div>
       <div v-else class="smart-otdr-shell__spacer" aria-hidden="true"></div>
     </header>
 
     <main class="smart-otdr-shell__body">
-      <slot />
+      <p v-if="blocked" role="alert">正在检查连接与授权…</p>
+      <slot v-else />
     </main>
 
-    <footer v-if="$slots.footer" class="smart-otdr-shell__footer">
+    <footer v-if="$slots.footer && !blocked" class="smart-otdr-shell__footer">
       <slot name="footer" />
     </footer>
 
-    <SmartOtdrQuickPanel v-if="showQuickPanel" />
+
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue'
-import backIcon from '@/assets/app/icons/common/back.png'
-import bluetoothIcon from '@/assets/icons/pon-meter/ui/bluetooth.png'
-import batteryIcon from '@/assets/icons/pon-meter/ui/battery.png'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useAuth } from '@/composables/useAuth'
+import { useSmartOtdrDevice } from '@/composables/useSmartOtdrDevice'
+import backIcon from '@/assets/icons/iconfont/smart-otdr/back.svg'
+import bluetoothIcon from '@/assets/icons/iconfont/smart-otdr/bluetooth.svg'
+import batteryIcon from '@/assets/icons/iconfont/smart-otdr/battery.svg'
 
 import { SMART_OTDR_SHELL_MAX_WIDTH, createPixelValue } from './smartOtdrUi'
 import SmartOtdrQuickPanel from './SmartOtdrQuickPanel.vue'
 
+const route = useRoute(); const router = useRouter()
+const { user } = useAuth()
+const device = computed(() => user.value?.devices?.find(d => d.id === route.params.id))
+const { locked, runtime } = useSmartOtdrDevice(device)
+const blocked = computed(() => device.value?.deviceType === 'smart_otdr' && route.name !== 'SmartOtdrConnect' && (device.value.status !== 'connected' || locked.value || !!runtime.value.authorizationError))
+watch(blocked, value => { if (value) void router.replace(`/device/${route.params.id}/activate`) }, { immediate: true })
 const props = withDefaults(
   defineProps<{
     title: string
@@ -114,7 +125,7 @@ onUnmounted(() => {
   padding: 0 14px;
   background: #ffffff;
   color: ui.$smart-otdr-text-main;
-  font-size: 10px;
+  font-size:12px;
 }
 
 .smart-otdr-shell__status > span {
@@ -141,7 +152,7 @@ onUnmounted(() => {
 .smart-otdr-shell__battery-value,
 .smart-otdr-shell__charging {
   color: ui.$smart-otdr-primary;
-  font-size: 9px;
+  font-size:12px;
   line-height: 1;
 }
 .smart-otdr-shell__charging { color: #16a34a; font-weight: 900; }
@@ -150,7 +161,7 @@ onUnmounted(() => {
   min-height: 58px;
   flex: 0 0 auto;
   display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
   align-items: center;
   padding: 6px 12px;
   border-bottom: 1px solid #d8e2ef;

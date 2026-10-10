@@ -1,6 +1,6 @@
 <template>
   <div :class="standalone ? 'app-container stable-source-page-app' : 'source-shell-host'">
-    <div class="source-shell">
+    <div class="source-shell instrument-ui">
       <div class="source-shell__status" aria-hidden="true">
         <strong>{{ currentTime }}</strong>
         <span>
@@ -28,11 +28,12 @@
 </template>
 
 <script setup lang="ts">
+import '../components/instrumentUi.scss'
 import { onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import backIcon from '@/assets/icons/pon-meter/ui/back.png'
-import bluetoothIcon from '@/assets/icons/pon-meter/ui/bluetooth.png'
-import batteryIcon from '@/assets/icons/pon-meter/ui/battery.png'
+import backIcon from '@/assets/icons/iconfont/smart-otdr/back.svg'
+import bluetoothIcon from '@/assets/icons/iconfont/smart-otdr/bluetooth.svg'
+import batteryIcon from '@/assets/icons/iconfont/smart-otdr/battery.svg'
 
 defineProps<{ title: string; subtitle?: string; standalone?: boolean }>()
 const emit = defineEmits<{ back: [] }>()
@@ -75,7 +76,7 @@ onUnmounted(() => {
   padding: 0 14px;
   background: #ffffff;
   color: ui.$source-text;
-  font-size: 10px;
+  font-size:12px;
 }
 
 .source-shell__status > span { display: flex; align-items: flex-end; gap: 3px; }

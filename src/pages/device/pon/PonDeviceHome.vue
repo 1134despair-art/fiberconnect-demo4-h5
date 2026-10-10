@@ -32,8 +32,7 @@
             {{ state.persisted.selectedWavelength }} <small>nm</small>
           </button>
         </header>
-        <div class="meter-wavelength">{{ state.persisted.selectedWavelength }} nm</div>
-        <div class="meter-reading">
+                <div class="meter-reading">
           <strong>{{ state.runtime.opmDbm.toFixed(2) }}</strong><span>dBm</span>
         </div>
         <div class="meter-linear">{{ linearPower }}</div>
@@ -85,8 +84,8 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import type { Device } from '@/composables/useAuth'
 import { useAuth } from '@/composables/useAuth'
-import flashlightIcon from '@/assets/icons/pon-meter/ui/flashlight.png'
-import historyIcon from '@/assets/icons/pon-meter/ui/history.png'
+import flashlightIcon from '@/assets/icons/iconfont/smart-otdr/flashlight.svg'
+import historyIcon from '@/assets/icons/iconfont/smart-otdr/timer.svg'
 import PonFunctionNav from './PonFunctionNav.vue'
 import PonPageShell from './PonPageShell.vue'
 import { dbmToMilliwatts, formatPonFrequency, usePonPowerMeterState } from './usePonPowerMeterState'
@@ -168,7 +167,7 @@ onUnmounted(() => {
 .offline-band { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border: 1px solid #fed7aa; border-radius: 10px; background: #fff7ed; }
 .offline-band strong, .offline-band span { display: block; }
 .offline-band strong { color: #9a3412; font-size: 12px; }
-.offline-band span { margin-top: 2px; color: #c2410c; font-size: 10px; }
+.offline-band span { margin-top: 2px; color: #c2410c; font-size:12px; }
 .offline-band button { @include ui.secondary-button; min-height: 38px; padding: 0 10px; color: #9a3412; font-size: 11px; }
 .home-meter { overflow: hidden; border: 1px solid #dbe7f5; border-radius: 12px; background: #ffffff; box-shadow: 0 8px 22px rgba(37, 99, 235, .08); }
 .home-meter > header { min-height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; border-bottom: 1px solid #e7eef8; }
@@ -193,7 +192,7 @@ onUnmounted(() => {
 .spec-strip div { min-width: 0; padding: 9px 5px; border-right: 1px solid ui.$pon-border; text-align: center; }
 .spec-strip div:last-child { border-right: 0; }
 .spec-strip span, .spec-strip strong { display: block; }
-.spec-strip span { color: ui.$pon-text-sub; font-size: 9px; }
+.spec-strip span { color: ui.$pon-text-sub; font-size:12px; }
 .spec-strip strong { margin-top: 4px; color: ui.$pon-text; font-size: 11px; @include ui.metric-number; }
 .home-tools { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .home-tools button { @include ui.button-reset; position: relative; min-width: 0; min-height: 64px; display: grid; grid-template-columns: 34px minmax(0, 1fr); align-items: center; gap: 9px; padding: 8px 40px 8px 10px; border: 1px solid ui.$pon-border; border-radius: 10px; background: #ffffff; color: ui.$pon-text; text-align: left; }
@@ -202,7 +201,7 @@ onUnmounted(() => {
 .tool-icon img { width: 20px; height: 20px; }
 .home-tools strong, .home-tools small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .home-tools strong { font-size: 11px; }
-.home-tools small { margin-top: 3px; color: ui.$pon-text-sub; font-size: 9px; }
+.home-tools small { margin-top: 3px; color: ui.$pon-text-sub; font-size:12px; }
 .mini-switch { position: absolute; right: 9px; width: 30px; height: 18px; padding: 2px; box-sizing: border-box; border-radius: 9px; background: #cbd5e1; }
 .mini-switch b { display: block; width: 14px; height: 14px; border-radius: 50%; background: #ffffff; transition: transform .18s ease; }
 .mini-switch.active { background: ui.$pon-primary; }

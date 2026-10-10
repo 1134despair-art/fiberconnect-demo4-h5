@@ -21,8 +21,8 @@
 </template>
 
 <script setup lang="ts">
-import vflIcon from '@/assets/app/icons/device/vfl.png'
-import flashlightIcon from '@/assets/app/icons/device/flashlight.png'
+import vflIcon from '@/assets/icons/iconfont/smart-otdr/vfl.svg'
+import flashlightIcon from '@/assets/icons/iconfont/smart-otdr/flashlight.svg'
 
 defineProps<{
   vflTitle: string

@@ -1,19 +1,42 @@
 <template>
-  <div class="app-container otdr-app-page smart-otdr-landscape-page">
+  <div class="app-container otdr-app-page smart-otdr-portrait-page">
     <div class="content-flex hide-scrollbar">
-      <SmartOtdrPageShell title="事件地图" :max-width="812" :show-quick-panel="true" @back="goBack">
+      <SmartOtdrPageShell title="事件地图" :max-width="430" :show-quick-panel="false" @back="goBack">
         <template #actions>
-          <div class="landscape-file-pill" :title="eventMapResult.filename">{{ eventMapResult.filename }}</div>
-          <div class="landscape-status" :class="{ running: isRunning }">
-            <span class="landscape-status__dot"></span>
-            {{ isRunning ? t('deviceDetail.eventMapRunning') : t('deviceDetail.eventMapIdle') }}
+          <div class="portrait-status" :class="{ running: isRunning }">
+            <span class="portrait-status__dot"></span>
+            {{ isRunning ? t('deviceDetail.eventMapRunning') : eventMapResult.events.length ? '已完成' : t('deviceDetail.eventMapIdle') }}
           </div>
+          <SmartOtdrQuickPanel inline-trigger />
         </template>
 
         <main class="event-map-workbench">
-          <section class="event-map-card">
+          <p class="portrait-file">{{ eventMapResult.filename }}</p>
+          <aside class="event-control-rail">
+            <div class="rail-section-title">链路摘要</div>
+            <div class="event-metric-grid">
+              <div class="event-metric-item"><span>波长</span><strong>{{ parameterState.wavelength }}</strong></div>
+              <div class="event-metric-item"><span>量程</span><strong>{{ parameterState.range }}</strong></div>
+              <div class="event-metric-item"><span>脉宽</span><strong>{{ parameterState.pulse }}</strong></div>
+              <div class="event-metric-item"><span>事件</span><strong>{{ eventMapResult.summaryMetrics.eventCount }}</strong></div>
+              <div class="event-metric-item wide"><span>链路长度</span><strong>{{ eventMapResult.summaryMetrics.linkLength }}</strong></div>
+            </div>
+            <div class="event-summary-grid">
+              <div class="event-summary-card"><span>{{ t('deviceDetail.eventMapLinkLoss') }}</span><strong>{{ eventMapResult.summaryMetrics.linkLoss }}</strong></div>
+              <div class="event-summary-card"><span>{{ t('deviceDetail.eventMapAvgLoss') }}</span><strong>{{ eventMapResult.summaryMetrics.avgLoss }}</strong></div>
+              <div class="event-summary-card wide"><span>{{ t('deviceDetail.eventMapReturnLoss') }}</span><strong>{{ eventMapResult.summaryMetrics.returnLoss }}</strong></div>
+            </div>
+
+
+          </aside>
+          <section v-if="eventMapResult.events.length" class="event-map-card">
             <div class="card-head">
               <div class="card-title">链路事件视图</div>
+              <div class="topology-navigation" aria-label="切换链路事件">
+                <button type="button" aria-label="上一个事件" :disabled="selectedNodeIndex <= 0" @click="selectAdjacentNode(-1)">‹</button>
+                <span>{{ selectedNodeIndex + 1 }} / {{ eventMapResult.nodes.length }}</span>
+                <button type="button" aria-label="下一个事件" :disabled="selectedNodeIndex >= eventMapResult.nodes.length - 1" @click="selectAdjacentNode(1)">›</button>
+              </div>
               <div class="card-meta">
                 <span>{{ parameterState.wavelength }}</span>
                 <span>{{ parameterState.range }}</span>
@@ -33,13 +56,14 @@
                   :style="{ left: `${node.position}%` }"
                   type="button"
                   :aria-label="`${getNodeTitle(node)} ${node.distance}`"
+                  :aria-pressed="selectedNodeId === node.id"
                   @click="selectedNodeId = node.id"
                 ></button>
                 <span class="link-overview__window"></span>
               </div>
 
-              <div class="topology-scroll">
-                <div class="topology-chain" :style="{ minWidth: topologyMinWidth }">
+              <div ref="topologyScroll" class="topology-scroll" aria-label="横向链路，左右滑动查看更多事件" @keydown.left.prevent="selectAdjacentNode(-1)" @keydown.right.prevent="selectAdjacentNode(1)">
+                <div class="topology-chain">
                   <div class="topology-chain__line"></div>
                   <button
                   v-for="node in eventMapResult.nodes"
@@ -47,13 +71,12 @@
                     class="topology-node"
                     :class="[node.type, getNodeTone(node), { active: selectedNodeId === node.id }]"
                     type="button"
+                    :aria-pressed="selectedNodeId === node.id"
                     @click="selectedNodeId = node.id"
                   >
                     <span class="topology-node__distance">{{ node.distance }}</span>
                     <span class="topology-node__card">
-                      <span class="topology-node__glyph" aria-hidden="true">
-                        <span></span>
-                      </span>
+                      <OtdrEventSymbol :type="getNodeTitle(node)" />
                     </span>
                     <span class="topology-node__index">{{ node.label }}</span>
                     <span class="topology-node__type">{{ getNodeTitle(node) }}</span>
@@ -64,85 +87,78 @@
               <div class="topology-selection">
                 <span>当前事件</span>
                 <strong>{{ selectedNodeTitle }}</strong>
-                <span>{{ selectedNodeDistance }}</span>
+                <span class="topology-selection__distance">{{ selectedNodeDistance }}</span>
+                <span v-if="selectedNode && getNodeEvent(selectedNode)" class="topology-selection__reading">损耗 {{ getNodeEvent(selectedNode)?.loss }} dB · 反射 {{ getNodeEvent(selectedNode)?.reflect }} dB</span>
               </div>
             </div>
           </section>
 
-          <aside class="event-control-rail">
-            <div class="rail-section-title">链路摘要</div>
-            <div class="event-metric-grid">
-              <div class="event-metric-item"><span>波长</span><strong>{{ parameterState.wavelength }}</strong></div>
-              <div class="event-metric-item"><span>量程</span><strong>{{ parameterState.range }}</strong></div>
-              <div class="event-metric-item"><span>脉宽</span><strong>{{ parameterState.pulse }}</strong></div>
-              <div class="event-metric-item"><span>事件</span><strong>{{ eventMapResult.summaryMetrics.eventCount }}</strong></div>
-              <div class="event-metric-item wide"><span>链路长度</span><strong>{{ eventMapResult.summaryMetrics.linkLength }}</strong></div>
-            </div>
-            <div class="event-summary-grid">
-              <div class="event-summary-card"><span>{{ t('deviceDetail.eventMapLinkLoss') }}</span><strong>{{ eventMapResult.summaryMetrics.linkLoss }}</strong></div>
-              <div class="event-summary-card"><span>{{ t('deviceDetail.eventMapAvgLoss') }}</span><strong>{{ eventMapResult.summaryMetrics.avgLoss }}</strong></div>
-              <div class="event-summary-card wide"><span>{{ t('deviceDetail.eventMapReturnLoss') }}</span><strong>{{ eventMapResult.summaryMetrics.returnLoss }}</strong></div>
-            </div>
 
-            <button class="action-primary" type="button" :disabled="isRunning" @click="runEventMapTest">
-              {{ isRunning ? '分析中' : t('deviceDetail.eventMapRun') }}
-            </button>
-            <div class="rail-action-grid">
+
+          <div v-if="!eventMapResult.events.length" class="event-empty">暂无测试结果，请开始测试或加载文件。</div>
+          <section v-else class="event-table-card">
+            <div class="result-list-head">
+              <div class="result-list-title">{{ t('deviceDetail.eventMapTable') }}</div>
+              <div class="result-list-mode">{{ eventMapResult.summaryMetrics.eventCount }} 个事件</div>
+            </div>
+            <div class="smart-result-scroll" role="region" aria-label="事件数据，可左右滑动" tabindex="0">
+              <table class="smart-result-table" aria-label="事件数据">
+                <thead>
+                  <tr>
+                    <th scope="col">序号</th>
+                    <th scope="col">类型</th>
+                    <th scope="col">{{ t('deviceDetail.eventMapDistanceKm') }}</th>
+                    <th scope="col">{{ t('deviceDetail.eventMapSectionKm') }}</th>
+                    <th scope="col">{{ t('deviceDetail.eventMapLossDb') }}</th>
+                    <th scope="col">{{ t('deviceDetail.eventMapTotalLossDb') }}</th>
+                    <th scope="col">{{ t('deviceDetail.eventMapSlopeDbPerKm') }}</th>
+                    <th scope="col">{{ t('deviceDetail.eventMapReflectDb') }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="item in eventMapResult.events" :key="item.id" class="selectable"
+                    :class="{ active: selectedNodeId === `event-${item.id}` }" tabindex="0"
+                    :aria-current="selectedNodeId === `event-${item.id}` ? 'true' : undefined"
+                    @click="selectedNodeId = `event-${item.id}`"
+                    @keydown.enter.prevent="selectedNodeId = `event-${item.id}`"
+                    @keydown.space.prevent="selectedNodeId = `event-${item.id}`">
+                    <td>{{ item.id }}</td>
+                    <td><span class="smart-result-type"><OtdrEventSymbol :type="item.type" compact />{{ item.type }}</span></td>
+                    <td>{{ item.distance }}</td>
+                    <td>{{ item.section }}</td>
+                    <td>{{ item.loss }}</td>
+                    <td>{{ item.totalLoss }}</td>
+                    <td>{{ item.slope }}</td>
+                    <td>{{ item.reflect }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </main>
+        <template #footer>
+            <div class="portrait-actions">
               <button class="action-secondary" type="button" @click="saveEventMapResult">{{ t('deviceDetail.eventMapSave') }}</button>
               <button class="action-secondary" type="button" :disabled="isRunning" @click="openSettingsDialog('parameter')">{{ t('deviceDetail.eventMapSettings') }}</button>
               <button class="action-secondary" type="button" @click="goToOtdr">返回OTDR</button>
               <button class="action-secondary" type="button" @click="goToFiles">文件</button>
             </div>
+            <button class="action-primary" type="button" :disabled="isRunning" @click="runEventMapTest">
+              {{ isRunning ? '分析中' : t('deviceDetail.eventMapRun') }}
+            </button>
             <div class="rail-save-state">
               <span>{{ t('deviceDetail.eventMapSavedAt') }} {{ lastSavedAt || '--' }}</span>
               <strong v-if="saveFeedback">{{ saveFeedback }}</strong>
             </div>
-          </aside>
-
-          <section class="event-table-card">
-            <div class="result-list-head">
-              <div class="result-list-title">{{ t('deviceDetail.eventMapTable') }}</div>
-              <div class="result-list-mode">{{ eventMapResult.summaryMetrics.eventCount }} 个事件</div>
-            </div>
-            <div class="event-table full-table">
-              <div class="table-row table-head full">
-                <span>序号</span>
-                <span>类型</span>
-                <span>{{ t('deviceDetail.eventMapDistanceKm') }}</span>
-                <span>{{ t('deviceDetail.eventMapSectionKm') }}</span>
-                <span>{{ t('deviceDetail.eventMapLossDb') }}</span>
-                <span>{{ t('deviceDetail.eventMapTotalLossDb') }}</span>
-                <span>{{ t('deviceDetail.eventMapSlopeDbPerKm') }}</span>
-                <span>{{ t('deviceDetail.eventMapReflectDb') }}</span>
-              </div>
-              <div v-for="item in eventMapResult.events" :key="item.id" class="table-row full">
-                <span>{{ item.id }}</span>
-                <span>{{ item.type }}</span>
-                <span>{{ item.distance }}</span>
-                <span>{{ item.section }}</span>
-                <span>{{ item.loss }}</span>
-                <span>{{ item.totalLoss }}</span>
-                <span>{{ item.slope }}</span>
-                <span>{{ item.reflect }}</span>
-              </div>
-            </div>
-          </section>
-        </main>
+        </template>
       </SmartOtdrPageShell>
-    </div>
-
-    <div v-if="!isLandscape && !landscapeHintDismissed" class="landscape-rotate-hint">
-      <span class="landscape-rotate-icon" aria-hidden="true"></span>
-      <strong>请横屏使用</strong>
-      <span>横屏可完整查看链路、摘要与事件表</span>
-      <button class="landscape-continue-btn" type="button" @click="landscapeHintDismissed = true">继续使用</button>
     </div>
 
     <SmartOtdrDialogShell
       v-if="isSettingsDialogVisible"
       title="设置"
       close-text="关闭"
-      :max-width="720"
+      :max-width="430"
       max-height="calc(100dvh - 32px)"
       @close="closeSettingsDialog"
     >
@@ -170,15 +186,16 @@
           </button>
         </div>
 
-        <div v-if="settingsTab === 'parameter'" class="settings-panel">
-          <section v-for="group in parameterGroups" :key="group.key" class="settings-group-card">
+        <SmartOtdrSettingLayout v-if="settingsTab === 'parameter'" :items="parameterGroups" v-slot="{ activeKey }">
+          <section v-for="group in parameterGroups" v-show="activeKey === group.key" :key="group.key" class="settings-group-card">
             <div class="settings-group-title">{{ group.label }}</div>
-            <div class="settings-option-grid">
+            <div class="settings-option-grid smart-choice-grid smart-choice-grid--compact">
               <button
                 v-for="option in group.options"
                 :key="option"
-                class="settings-option-btn"
+                class="settings-option-btn smart-choice-button"
                 :class="{ active: group.value === option }"
+                :aria-pressed="group.value === option"
                 type="button"
                 @click="updateParameterOption(group.key, option)"
               >
@@ -186,10 +203,10 @@
               </button>
             </div>
           </section>
-        </div>
+        </SmartOtdrSettingLayout>
 
-        <div v-else class="settings-panel">
-          <section class="settings-group-card">
+        <SmartOtdrSettingLayout v-else :items="[{ key: 'threshold', label: '合格门限' }, { key: 'splitter', label: '分路器' }]" v-slot="{ activeKey }">
+          <section v-show="activeKey === 'threshold'" class="settings-group-card">
             <div class="settings-group-title">{{ t('deviceDetail.eventMapThreshold') }}</div>
             <label v-for="item in thresholdRows" :key="item.key" class="settings-form-row">
               <div class="checkbox-wrap">
@@ -203,7 +220,7 @@
             </label>
           </section>
 
-          <section class="settings-group-card">
+          <section v-show="activeKey === 'splitter'" class="settings-group-card">
             <div class="settings-group-title">{{ t('deviceDetail.eventMapSplitter') }}</div>
             <label v-for="item in splitterRows" :key="item.key" class="settings-form-row">
               <span class="splitter-label">{{ item.label }}</span>
@@ -213,7 +230,7 @@
               </div>
             </label>
           </section>
-        </div>
+        </SmartOtdrSettingLayout>
       </template>
 
       <template #footer>
@@ -231,12 +248,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue'
+import { readOtdrResult, type OtdrSnapshot } from '@/services/otdrResults'
+import { scopedKey } from '@/services/scopedStorage'
+import SmartOtdrQuickPanel from '../components/SmartOtdrQuickPanel.vue'
+import OtdrEventSymbol from '../components/OtdrEventSymbol.vue'
+import SmartOtdrSettingLayout from '../components/SmartOtdrSettingLayout.vue'
+import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import SmartOtdrDialogShell from '../components/SmartOtdrDialogShell.vue'
 import SmartOtdrPageShell from '../components/SmartOtdrPageShell.vue'
-import { useLandscapeScreen } from '../components/useLandscapeScreen'
 
 type SettingsTab = 'parameter' | 'threshold'
 type ParameterKey = 'wavelength' | 'range' | 'pulse'
@@ -360,17 +381,19 @@ type SplitterRow = {
 const router = useRouter()
 const route = useRoute()
 const deviceId = String(route.params.id || '')
+const SMART_OTDR_LOADED_FILE_KEY = scopedKey('otdr-loaded-file', deviceId)
+const FILE_MANAGER_STATE_KEY = scopedKey('otdr-files', deviceId)
 const { t } = useI18n()
-const FILE_MANAGER_STATE_KEY = 'smart-otdr-file-manager-state'
-const SMART_OTDR_LOADED_FILE_KEY = 'smart-otdr-loaded-file'
 
-const { isLandscape } = useLandscapeScreen()
-const landscapeHintDismissed = ref(false)
+
+
 
 const settingsTab = ref<SettingsTab>('parameter')
 const isSettingsDialogVisible = ref(false)
 const isRunning = ref(false)
 const lastSavedAt = ref('')
+const sourceMeasurementId = ref('')
+const resultTimestamp = ref(0)
 const saveFeedback = ref('')
 const selectedNodeId = ref('start')
 
@@ -486,7 +509,7 @@ const createEventMapResult = (rangeLabel = '1km', filename = '20260101-01.sor'):
   }
 }
 
-const createDefaultEventMapResult = (): EventMapResult => createEventMapResult('1km', 'EVENT_MAP_20260101_01.json')
+const createDefaultEventMapResult = (): EventMapResult => ({ filename: '暂无测量结果', totalDistance: '--', summaryMetrics: {linkLength:'--',linkLoss:'--',avgLoss:'--',returnLoss:'--',eventCount:'0'}, nodes: [], events: [] })
 
 const parameterState = reactive({
   wavelength: '1550nm',
@@ -519,7 +542,23 @@ const splitterState = reactive<SplitterState>({
 
 const eventMapResult = ref<EventMapResult>(createDefaultEventMapResult())
 
-const topologyMinWidth = computed(() => `${Math.max(520, eventMapResult.value.nodes.length * 104)}px`)
+const topologyScroll = ref<HTMLElement | null>(null)
+const selectedNodeIndex = computed(() => Math.max(0, eventMapResult.value.nodes.findIndex(node => node.id === selectedNodeId.value)))
+const selectAdjacentNode = (direction: number) => {
+  const next = eventMapResult.value.nodes[selectedNodeIndex.value + direction]
+  if (next) selectedNodeId.value = next.id
+}
+
+// Overview and data selections also bring the matching horizontal node into view.
+watch(selectedNodeId, async () => {
+  await nextTick()
+  const viewport = topologyScroll.value
+  const node = viewport?.querySelector<HTMLElement>('.topology-node.active')
+  if (!viewport || !node) return
+  const bounds = node.getBoundingClientRect()
+  const frame = viewport.getBoundingClientRect()
+  viewport.scrollTo({ left: viewport.scrollLeft + bounds.left - frame.left - (frame.width - bounds.width) / 2, behavior: 'auto' })
+})
 
 const getNodeEvent = (node: EventNode) => {
   if (node.type === 'start') return null
@@ -568,7 +607,7 @@ const parameterGroups = computed(() => [
   { key: 'pulse' as ParameterKey, label: '测量脉宽', value: parameterState.pulse, options: pulseOptions }
 ])
 
-const storageKey = computed(() => `smart_otdr_event_map_v2_${route.params.id}`)
+const storageKey = computed(() => scopedKey('otdr-event-map', String(route.params.id)))
 
 const normalizeMetricValue = (value: unknown, fallback: string) => {
   if (typeof value !== 'string') return fallback
@@ -628,7 +667,7 @@ const normalizeEventMapResult = (result: Partial<EventMapResult>) => {
 }
 
 const loadSavedState = () => {
-  const raw = sessionStorage.getItem(storageKey.value)
+  const raw = localStorage.getItem(storageKey.value)
   if (!raw) return
 
   try {
@@ -638,12 +677,16 @@ const loadSavedState = () => {
       splitterState?: SplitterState
       eventMapResult?: EventMapResult
       lastSavedAt?: string
+      sourceMeasurementId?: string
+      resultTimestamp?: number
     }
 
     if (parsed.parameterState) Object.assign(parameterState, parsed.parameterState)
     if (parsed.thresholdState) Object.assign(thresholdState, parsed.thresholdState)
     if (parsed.splitterState) Object.assign(splitterState, parsed.splitterState)
     if (parsed.eventMapResult) eventMapResult.value = normalizeEventMapResult(parsed.eventMapResult)
+    sourceMeasurementId.value = parsed.sourceMeasurementId || ''
+    resultTimestamp.value = parsed.resultTimestamp || 0
     if (parsed.lastSavedAt) lastSavedAt.value = parsed.lastSavedAt
   } catch {
     // Ignore invalid session storage payload and keep defaults.
@@ -697,21 +740,26 @@ const runEventMapTest = async () => {
   eventMapResult.value = buildMockResult()
   selectedNodeId.value = 'start'
   isRunning.value = false
+  sourceMeasurementId.value = ''
+  resultTimestamp.value = Date.now()
+  persistEventMapState()
 }
 
 const persistEventMapState = () => {
   lastSavedAt.value = new Date().toLocaleString()
-  sessionStorage.setItem(storageKey.value, JSON.stringify({
+  localStorage.setItem(storageKey.value, JSON.stringify({
     parameterState: { ...parameterState },
     thresholdState: { ...thresholdState },
     splitterState: { ...splitterState },
     eventMapResult: eventMapResult.value,
-    lastSavedAt: lastSavedAt.value
+    lastSavedAt: lastSavedAt.value,
+    sourceMeasurementId: sourceMeasurementId.value,
+    resultTimestamp: resultTimestamp.value
   }))
 }
 
 const readFileManagerState = (): EventMapFileManagerState => {
-  const raw = sessionStorage.getItem(FILE_MANAGER_STATE_KEY)
+  const raw = localStorage.getItem(FILE_MANAGER_STATE_KEY)
   if (!raw) return {}
   try {
     return JSON.parse(raw) as EventMapFileManagerState
@@ -750,7 +798,7 @@ const saveResultToFileManager = () => {
   if (existingIndex >= 0) nodes.splice(existingIndex, 1, nextFile)
   else nodes.unshift(nextFile)
 
-  sessionStorage.setItem(FILE_MANAGER_STATE_KEY, JSON.stringify({
+  localStorage.setItem(FILE_MANAGER_STATE_KEY, JSON.stringify({
     ...managerState,
     nodes,
     activeStorage: storage,
@@ -760,13 +808,14 @@ const saveResultToFileManager = () => {
 }
 
 const saveEventMapResult = () => {
-  persistEventMapState()
-  saveResultToFileManager()
+  if (!eventMapResult.value.events.length) { saveFeedback.value = '请先完成测试'; return }
+  try { persistEventMapState(); saveResultToFileManager() }
+  catch { saveFeedback.value = '保存失败，请检查存储空间后重试'; return }
   saveFeedback.value = t('deviceDetail.eventMapSaveSuccess')
 }
 
 const loadSelectedEventMapFile = () => {
-  const raw = sessionStorage.getItem(SMART_OTDR_LOADED_FILE_KEY)
+  const raw = localStorage.getItem(SMART_OTDR_LOADED_FILE_KEY)
   if (!raw) return
   try {
     const loadedFile = JSON.parse(raw) as LoadedEventMapFile
@@ -776,1466 +825,67 @@ const loadSelectedEventMapFile = () => {
       : createEventMapResult(parameterState.range, loadedFile.name)
     eventMapResult.value.filename = loadedFile.name
     selectedNodeId.value = 'start'
+    resultTimestamp.value = Date.now()
+    sourceMeasurementId.value = ''
+    persistEventMapState()
+    localStorage.removeItem(SMART_OTDR_LOADED_FILE_KEY)
   } catch {
     // Keep the current result when the selected file payload is invalid.
   }
 }
 
+const applyMeasurement = (snapshot: OtdrSnapshot) => {
+ let previous = 0
+ const events: EventRow[] = snapshot.result.events.map(event => {
+  const distance = Number.parseFloat(event.distance) || 0
+  const section = Math.max(0, distance - previous); previous = distance
+  const loss = Number.parseFloat(event.loss) || 0
+  return { id: event.id, type: event.type, distance: distance.toFixed(3), section: section.toFixed(3), loss: loss.toFixed(2), totalLoss: Number.parseFloat(event.totalLoss).toFixed(2), slope: section ? (loss / section).toFixed(2) : '--', reflect: Number.parseFloat(event.reflect).toFixed(1) }
+ })
+ const distance = Number.parseFloat(events[events.length - 1]?.distance || '0')
+ eventMapResult.value = { filename: snapshot.filename, totalDistance: formatDistanceWithUnit(distance), events, nodes: createEventNodes(events, distance),
+  summaryMetrics: { linkLength: formatDistanceWithUnit(distance), linkLoss: snapshot.result.summary.totalLoss, avgLoss: snapshot.result.summary.averageLoss, returnLoss: snapshot.result.summary.maxReflectance, eventCount: String(events.length) } }
+ Object.assign(parameterState, { wavelength: snapshot.parameters.wavelength, range: snapshot.parameters.range, pulse: snapshot.parameters.pulseWidth })
+ sourceMeasurementId.value = snapshot.id
+ resultTimestamp.value = Date.now()
+ selectedNodeId.value = 'start'
+ persistEventMapState()
+}
+
 onMounted(() => {
   loadSavedState()
+  const snapshot = readOtdrResult(deviceId)
+  if (snapshot && sourceMeasurementId.value !== snapshot.id && (snapshot.selectedAt >= resultTimestamp.value || !eventMapResult.value.events.length)) applyMeasurement(snapshot)
   loadSelectedEventMapFile()
 })
 </script>
 
 <style scoped lang="scss">
-@use '../components/smartOtdrUi.scss' as ui;
-
-.otdr-app-page {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-  background: linear-gradient(180deg, #f6f8fc 0%, #edf3ff 100%);
-}
-
-.content-flex {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  overflow-y: auto;
-  padding: 0;
-}
-
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-.hide-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.otdr-app-page :deep(.smart-otdr-shell) {
-  border-radius: 0;
-  border: 0;
-  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-  box-shadow: none;
-  overflow: hidden;
-}
-
-.otdr-app-page :deep(.smart-otdr-shell__header) {
-  padding: 14px 16px 10px;
-}
-
-.otdr-app-page :deep(.smart-otdr-shell__body) {
-  padding: 8px 16px 110px;
-}
-
-.event-map-main {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.event-overview-card,
-.event-map-card,
-.event-table-card,
-.event-action-card {
-  @include ui.smart-otdr-app-surface;
-  border-color: rgba(59, 130, 246, 0.10);
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
-}
-
-.event-overview-card {
-  padding: 16px;
-}
-
-.event-overview-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.loaded-file-pill {
-  min-width: 0;
-  width: fit-content;
-  max-width: 100%;
-  padding: 12px 14px;
-  border-radius: 16px;
-  border: 1px solid rgba(59, 130, 246, 0.1);
-  background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
-  color: #2563eb;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.loaded-file-pill__dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
-  flex-shrink: 0;
-}
-
-.loaded-file-pill__name {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.event-overview-status {
-  flex-shrink: 0;
-  min-height: 34px;
-  padding: 0 12px;
-  border-radius: 999px;
-  background: #eff6ff;
-  color: #2563eb;
-  font-size: 12px;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(59, 130, 246, 0.1);
-}
-
-.event-overview-status.running {
-  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
-  color: #ffffff;
-  border-color: transparent;
-  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.18);
-}
-
-.event-metric-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.event-metric-item,
-.event-summary-card {
-  @include ui.smart-otdr-soft-surface;
-  padding: 12px 14px;
-}
-
-.event-metric-label,
-.event-summary-label {
-  font-size: 12px;
-  color: #64748b;
-}
-
-.event-metric-value,
-.event-summary-value {
-  margin-top: 6px;
-  font-size: 15px;
-  font-weight: 700;
-  color: #0f172a;
-}
-
-.event-summary-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.event-map-card,
-.event-table-card,
-.event-action-card {
-  padding: 12px;
-}
-
-.card-head,
-.result-list-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 2px 4px 12px;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
-}
-
-.card-title,
-.result-list-title,
-.modal-title {
-  font-size: 15px;
-  font-weight: 700;
-  color: #0f172a;
-}
-
-.card-meta {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 6px 10px;
-  font-size: 12px;
-  color: #64748b;
-}
-
-.result-list-mode {
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: #eff6ff;
-  color: #2563eb;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.map-canvas {
-  margin-top: 12px;
-  padding: 16px;
-  border-radius: 18px;
-  background: linear-gradient(180deg, #07162f 0%, #0b2144 100%);
-  color: #dbeafe;
-}
-
-.trace-panel {
-  position: relative;
-  height: 248px;
-  border-radius: 18px;
-  overflow: hidden;
-  background:
-    radial-gradient(circle at top left, rgba(59, 130, 246, 0.2), transparent 32%),
-    linear-gradient(180deg, rgba(2, 6, 23, 0.34) 0%, rgba(15, 23, 42, 0.18) 100%);
-  border: 1px solid rgba(147, 197, 253, 0.18);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-}
-
-.trace-grid {
-  position: absolute;
-  inset: 16px 12px 40px;
-  border-radius: 12px;
-  background-image:
-    linear-gradient(to right, rgba(148, 163, 184, 0.16) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(148, 163, 184, 0.12) 1px, transparent 1px);
-  background-size: 20% 100%, 100% 25%;
-}
-
-.trace-svg {
-  position: absolute;
-  inset: 16px 12px 40px;
-  width: calc(100% - 24px);
-  height: calc(100% - 56px);
-}
-
-.trace-shadow {
-  fill: none;
-  stroke: rgba(56, 189, 248, 0.28);
-  stroke-width: 2.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.trace-line {
-  fill: none;
-  stroke: #38bdf8;
-  stroke-width: 1.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.55));
-}
-
-.trace-drop {
-  stroke: rgba(148, 163, 184, 0.34);
-  stroke-width: 0.4;
-  stroke-dasharray: 1.2 1.4;
-}
-
-.trace-marker {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  z-index: 1;
-}
-
-.marker-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #38bdf8;
-  box-shadow:
-    0 0 0 4px rgba(56, 189, 248, 0.18),
-    0 0 12px rgba(56, 189, 248, 0.72);
-}
-
-.marker-badge {
-  min-width: 44px;
-  padding: 4px 8px;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.72);
-  border: 1px solid rgba(148, 163, 184, 0.28);
-  color: #e0f2fe;
-  font-size: 11px;
-  font-weight: 700;
-  text-align: center;
-}
-
-.trace-marker.start .marker-dot {
-  background: #94a3b8;
-  box-shadow:
-    0 0 0 4px rgba(148, 163, 184, 0.16),
-    0 0 8px rgba(148, 163, 184, 0.5);
-}
-
-.trace-marker.end .marker-dot {
-  background: #f59e0b;
-  box-shadow:
-    0 0 0 4px rgba(245, 158, 11, 0.18),
-    0 0 12px rgba(245, 158, 11, 0.6);
-}
-
-.trace-scale {
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 8px;
-  height: 28px;
-}
-
-.scale-item {
-  position: absolute;
-  bottom: 0;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-}
-
-.scale-line {
-  width: 1px;
-  height: 8px;
-  background: rgba(191, 219, 254, 0.5);
-}
-
-.scale-label {
-  font-size: 10px;
-  color: rgba(219, 234, 254, 0.82);
-}
-
-.trace-event-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.trace-event-chip {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 12px;
-  border-radius: 14px;
-  background: rgba(15, 23, 42, 0.38);
-  border: 1px solid rgba(148, 163, 184, 0.2);
-}
-
-.trace-event-chip.start {
-  border-color: rgba(148, 163, 184, 0.34);
-}
-
-.trace-event-chip.end {
-  border-color: rgba(245, 158, 11, 0.35);
-}
-
-.chip-label {
-  font-size: 11px;
-  font-weight: 700;
-  color: #f8fafc;
-}
-
-.chip-distance {
-  font-size: 11px;
-  color: rgba(219, 234, 254, 0.8);
-}
-
-.event-table {
-  margin-top: 12px;
-  border-radius: 16px;
-  border: 1px solid #dbeafe;
-  background: #ffffff;
-}
-
-.event-table.full-table {
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(148, 163, 184, 0.7) rgba(226, 232, 240, 0.7);
-}
-
-.event-table.full-table::-webkit-scrollbar {
-  height: 6px;
-}
-
-.event-table.full-table::-webkit-scrollbar-track {
-  background: rgba(226, 232, 240, 0.7);
-  border-radius: 999px;
-}
-
-.event-table.full-table::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.8);
-  border-radius: 999px;
-}
-
-.table-row {
-  display: grid;
-  grid-template-columns: 50px 1fr 88px 96px 56px;
-  gap: 10px;
-  align-items: center;
-  padding: 10px 12px;
-  background: #fff;
-  font-size: 12px;
-  color: #334155;
-}
-
-.table-row + .table-row {
-  border-top: 1px solid #f1f5f9;
-}
-
-.table-head {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  background: #eef4ff;
-  font-weight: 600;
-  color: #64748b;
-}
-
-.table-row.full {
-  min-width: 760px;
-  grid-template-columns: 52px 88px repeat(6, minmax(84px, 1fr));
-}
-
-.action-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.action-primary,
-.action-secondary,
-.dialog-btn,
-.modal-tab,
-.settings-option-btn {
-  min-height: 48px;
-  border-radius: 14px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.dialog-btn {
-  min-width: 88px;
-  padding: 0 18px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-  flex: 0 0 auto;
-}
-
-.action-primary {
-  grid-column: 1 / -1;
-  @include ui.smart-otdr-primary-button;
-}
-
-.action-secondary,
-.footer-file-btn,
-.modal-tab,
-.settings-option-btn,
-.dialog-btn.secondary {
-  @include ui.smart-otdr-secondary-button;
-}
-
-.dialog-btn.primary {
-  @include ui.smart-otdr-primary-button;
-}
-
-.action-primary:disabled,
-.action-secondary:disabled,
-.dialog-btn:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-.footer-info {
-  margin-top: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding-top: 14px;
-  border-top: 1px solid rgba(148, 163, 184, 0.12);
-  font-size: 12px;
-  color: #64748b;
-}
-
-.footer-copy {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 16px;
-}
-
-.save-feedback {
-  color: #16a34a;
-  font-weight: 700;
-}
-
-.footer-file-btn {
-  flex-shrink: 0;
-  min-width: 96px;
-  min-height: 36px;
-  padding: 0 16px;
-  border-radius: 999px;
-}
-
-.modal-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 0 2px 10px;
-}
-
-.modal-tab-row {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-  padding: 12px 2px 16px;
-}
-
-.modal-tab {
-  width: 100%;
-  min-height: 42px;
-  padding: 0 16px;
-  border-radius: 999px;
-  color: #64748b;
-}
-
-.modal-tab.active,
-.settings-option-btn.active {
-  @include ui.smart-otdr-primary-button;
-  color: #ffffff;
-}
-
-.settings-panel {
-  display: grid;
-  gap: 12px;
-}
-
-.settings-group-card {
-  @include ui.smart-otdr-setting-card;
-  padding: 14px;
-}
-
-.settings-group-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 12px;
-}
-
-.settings-option-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.settings-option-btn {
-  min-height: 44px;
-  border-radius: 16px;
-}
-
-.settings-form-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 14px 0;
-}
-
-.settings-form-row + .settings-form-row {
-  border-top: 1px solid rgba(148, 163, 184, 0.12);
-}
-
-.checkbox-wrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #0f172a;
-}
-
-.splitter-label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #0f172a;
-}
-
-.value-wrap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.value-input {
-  width: 86px;
-  height: 38px;
-  padding: 0 12px;
-  border-radius: 10px;
-  border: 1px solid #cbd5e1;
-  background: #f8fafc;
-  color: #0f172a;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.unit-text {
-  font-size: 12px;
-  color: #64748b;
-}
-
-.dialog-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  width: 100%;
-  padding-top: 4px;
-}
-
-@media (max-width: 768px) {
-  .event-metric-grid,
-  .event-summary-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .trace-panel {
-    height: 272px;
-  }
-
-  .trace-event-list {
-    flex-direction: column;
-  }
-
-  .table-row.full {
-    min-width: 720px;
-  }
-
-  .settings-form-row {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .footer-info,
-  .card-head,
-  .result-list-head {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .card-meta {
-    justify-content: flex-start;
-  }
-}
-
-@media (max-width: 520px) {
-  .content-flex {
-    padding: 0 0 20px;
-  }
-
-  .otdr-app-page :deep(.smart-otdr-shell__header) {
-    padding: 12px 14px 8px;
-  }
-
-  .otdr-app-page :deep(.smart-otdr-shell__body) {
-    padding: 8px 14px 110px;
-  }
-
-  .event-overview-top {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .event-metric-grid,
-  .event-summary-grid,
-  .action-grid,
-  .modal-tab-row,
-  .settings-option-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .dialog-actions {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: stretch;
-  }
-
-  .dialog-btn {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .action-primary {
-    grid-column: auto;
-  }
-
-  .footer-file-btn {
-    width: 100%;
-  }
-
-  .value-wrap {
-    width: 100%;
-  }
-
-  .value-input {
-    flex: 1;
-    width: auto;
-  }
-}
-
-/* Event map landscape workbench */
-.app-container.smart-otdr-landscape-page {
-  width: min(812px, calc(100vw - 40px));
-  max-width: 812px;
-  height: min(375px, calc(100dvh - 40px));
-  max-height: 375px;
-  min-height: 0;
-  border-radius: 22px;
-  background: #f4f7fb;
-}
-
-.smart-otdr-landscape-page .content-flex {
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden;
-  padding: 0;
-}
-
-.smart-otdr-landscape-page :deep(.smart-otdr-shell) {
-  width: 100%;
-  max-width: none;
-  height: 100%;
-  min-height: 0;
-}
-
-.smart-otdr-landscape-page :deep(.smart-otdr-shell__header) {
-  min-height: 52px;
-  padding: 4px 10px;
-  border-bottom: 1px solid #d8e2ef;
-  background: #ffffff;
-  box-sizing: border-box;
-}
-
-.smart-otdr-landscape-page :deep(.smart-otdr-shell__title) {
-  padding: 0 10px;
-  font-size: 16px;
-  text-align: left;
-}
-
-.smart-otdr-landscape-page :deep(.smart-otdr-shell__body) {
-  min-height: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-  padding: 8px;
-}
-
-.landscape-file-pill {
-  max-width: 150px;
-  overflow: hidden;
-  color: #475569;
-  font-size: 11px;
-  font-weight: 600;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.landscape-status {
-  min-height: 28px;
-  padding: 0 10px;
-  border: 1px solid #d8e2ef;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: #f8fafc;
-  color: #475569;
-  font-size: 11px;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.landscape-status__dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #16a34a;
-}
-
-.landscape-status.running {
-  border-color: rgba(37, 99, 235, 0.22);
-  background: #eff6ff;
-  color: #1d4ed8;
-}
-
-.landscape-status.running .landscape-status__dot {
-  background: #2563eb;
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
-}
-
-.event-map-workbench {
-  width: 100%;
-  height: auto;
-  min-width: 0;
-  min-height: 100%;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 190px;
-  grid-template-rows: 320px minmax(190px, auto);
-  grid-template-areas:
-    'map controls'
-    'table table';
-  align-content: start;
-  gap: 12px 8px;
-  padding-bottom: 4px;
-}
-
-.event-map-card {
-  grid-area: map;
-  min-width: 0;
-  min-height: 0;
-  padding: 6px;
-  border: 1px solid #26364c;
-  border-radius: 8px;
-  background: #0b1423;
-  box-shadow: none;
-  overflow: hidden;
-}
-
-.event-map-card .card-head {
-  min-height: 28px;
-  padding: 0 4px 5px;
-  border-color: #26364c;
-  flex-direction: row;
-  align-items: center;
-}
-
-.event-map-card .card-title {
-  color: #e2e8f0;
-  font-size: 11px;
-}
-
-.event-map-card .card-meta {
-  gap: 4px 8px;
-  color: #94a3b8;
-  font-size: 9px;
-}
-
-.event-map-card .card-meta strong {
-  color: #38bdf8;
-}
-
-.map-canvas {
-  height: calc(100% - 28px);
-  margin-top: 0;
-  padding: 7px 8px;
-  border-radius: 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  background: #0b1423;
-  box-sizing: border-box;
-}
-
-.link-overview {
-  position: relative;
-  flex: 0 0 34px;
-  min-height: 34px;
-  margin: 0 8px;
-}
-
-.link-overview__track {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 15px;
-  height: 7px;
-  border-radius: 999px;
-  background: #334155;
-  box-shadow: inset 0 1px 2px rgba(2, 6, 23, 0.52);
-}
-
-.link-overview__marker {
-  position: absolute;
-  top: 11px;
-  z-index: 2;
-  width: 7px;
-  height: 15px;
-  min-width: 0;
-  padding: 0;
-  border: 0;
-  border-radius: 2px;
-  transform: translateX(-50%);
-  background: #22c55e;
-  cursor: pointer;
-}
-
-.link-overview__marker.start {
-  background: #38bdf8;
-}
-
-.link-overview__marker.end,
-.link-overview__marker.warning {
-  background: #f59e0b;
-}
-
-.link-overview__marker.active {
-  width: 10px;
-  top: 8px;
-  height: 21px;
-  background: #f97316;
-  box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.18);
-}
-
-.link-overview__window {
-  position: absolute;
-  left: 10%;
-  right: 10%;
-  top: 6px;
-  height: 25px;
-  border: 1px solid rgba(56, 189, 248, 0.48);
-  border-radius: 5px;
-  pointer-events: none;
-}
-
-.topology-scroll {
-  flex: 1;
-  min-height: 0;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: thin;
-  scrollbar-color: #475569 transparent;
-}
-
-.topology-scroll::-webkit-scrollbar {
-  height: 4px;
-}
-
-.topology-scroll::-webkit-scrollbar-thumb {
-  border-radius: 999px;
-  background: #475569;
-}
-
-.topology-chain {
-  position: relative;
-  height: 166px;
-  padding: 0 16px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(88px, 1fr));
-  align-items: center;
-  box-sizing: border-box;
-}
-
-.topology-chain__line {
-  position: absolute;
-  left: 54px;
-  right: 54px;
-  top: 94px;
-  height: 4px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #38bdf8 0%, #22c55e 78%, #f59e0b 100%);
-  box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
-}
-
-.topology-node {
-  position: relative;
-  z-index: 1;
-  min-width: 0;
-  min-height: 142px;
-  padding: 0 4px;
-  border: 0;
-  display: grid;
-  grid-template-rows: 24px 58px 20px 20px;
-  align-items: center;
-  justify-items: center;
-  background: transparent;
-  color: #dbeafe;
-  cursor: pointer;
-}
-
-.topology-node__distance {
-  color: #bfdbfe;
-  font-size: 9px;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.topology-node__card {
-  width: 58px;
-  height: 52px;
-  border: 2px solid #22c55e;
-  border-radius: 8px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: #f8fafc;
-  box-shadow: 0 5px 12px rgba(2, 6, 23, 0.24);
-}
-
-.topology-node__glyph {
-  position: relative;
-  width: 34px;
-  height: 14px;
-  border-radius: 3px;
-  background: #3b82f6;
-}
-
-.topology-node__glyph::before,
-.topology-node__glyph::after {
-  content: '';
-  position: absolute;
-  top: 5px;
-  width: 10px;
-  height: 4px;
-  background: #f59e0b;
-}
-
-.topology-node__glyph::before {
-  right: 100%;
-}
-
-.topology-node__glyph::after {
-  left: 100%;
-}
-
-.topology-node.splice .topology-node__glyph {
-  width: 38px;
-  height: 5px;
-  border-radius: 999px;
-}
-
-.topology-node.splice .topology-node__glyph span {
-  position: absolute;
-  left: 15px;
-  top: -8px;
-  width: 8px;
-  height: 20px;
-  border-radius: 2px;
-  background: #0ea5e9;
-}
-
-.topology-node.danger .topology-node__card {
-  border-color: #ef4444;
-}
-
-.topology-node.danger .topology-node__glyph {
-  width: 0;
-  height: 0;
-  border-top: 14px solid transparent;
-  border-bottom: 14px solid transparent;
-  border-left: 24px solid #38bdf8;
-  border-radius: 2px;
-  background: transparent;
-}
-
-.topology-node.end .topology-node__card {
-  border-color: #f59e0b;
-}
-
-.topology-node.end .topology-node__glyph {
-  width: 22px;
-  height: 22px;
-  border-radius: 5px;
-  background: #f59e0b;
-}
-
-.topology-node.start .topology-node__card {
-  border-color: #cbd5e1;
-}
-
-.topology-node.start .topology-node__glyph {
-  width: 34px;
-  height: 18px;
-  border-radius: 4px;
-  background: #94a3b8;
-}
-
-.topology-node.active .topology-node__card {
-  border-color: #f97316;
-  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2), 0 8px 18px rgba(2, 6, 23, 0.3);
-}
-
-.topology-node__index {
-  min-width: 24px;
-  padding: 2px 6px;
-  border-radius: 999px;
-  background: #132238;
-  color: #ffffff;
-  font-size: 9px;
-  font-weight: 700;
-}
-
-.topology-node.active .topology-node__index {
-  background: #f97316;
-}
-
-.topology-node__type {
-  max-width: 88px;
-  overflow: hidden;
-  color: #94a3b8;
-  font-size: 9px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.topology-selection {
-  flex: 0 0 26px;
-  min-height: 26px;
-  padding: 0 9px;
-  border: 1px solid #26364c;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #132238;
-  color: #94a3b8;
-  font-size: 9px;
-}
-
-.topology-selection strong {
-  color: #f8fafc;
-}
-
-.topology-selection span:last-child {
-  margin-left: auto;
-  color: #38bdf8;
-  font-variant-numeric: tabular-nums;
-}
-
-.trace-panel {
-  flex: 1;
-  min-height: 0;
-  height: auto;
-  border-radius: 5px;
-}
-
-.trace-grid {
-  inset: 8px 8px 26px;
-}
-
-.trace-svg {
-  inset: 8px 8px 26px;
-  width: calc(100% - 16px);
-  height: calc(100% - 34px);
-}
-
-.trace-scale {
-  left: 8px;
-  right: 8px;
-  bottom: 3px;
-  height: 20px;
-}
-
-.scale-item {
-  gap: 2px;
-}
-
-.scale-label {
-  font-size: 8px;
-}
-
-.trace-marker {
-  gap: 4px;
-}
-
-.marker-dot {
-  width: 7px;
-  height: 7px;
-}
-
-.marker-badge {
-  min-width: 32px;
-  padding: 2px 5px;
-  font-size: 8px;
-}
-
-.trace-event-list {
-  flex: 0 0 28px;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  gap: 4px;
-  margin-top: 4px;
-  overflow-x: auto;
-}
-
-.trace-event-chip {
-  flex: 0 0 auto;
-  padding: 4px 7px;
-  border-radius: 5px;
-  gap: 5px;
-}
-
-.chip-label,
-.chip-distance {
-  font-size: 8px;
-}
-
-.event-control-rail {
-  grid-area: controls;
-  min-width: 0;
-  min-height: 0;
-  padding: 8px;
-  border: 1px solid #d8e2ef;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  background: #ffffff;
-  overflow: hidden;
-}
-
-.rail-section-title {
-  color: #0f172a;
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.event-control-rail .event-metric-grid,
-.event-control-rail .event-summary-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 4px;
-  margin: 0;
-}
-
-.event-control-rail .event-summary-grid {
-  grid-template-columns: 1fr;
-}
-
-.event-control-rail .event-metric-item:nth-child(-n + 3) {
-  display: none;
-}
-
-.event-control-rail .event-metric-item,
-.event-control-rail .event-summary-card {
-  min-width: 0;
-  min-height: 28px;
-  padding: 4px 6px;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 4px;
-  background: #f8fafc;
-  color: #64748b;
-  font-size: 10px;
-}
-
-.event-control-rail .event-summary-card {
-  min-height: 30px;
-  background: #eff6ff;
-  color: #2563eb;
-}
-
-.event-control-rail .wide {
-  grid-column: 1 / -1;
-}
-
-.event-control-rail .event-metric-item.wide {
-  grid-column: 1 / -1;
-}
-
-.event-control-rail strong {
-  min-width: 0;
-  overflow: hidden;
-  color: #0f172a;
-  font-size: 10px;
-  font-variant-numeric: tabular-nums;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.event-control-rail .event-summary-card strong {
-  color: #1e3a8a;
-}
-
-.event-control-rail .action-primary,
-.event-control-rail .action-secondary {
-  min-height: 34px;
-  border-radius: 7px;
-  font-size: 10px;
-}
-
-.event-control-rail .action-primary {
-  grid-column: auto;
-  min-height: 38px;
-}
-
-.rail-action-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 4px;
-}
-
-.rail-save-state {
-  min-height: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 4px;
-  color: #64748b;
-  font-size: 9px;
-}
-
-.rail-save-state strong {
-  color: #16a34a;
-  font-size: 9px;
-}
-
-.event-table-card {
-  grid-area: table;
-  min-width: 0;
-  min-height: 0;
-  min-height: 190px;
-  padding: 8px;
-  border: 1px solid #d8e2ef;
-  border-radius: 8px;
-  background: #ffffff;
-  box-shadow: none;
-  overflow: hidden;
-}
-
-.event-table-card .result-list-head {
-  min-height: 24px;
-  padding: 0 4px 5px;
-  flex-direction: row;
-  align-items: center;
-}
-
-.event-table-card .result-list-title {
-  font-size: 11px;
-}
-
-.event-table-card .result-list-mode {
-  padding: 2px 7px;
-  font-size: 9px;
-}
-
-.event-table {
-  height: 150px;
-  margin-top: 0;
-  border-radius: 5px;
-  overflow: auto;
-}
-
-.table-row.full {
-  min-width: 680px;
-  grid-template-columns: 38px 70px repeat(6, minmax(68px, 1fr));
-  gap: 5px;
-  padding: 5px 7px;
-  font-size: 10px;
-}
-
-.landscape-rotate-hint {
-  position: fixed;
-  inset: 0;
-  z-index: 120;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 24px;
-  background: #f4f7fb;
-  color: #0f172a;
-  text-align: center;
-}
-
-.landscape-rotate-hint strong {
-  font-size: 18px;
-}
-
-.landscape-rotate-hint > span:nth-child(3) {
-  color: #64748b;
-  font-size: 12px;
-}
-
-.landscape-rotate-icon {
-  position: relative;
-  width: 56px;
-  height: 34px;
-  border: 3px solid #2563eb;
-  border-radius: 8px;
-}
-
-.landscape-rotate-icon::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  right: 4px;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: #2563eb;
-  transform: translateY(-50%);
-}
-
-.landscape-continue-btn {
-  min-width: 112px;
-  min-height: 40px;
-  margin-top: 6px;
-  padding: 0 18px;
-  border: 0;
-  border-radius: 6px;
-  background: #2563eb;
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 700;
-}
-
-@media (max-width: 720px) and (orientation: landscape) {
-  .app-container.smart-otdr-landscape-page {
-    width: calc(100vw - 16px);
-    height: calc(100dvh - 16px);
-    max-width: none;
-    max-height: none;
-    border-radius: 16px;
-  }
-
-  .event-map-workbench {
-    grid-template-columns: minmax(0, 1fr) 164px;
-    grid-template-rows: 304px minmax(190px, auto);
-  }
-
-  .landscape-file-pill {
-    display: none;
-  }
-
-  .event-control-rail .event-metric-item:nth-child(-n + 3),
-  .event-control-rail .rail-save-state {
-    display: none;
-  }
-
-  .event-control-rail .event-metric-item.wide {
-    grid-column: auto;
-  }
-}
-
-@media (max-width: 700px) {
-  .app-container.smart-otdr-landscape-page {
-    width: calc(100vw - 24px);
-    height: calc(100dvh - 24px);
-    max-width: none;
-    max-height: none;
-  }
-}
+@use '../components/smartOtdrChoices.scss';
+@use '../components/smartOtdrPortrait.scss';
+@use '../components/smartOtdrResultTable.scss';
+.event-empty { padding:32px 16px;text-align:center;color:#64748b;background:white;border-radius:12px;font-size:14px; }
+.event-map-workbench { display:flex;flex-direction:column;gap:12px;min-width:0; }.portrait-file { margin:0; }.event-control-rail { padding:12px;border:1px solid #dfe6ee;background:white;border-radius:10px; }.rail-section-title { font-size:13px;font-weight:700;color:#26384e;margin-bottom:10px; }
+.event-metric-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px; }.event-metric-item { display:flex;flex-direction:column;gap:4px;min-width:0; }.event-metric-item span,.event-summary-card span { color:#6c7b8e;font-size:12px; }.event-metric-item strong { color:#233b5a;font-size:12px;overflow-wrap:anywhere; }.event-metric-item.wide { grid-column:span 2; }
+.event-summary-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid #edf1f5; }.event-summary-card { display:flex;flex-direction:column;gap:4px;min-width:0; }.event-summary-card strong { color:#1d4ed8;font-size:13px;overflow-wrap:anywhere; }
+.event-map-card { min-width:0;padding:12px;border:1px solid #dfe6ee;border-radius:12px;background:white; }.card-head { display:flex;justify-content:space-between;gap:8px;align-items:center; }.card-title { font-size:13px;font-weight:700;color:#26384e; }.card-meta { display:none; }.link-overview { position:relative;height:44px;margin:8px 18px; }.link-overview__track { position:absolute;left:0;right:0;top:18px;height:3px;border-radius:4px;background:#d5dfec; }.link-overview__marker { position:absolute;top:0;transform:translateX(-50%);width:44px;height:44px;padding:0;border:0;background:transparent; }.link-overview__marker::after { content:'';display:block;width:7px;height:15px;margin:auto;border-radius:2px;background:#22a77a; }.link-overview__marker.active::after { background:#2563eb;box-shadow:0 0 0 4px #2563eb18; }.link-overview__marker.end::after { background:#e8a524; }.link-overview__window { display:none; }
+/* Match the hardware's left-to-right link: distance, symbol, then index. */
+.topology-navigation { display:flex;align-items:center;gap:4px;flex-shrink:0; }
+.topology-navigation button { display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid #d8e2ee;border-radius:6px;background:#f8fafc;color:#37516e;font-size:23px;cursor:pointer; }
+.topology-navigation span { min-width:34px;text-align:center;font-size:12px;color:#718095;font-variant-numeric:tabular-nums; }
+.topology-scroll { overflow-x:auto;overflow-y:hidden;max-width:100%;padding-bottom:6px;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scrollbar-width:thin;scrollbar-color:#bdcce0 #f3f6fa; }
+.topology-chain { position:relative;display:flex;flex-direction:row;align-items:flex-start;justify-content:space-between;gap:12px;width:max-content;min-width:100%; }
+.topology-chain__line { position:absolute;left:34px;right:34px;top:56px;height:3px;background:#b8cce6; }
+.topology-node { position:relative;display:grid;grid-template-columns:1fr;grid-template-rows:18px 48px 18px minmax(18px,auto);justify-items:center;align-items:center;gap:6px;flex:0 0 68px;width:68px;min-height:0;padding:8px 2px;border:1px solid transparent;border-radius:9px;background:transparent;text-align:center;cursor:pointer;scroll-snap-align:center; }
+.topology-node.active { border-color:#91b4f8;background:#f2f6ff; }
+.topology-node__distance { grid-row:1;font-size:12px;line-height:18px;color:#425b77;white-space:nowrap; }
+.topology-node__card { grid-row:2;display:grid;place-items:center;width:48px;height:48px;border:1px solid #c9d8eb;border-radius:8px;background:#fff;z-index:1; }
+.topology-node__card :deep(svg) { width:38px;height:38px; }
+.topology-node__index { grid-row:3;position:static;min-width:18px;padding:1px 4px;border-radius:4px;background:#536c89;color:white;font-size:12px;line-height:16px; }
+.topology-node__type { grid-row:4;font-size:12px;line-height:18px;font-weight:650;color:#263c58;overflow-wrap:anywhere; }
+.topology-node.danger .topology-node__card { border-color:#ef7777; }.topology-node.danger .topology-node__type { color:#b42318; }
+.topology-selection { display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid #e7edf4;font-size:11px;color:#718095; }
+.topology-selection strong { color:#1d4ed8; }.topology-selection__distance { margin-left:auto; }.topology-selection__reading { flex-basis:100%;font-size:12px;line-height:1.5; }
+.result-list-head { display:flex;justify-content:space-between;margin-bottom:10px; }.result-list-title { color:#26384e;font-size:13px;font-weight:700; }.result-list-mode { font-size:11px;color:#718095; }.event-table-card { min-width:0; }.rail-save-state { display:flex;justify-content:space-between;gap:8px;color:#718095;font-size:12px;margin-top:5px; }.rail-save-state strong { color:#15803d; }
+.modal-head { display:none; }.settings-group-title { font-size:14px;font-weight:650;margin-bottom:10px;color:#233a56; }.settings-option-grid { display:grid;gap:8px; }.settings-option-btn { min-height:42px;border:1px solid #d8e2ee;border-radius:8px;background:white;color:#37516e; }.settings-option-btn.active { color:#1d4ed8;border-color:#2563eb;background:#eff6ff; }.settings-form-row { display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid #edf1f5;font-size:12px;flex-wrap:wrap; }.checkbox-wrap,.value-wrap { display:flex;align-items:center;gap:6px; }.value-input { width:65px;min-height:34px;border:1px solid #ccd8e6;border-radius:6px;padding:4px 6px; }.unit-text { color:#718095;font-size:11px; }
 </style>

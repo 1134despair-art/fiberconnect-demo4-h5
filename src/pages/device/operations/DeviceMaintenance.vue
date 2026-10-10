@@ -1,12 +1,7 @@
 <template>
   <div class="app-container legacy-operation-page">
     <!-- 顶部标题栏 -->
-    <header class="header">
-      <button @click="goBack" class="back-btn">
-        ← {{ t('common.back') }}
-      </button>
-      <div class="page-title">{{ t('device.maintenance.title') }}</div>
-    </header>
+    <WorkspaceHeader :title="t('device.maintenance.title')" @back="goBack" />
     
     <!-- 主内容区域 -->
     <div class="content-flex hide-scrollbar">
@@ -14,62 +9,62 @@
         <!-- 维护功能菜单 -->
         <div class="maintenance-menu">
           <!-- 放电校正 -->
-          <div class="maintenance-item" @click="showDischargeCalibration = true">
+          <div class="maintenance-item" role="button" tabindex="0" @keydown.enter="showDischargeCalibration = true" @keydown.space.prevent="showDischargeCalibration = true" @click="showDischargeCalibration = true">
             <div class="item-icon discharge">
-              <span class="iconify" data-icon="mdi:lightning-bolt"></span>
+              <DeviceIcon class="iconify" name="mdi:lightning-bolt" />
             </div>
             <div class="item-info">
               <div class="item-title">{{ t('device.maintenance.dischargeCalibration') }}</div>
               <div class="item-desc">{{ t('device.maintenance.dischargeDesc') }}</div>
             </div>
-            <span class="iconify arrow-icon" data-icon="mdi:chevron-right"></span>
+            <DeviceIcon class="iconify arrow-icon" name="mdi:chevron-right" />
           </div>
           
           <!-- 马达测试 -->
-          <div class="maintenance-item" @click="showMotorTest = true">
+          <div class="maintenance-item" role="button" tabindex="0" @keydown.enter="showMotorTest = true" @keydown.space.prevent="showMotorTest = true" @click="showMotorTest = true">
             <div class="item-icon motor">
-              <span class="iconify" data-icon="mdi:cog"></span>
+              <DeviceIcon class="iconify" name="mdi:cog" />
             </div>
             <div class="item-info">
               <div class="item-title">{{ t('device.maintenance.motorTest') }}</div>
               <div class="item-desc">{{ t('device.maintenance.motorDesc') }}</div>
             </div>
-            <span class="iconify arrow-icon" data-icon="mdi:chevron-right"></span>
+            <DeviceIcon class="iconify arrow-icon" name="mdi:chevron-right" />
           </div>
           
           <!-- 硬件自测 -->
-          <div class="maintenance-item" @click="showHardwareTest = true">
+          <div class="maintenance-item" role="button" tabindex="0" @keydown.enter="showHardwareTest = true" @keydown.space.prevent="showHardwareTest = true" @click="showHardwareTest = true">
             <div class="item-icon hardware">
-              <span class="iconify" data-icon="mdi:chip"></span>
+              <DeviceIcon class="iconify" name="mdi:chip" />
             </div>
             <div class="item-info">
               <div class="item-title">{{ t('device.maintenance.hardwareTest') }}</div>
               <div class="item-desc">{{ t('device.maintenance.hardwareDesc') }}</div>
             </div>
-            <span class="iconify arrow-icon" data-icon="mdi:chevron-right"></span>
+            <DeviceIcon class="iconify arrow-icon" name="mdi:chevron-right" />
           </div>
           
-          <div class="maintenance-item" @click="showHeatingModal = true">
+          <div class="maintenance-item" role="button" tabindex="0" @keydown.enter="showHeatingModal = true" @keydown.space.prevent="showHeatingModal = true" @click="showHeatingModal = true">
             <div class="item-icon heating">
-              <span class="iconify" data-icon="mdi:fire"></span>
+              <DeviceIcon class="iconify" name="mdi:fire" />
             </div>
             <div class="item-info">
               <div class="item-title">{{ t('device.maintenance.heatingFunction') }}</div>
               <div class="item-desc">{{ t('device.maintenance.heatingDesc') }}</div>
             </div>
-            <span class="iconify arrow-icon" data-icon="mdi:chevron-right"></span>
+            <DeviceIcon class="iconify arrow-icon" name="mdi:chevron-right" />
           </div>
           
           <!-- 更换电极 -->
-          <div class="maintenance-item" @click="showElectrodeReplacement = true">
+          <div class="maintenance-item" role="button" tabindex="0" @keydown.enter="showElectrodeReplacement = true" @keydown.space.prevent="showElectrodeReplacement = true" @click="showElectrodeReplacement = true">
             <div class="item-icon electrode">
-              <span class="iconify" data-icon="mdi:flash"></span>
+              <DeviceIcon class="iconify" name="mdi:flash" />
             </div>
             <div class="item-info">
               <div class="item-title">{{ t('device.maintenance.electrodeReplace') }}</div>
               <div class="item-desc">{{ t('device.maintenance.electrodeDesc') }}</div>
             </div>
-            <span class="iconify arrow-icon" data-icon="mdi:chevron-right"></span>
+            <DeviceIcon class="iconify arrow-icon" name="mdi:chevron-right" />
           </div>
         </div>
       </div>
@@ -96,7 +91,7 @@
             
             <div v-if="isCalibrating" class="calibration-progress">
               <div class="progress-info">
-                <span class="iconify loading-icon" data-icon="mdi:loading"></span>
+                <DeviceIcon class="iconify loading-icon" name="mdi:loading" />
                 <span>{{ t('device.maintenance.calibrating') }}</span>
               </div>
               <div class="angle-display">
@@ -127,7 +122,7 @@
             
             <div v-if="calibrationCompleted" class="calibration-result">
               <div class="result-message">
-                <span class="iconify success-icon" data-icon="mdi:check-circle"></span>
+                <DeviceIcon class="iconify success-icon" name="mdi:check-circle" />
                 <span>{{ t('device.maintenance.calibrationComplete') }}</span>
               </div>
               <div class="result-actions">
@@ -238,7 +233,7 @@
             
             <div v-if="isHardwareTesting" class="test-progress">
               <div class="progress-header">
-                <span class="iconify loading-icon" data-icon="mdi:loading"></span>
+                <DeviceIcon class="iconify loading-icon" name="mdi:loading" />
                 <span>{{ t('device.maintenance.selfTesting') }}</span>
               </div>
               <div class="test-items">
@@ -254,10 +249,10 @@
                 >
                   <span class="item-name">{{ item.name }}</span>
                   <span class="item-status">
-                    <span v-if="item.status === 'waiting'" class="iconify" data-icon="mdi:clock-outline"></span>
-                    <span v-else-if="item.status === 'testing'" class="iconify loading-icon" data-icon="mdi:loading"></span>
-                    <span v-else-if="item.status === 'completed'" class="iconify success-icon" data-icon="mdi:check-circle"></span>
-                    <span v-else-if="item.status === 'failed'" class="iconify error-icon" data-icon="mdi:alert-circle"></span>
+                    <DeviceIcon v-if="item.status === 'waiting'" class="iconify" name="mdi:clock-outline" />
+                    <DeviceIcon v-else-if="item.status === 'testing'" class="iconify loading-icon" name="mdi:loading" />
+                    <DeviceIcon v-else-if="item.status === 'completed'" class="iconify success-icon" name="mdi:check-circle" />
+                    <DeviceIcon v-else-if="item.status === 'failed'" class="iconify error-icon" name="mdi:alert-circle" />
                   </span>
                 </div>
               </div>
@@ -292,7 +287,7 @@
           <div class="heating-content">
             <div class="warning-section">
               <div class="warning-icon">
-                <span class="iconify" data-icon="mdi:alert"></span>
+                <DeviceIcon class="iconify" name="mdi:alert" />
               </div>
               <div class="warning-text">
                 <p><strong>{{ t('device.maintenance.heatingWarning') }}</strong></p>
@@ -333,7 +328,7 @@
           <div class="electrode-replacement-content">
             <div class="warning-section">
               <div class="warning-icon">
-                <span class="iconify" data-icon="mdi:alert"></span>
+                <DeviceIcon class="iconify" name="mdi:alert" />
               </div>
               <div class="warning-text">
                 <p><strong>{{ t('device.maintenance.electrodeWarning') }}</strong></p>
@@ -392,10 +387,14 @@
         </div>
       </div>
     </div>
+    <FusionFunctionNav />
   </div>
 </template>
 
 <script setup lang="ts">
+import FusionFunctionNav from '../components/FusionFunctionNav.vue'
+import WorkspaceHeader from '@/components/WorkspaceHeader.vue'
+import DeviceIcon from '@/components/DeviceIcon.vue'
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -1679,4 +1678,14 @@ const toggleHeating = async () => {
   opacity: 0.7;
   cursor: not-allowed;
 }
+/* Shared mobile instrument rhythm, retaining each hardware operation. */
+.app-container.legacy-operation-page {background:#f7f9fc;}
+.legacy-operation-page :is(.settings-card,.stats-card,.records-card,.actions-panel,.status-card,.wavelength-card,.control-card,.maintenance-item) {border:1px solid #d8e2ef;border-radius:12px;background:#fff;box-shadow:none;}
+.legacy-operation-page :is(.p-4,.actions-wrap) {padding:14px;}
+.legacy-operation-page button {min-height:44px;min-width:44px;border-radius:8px;font-family:inherit;}
+.legacy-operation-page :is(.setting-label,.item-desc,.record-count) {font-size:13px;line-height:1.5;}
+.legacy-operation-page .setting-item {gap:12px;flex-wrap:wrap;}
+.legacy-operation-page .setting-control {min-width:0;max-width:100%;}
+.legacy-operation-page .section-title {font-size:15px;}
+.legacy-operation-page button:focus-visible {outline:2px solid #2563eb;outline-offset:2px;}
 </style>

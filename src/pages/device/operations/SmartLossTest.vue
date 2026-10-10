@@ -4,21 +4,10 @@
       <SmartOtdrPageShell title="损耗测试" @back="exitPage">
       <div class="page-body">
         <section class="panel-card overview-card">
-          <div class="card-title-row">
-            <div>
-              <h3 class="section-title">损耗测试</h3>
-              <div class="section-desc">{{ pageDescription }}</div>
-            </div>
-            <div class="status-badge" :class="{ off: !lossState.isEnabled }">
-              {{ lossState.isEnabled ? '开启' : '关闭' }}
-            </div>
-          </div>
-
           <div class="meter-screen" :class="{ off: !lossState.isEnabled }">
             <div class="screen-head">
               <span>LS</span>
               <span>{{ lossState.wavelength }}nm</span>
-              <span class="screen-mode" :class="{ off: !lossState.isEnabled }">{{ statusTagText }}</span>
             </div>
 
             <div class="screen-reading">
@@ -124,12 +113,6 @@ const lossState = reactive({
   wavelength: 1310 as WavelengthOption,
   referenceDbm: 0
 })
-
-const pageDescription = computed(() => (
-  lossState.isEnabled
-      ? `已开启 · ${lossState.wavelength}nm`
-      : '开启后显示测量读数'
-))
 
 const currentPreset = computed(() => presets[lossState.wavelength])
 
@@ -469,21 +452,21 @@ const exitPage = () => {
 .overview-card > .card-title-row { min-height: 44px; align-items: center; padding: 0 14px; border-bottom: 1px solid #e6edf7; }
 .overview-card .section-title { color: #1d4ed8; font-size: 13px; }
 .overview-card .section-desc { display: none; }
-.status-badge { padding: 4px 9px; border-radius: 6px; font-size: 10px; }
+.status-badge { padding: 4px 9px; border-radius: 6px; font-size:12px; }
 .meter-screen { margin: 0; padding: 0; border-radius: 0; background: #ffffff; color: #0f172a; }
 .meter-screen.off { filter: none; }
 .screen-head { min-height: 38px; padding: 0 14px; color: #2563eb; font-size: 11px; }
-.screen-mode { min-width: auto; height: 24px; padding: 0 8px; border-radius: 6px; background: #eff6ff; color: #1d4ed8; font-size: 10px; }
+.screen-mode { min-width: auto; height: 24px; padding: 0 8px; border-radius: 6px; background: #eff6ff; color: #1d4ed8; font-size:12px; }
 .screen-reading { min-height: 104px; align-items: baseline; justify-content: center; margin: 0; padding: 12px 14px; }
 .reading-number { color: #1d4ed8; font-size: 44px; letter-spacing: 0; }
 .reading-unit { color: #0f172a; font-size: 15px; }
 .screen-foot { gap: 0; margin: 0; border-top: 1px solid #e6edf7; }
 .screen-foot-item { padding: 10px 6px; border: 0; border-right: 1px solid #e6edf7; border-radius: 0; background: #ffffff; text-align: center; }
 .screen-foot-item:last-child { border-right: 0; }
-.foot-label { color: #64748b; font-size: 9px; }
+.foot-label { color: #64748b; font-size:12px; }
 .foot-value { margin-top: 4px; color: #0f172a; font-size: 11px; }
 .inline-metrics { margin: 0; border: 0; border-top: 1px solid #e6edf7; border-radius: 0; background: #ffffff; }
-.inline-metric-head span { padding: 8px 4px 3px; background: #ffffff; color: #64748b; font-size: 9px; }
+.inline-metric-head span { padding: 8px 4px 3px; background: #ffffff; color: #64748b; font-size:12px; }
 .inline-metric-body span { padding: 3px 4px 10px; color: #0f172a; font-size: 11px; }
 .action-card .section-title { font-size: 14px; }
 .action-grid { gap: 8px; }

@@ -1,0 +1,54 @@
+{
+  "about": {
+    "name": "光纤互联管理系统",
+    "version": "v1.0.0",
+    "description": "专业的光纤熔接机移动端管理应用，支持设备连接、参数设置、数据管理等功能。",
+    "company": "惠州市森柯林光电科技有限公司",
+    "releaseDate": "2026年07月",
+    "techSupport": "13437626698"
+  },
+  "sales": {
+    "salesPeople": [
+      {
+        "contact": "惠州联系人黄志伟",
+        "phone": "13428606986"
+      },
+      {
+        "contact": "深圳联系人黄文城",
+        "phone": "13070925695"
+      },
+      {
+        "contact": "广州联系人马允浩",
+        "phone": "15102026382"
+      },
+      {
+        "contact": "越南联系人廖栩坚",
+        "phone": "+84 0789094900"
+      }
+    ],
+    "salesContacts": [
+      "惠州联系人黄志伟",
+      "深圳联系人黄文城",
+      "广州联系人马允浩",
+      "越南联系人廖栩坚"
+    ],
+    "salesPhones": [
+      "13428606986",
+      "13070925695",
+      "15102026382",
+      "+84 0789094900"
+    ],
+    "officialWebsites": [
+      "https://www.skl88.com"
+    ]
+  },
+  "name": "光纤互联管理系统",
+  "version": "v1.0.0",
+  "description": "专业的光纤熔接机移动端管理应用，支持设备连接、参数设置、数据管理等功能。",
+  "company": "惠州市森柯林光电科技有限公司",
+  "releaseDate": "2026年07月",
+  "techSupport": "13437626698",
+  "salesContact": "惠州联系人黄志伟",
+  "salesPhone": "13428606986",
+  "officialWebsite": "https://www.skl88.com"
+}

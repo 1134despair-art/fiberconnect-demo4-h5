@@ -103,19 +103,25 @@
     </div>
 
     <div v-if="toast" class="toast" role="status">{{ toast }}</div>
+    <FusionFunctionNav />
   </div>
 </template>
 
 <script setup lang="ts">
+import FusionFunctionNav from '../components/FusionFunctionNav.vue'
+import brightnessIcon from '@/assets/icons/iconfont/device/brightness.svg'
+import buzzerIcon from '@/assets/icons/iconfont/device/buzzer.svg'
+import powerOffIcon from '@/assets/icons/iconfont/device/poweroff.svg'
+import infoIcon from '@/assets/icons/iconfont/device/info.svg'
 import { computed, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
-import bluetoothIcon from '@/assets/app/icons/connection/bluetooth.png'
-import networkIcon from '@/assets/app/icons/device/cellular.png'
-import timerIcon from '@/assets/app/icons/device/timer.png'
-import languageIcon from '@/assets/app/icons/profile/language.png'
-import infoIcon from '@/assets/app/icons/profile/info.png'
-import settingsIcon from '@/assets/app/icons/common/settings.png'
+import bluetoothIcon from '@/assets/icons/iconfont/device/bluetooth.svg'
+import networkIcon from '@/assets/icons/iconfont/device/cellular.svg'
+import timerIcon from '@/assets/icons/iconfont/device/timer.svg'
+import languageIcon from '@/assets/icons/iconfont/device/language.svg'
+
+
 import PortableOtdrSettings from '../portable-otdr/PortableOtdrSettings.vue'
 import MultiOpmSettings from '../multi-opm/MultiOpmSettings.vue'
 
@@ -187,14 +193,14 @@ const baseItems = computed<SettingItem[]>(() => [
 const settingSections = computed<SettingSection[]>(() => {
   const commonInfo: SettingItem[] = [
     { key: 'info', label: '系统信息', description: '型号、序列号与版本', value: 'V1.0.0', icon: infoIcon },
-    { key: 'firmware', label: '固件版本', description: '当前版本信息', value: 'V1.0.0', icon: settingsIcon }
+    { key: 'firmware', label: '固件版本', description: '当前版本信息', value: 'V1.0.0', icon: infoIcon }
   ]
 
   if (device.value?.deviceType === 'fusion_splicer') {
     return [
       { title: '基础设置', items: [
-        { key: 'brightness', label: '屏幕亮度', description: '调整设备屏幕亮度', value: `${state.brightness}`, icon: settingsIcon },
-        { key: 'tone', label: '触屏提示音', description: '按键操作提示', value: state.tone ? '开启' : '关闭', icon: settingsIcon },
+        { key: 'brightness', label: '屏幕亮度', description: '调整设备屏幕亮度', value: `${state.brightness}`, icon: brightnessIcon },
+        { key: 'tone', label: '触屏提示音', description: '按键操作提示', value: state.tone ? '开启' : '关闭', icon: buzzerIcon },
         ...baseItems.value.slice(0, 1),
         { key: 'sleep', label: '休眠', description: '降低待机功耗', value: state.sleep ? '开启' : '关闭', icon: timerIcon },
         ...baseItems.value.slice(1)
@@ -215,7 +221,7 @@ const settingSections = computed<SettingSection[]>(() => {
         { key: 'server', label: '服务器配置', description: `${state.serverIp}:${state.serverPort}`, value: '编辑', icon: networkIcon },
         ...baseItems.value.slice(1)
       ] },
-      { title: '设备信息', items: [...commonInfo, { key: 'remoteShutdown', label: '远程关机', description: '停止测量并关闭设备', value: '', icon: settingsIcon, danger: true }] }
+      { title: '设备信息', items: [...commonInfo, { key: 'remoteShutdown', label: '远程关机', description: '停止测量并关闭设备', value: '', icon: powerOffIcon, danger: true }] }
     ]
   }
 

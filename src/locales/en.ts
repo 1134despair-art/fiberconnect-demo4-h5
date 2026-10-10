@@ -4,6 +4,21 @@ import { portAuditMessages } from './portAudit'
 import { dualPonMessages } from './dualPon'
 
 export default {
+  avatar: {
+  "change": "Change avatar",
+  "processing": "Processing image…",
+  "hint": "JPG, PNG or WebP · up to 10MB",
+  "cropHint": "Automatically cropped and compressed",
+  "invalidType": "Choose a JPG, PNG or WebP image",
+  "tooLarge": "Image exceeds 10MB. Choose a smaller image.",
+  "invalidImage": "This image could not be read. Try another.",
+  "selected": "New avatar selected",
+  "saveError": "Could not save. Check browser storage and try again.",
+  "nameRequired": "Enter your name",
+  "emailInvalid": "Enter a valid email address",
+  "save": "Save avatar",
+  "cancel": "Cancel"
+},
   common: {
     back: 'Back',
     enter: 'Enter',
@@ -39,6 +54,19 @@ export default {
     logout: 'Logout',
     phone: 'Phone',
     email: 'Email',
+    deviceOverview: 'Device status overview',
+    totalDevices: 'All devices',
+    onlineDevices: 'Online',
+    offlineDevices: 'Offline',
+    deviceTools: 'Device search and filters',
+    searchDevices: 'Search name, model, or serial number',
+    clearSearch: 'Clear search',
+    deviceFilter: 'Filter devices by status',
+    filterAll: 'All',
+    filterOnline: 'Online',
+    filterOffline: 'Offline',
+    noMatchingDevices: 'No matching devices',
+    adjustSearch: 'Try another search or status filter',
     addedDevices: '{count} devices added',
     addDevice: 'Add Device',
     noDevices: 'No Devices',

@@ -57,10 +57,10 @@
 import { computed, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import type { Device } from '@/composables/useAuth'
-import vflIcon from '@/assets/icons/pon-meter/ui/vfl.png'
-import steadyIcon from '@/assets/icons/pon-meter/ui/continuous-wave.png'
-import blinkIcon from '@/assets/icons/pon-meter/ui/frequency-signal.png'
-import powerIcon from '@/assets/icons/pon-meter/ui/power-off.png'
+import vflIcon from '@/assets/icons/iconfont/device/vfl.svg'
+import steadyIcon from '@/assets/icons/iconfont/device/output.svg'
+import blinkIcon from '@/assets/icons/iconfont/device/wave.svg'
+import powerIcon from '@/assets/icons/iconfont/device/poweroff.svg'
 import DeviceSettingDialog from '../components/DeviceSettingDialog.vue'
 import MultiOpmFunctionNav from './MultiOpmFunctionNav.vue'
 import MultiOpmPageShell from './MultiOpmPageShell.vue'
@@ -118,12 +118,12 @@ onUnmounted(() => { if (feedbackTimer) window.clearTimeout(feedbackTimer) })
 .source-wavelength { display: flex; align-items: baseline; gap: 7px; margin-top: 8px; color: ui.$text; }
 .source-wavelength strong { font-size: 32px; @include ui.metric-number; }
 .source-wavelength span { font-size: 12px; }
-.source-status small { margin-top: 7px; padding: 5px 14px; border-radius: 999px; background: #eef2f7; color: ui.$text-sub; font-size: 10px; }
+.source-status small { margin-top: 7px; padding: 5px 14px; border-radius: 999px; background: #eef2f7; color: ui.$text-sub; font-size:12px; }
 .source-status.active.red small { background: #fee2e2; color: #b91c1c; }
 .source-status.active.green small { background: #dcfce7; color: #15803d; }
 .control-section header strong, .control-section header span { display: block; }
 .control-section header strong { color: ui.$text; font-size: 13px; }
-.control-section header span { margin-top: 3px; color: ui.$text-sub; font-size: 10px; }
+.control-section header span { margin-top: 3px; color: ui.$text-sub; font-size:12px; }
 .color-option { min-height: 54px; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; border: 1px solid #93c5fd; border-radius: 9px; background: ui.$primary-soft; color: ui.$primary-dark; }
 .color-option i { width: 11px; height: 11px; border-radius: 50%; background: #ef4444; }
 .color-option.green i { background: #22c55e; }
@@ -137,9 +137,9 @@ onUnmounted(() => { if (feedbackTimer) window.clearTimeout(feedbackTimer) })
 .close-output img { width: 20px; height: 20px; }
 .safety-note { display: grid; grid-template-columns: 58px 1fr; align-items: center; gap: 10px; padding: 12px; border: 1px solid #fecaca; border-radius: 8px; background: #fef2f2; }
 .safety-note strong { color: #b91c1c; font-size: 11px; }
-.safety-note span { color: #b91c1c; font-size: 10px; line-height: 1.45; }
+.safety-note span { color: #b91c1c; font-size:12px; line-height: 1.45; }
 .laser-confirm { display: flex; gap: 12px; align-items: flex-start; }
-.laser-confirm strong { flex: 0 0 auto; padding: 5px 7px; border: 2px solid #dc2626; border-radius: 999px; color: #dc2626; font-size: 10px; }
+.laser-confirm strong { flex: 0 0 auto; padding: 5px 7px; border: 2px solid #dc2626; border-radius: 999px; color: #dc2626; font-size:12px; }
 .laser-confirm p { margin: 0; color: ui.$text-sub; font-size: 12px; line-height: 1.6; }
 .settings-toast { bottom: 94px; }
 </style>

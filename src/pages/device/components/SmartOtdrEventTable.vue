@@ -21,7 +21,7 @@
       </div>
       <div v-for="row in rows" :key="row.id" class="row table-row">
         <span>{{ row.id }}</span>
-        <span>{{ row.type }}</span>
+        <span><OtdrEventSymbol :type="row.type" compact />{{ row.type }}</span>
         <span>{{ row.distance }}</span>
         <span>{{ row.loss }}</span>
         <span>{{ row.reflect }}</span>
@@ -32,6 +32,7 @@
 </template>
 
 <script setup lang="ts">
+import OtdrEventSymbol from './OtdrEventSymbol.vue'
 import { useI18n } from 'vue-i18n'
 
 interface EventRow {

@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
+import LocalIcon from '@/components/LocalIcon.vue'
+import { ref, reactive, computed, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { catalogProducts, findCatalogProduct } from '@/data/productCatalog'
+import { scopedKey, readStored } from '@/services/scopedStorage'
 import { useI18n } from 'vue-i18n'
 import { useModal } from '@/composables/useModal'
 import BottomNavigation from '@/components/BottomNavigation.vue'
@@ -10,64 +14,37 @@ import plusIcon from '@/assets/icons/mdi-plus.svg'
 const { t } = useI18n()
 const { alert, showModal, modalOptions, handleConfirm } = useModal()
 
-// Product data
-const products = ref([
-  { id: 1, name: '六马达熔接机 WM-6000', model: 'WM-6000' },
-  { id: 2, name: '四马达熔接机 WM-4000', model: 'WM-4000' },
-  { id: 3, name: '便携式熔接机 WM-2000', model: 'WM-2000' },
-  { id: 4, name: '光功率计 PM-100', model: 'PM-100' },
-  { id: 5, name: '光功率计 PM-200', model: 'PM-200' },
-  { id: 6, name: '红光源 VFL-650', model: 'VFL-650' }
-])
-
-// Order data
-const orders = ref([
-  {
-    id: 'RMA20241225001',
-    productId: 1,
-    productName: '六马达熔接机 WM-6000',
-    productModel: 'WM-6000',
-    problemDescription: '熔接机显示屏出现花屏现象，无法正常操作。',
-    status: 'processing',
-    createTime: '2024-12-25 14:30:25',
-    returnExpressNo: 'SF1234567890',
-    sendBackExpressNo: '',
-    result: ''
-  },
-  {
-    id: 'RMA20241224002',
-    productId: 4,
-    productName: '光功率计 PM-100',
-    productModel: 'PM-100',
-    problemDescription: '测量数据不准确，偏差较大。',
-    status: 'completed',
-    createTime: '2024-12-24 10:15:30',
-    returnExpressNo: 'YT9876543210',
-    sendBackExpressNo: 'SF0987654321',
-    result: '已更换传感器，校准完成。'
-  }
-])
+const route = useRoute()
+const products = computed(() => catalogProducts)
+interface ServiceOrder {
+ id: string; productId: string; productName: string; productModel: string;
+ problemDescription: string; contactPhone: string; status: string; createTime: string;
+ returnExpressNo: string; sendBackExpressNo: string; result: string
+}
+const orderStorageKey = scopedKey('after-sales')
+const storedOrders = readStored<unknown>(orderStorageKey, [])
+const orders = ref<ServiceOrder[]>(Array.isArray(storedOrders) ? storedOrders : [])
 
 // Modal states
-const showCreateOrder = ref(false)
+const showCreateOrder = ref(route.query.create === '1')
 const showOrderDetail = ref(false)
 const isSubmitting = ref(false)
 const selectedOrder = ref<any>(null)
 
 // New order form
 const newOrder = reactive({
-  productId: '',
+  productId: findCatalogProduct(route.query.productId) ? String(route.query.productId) : '',
   problemDescription: '',
   contactPhone: '',
   returnExpressNo: '',
   sendBackExpressNo: ''
 })
 
-// Form validation
-const isFormValid = computed(() => {
-  return newOrder.productId && 
-         newOrder.problemDescription.trim() && 
-         newOrder.contactPhone.trim()
+// Accept mobile or landline numbers with international prefix and separators.
+const contactValid = computed(() => /^\+?[0-9][0-9 ()-]{5,22}$/.test(newOrder.contactPhone.trim()) && newOrder.contactPhone.replace(/\D/g, '').length >= 7 && newOrder.contactPhone.replace(/\D/g, '').length <= 15)
+const isFormValid = computed(() => !!findCatalogProduct(newOrder.productId) && !!newOrder.problemDescription.trim() && contactValid.value)
+watch(() => route.query.productId, value => {
+ if (findCatalogProduct(value)) { newOrder.productId = String(value); showCreateOrder.value = true }
 })
 
 /**
@@ -101,11 +78,13 @@ const submitOrder = async () => {
   
   isSubmitting.value = true
   try {
-    const product = products.value.find(p => p.id === parseInt(newOrder.productId))
+    const product = findCatalogProduct(newOrder.productId)
+    if (!product) return
     
     const order = {
-      id: `RMA${new Date().toISOString().slice(0, 10).replace(/-/g, '')}${String(orders.value.length + 1).padStart(6, '0')}`,
-      productId: parseInt(newOrder.productId),
+      id: `RMA${Date.now()}${crypto.randomUUID().slice(0, 6)}`,
+      productId: String(product.id),
+      contactPhone: newOrder.contactPhone.trim(),
       productName: product?.name || '',
       productModel: product?.model || '',
       problemDescription: newOrder.problemDescription,
@@ -116,7 +95,9 @@ const submitOrder = async () => {
       result: ''
     }
     
-    orders.value.unshift(order)
+    const nextOrders = [order, ...orders.value]
+    localStorage.setItem(orderStorageKey, JSON.stringify(nextOrders))
+    orders.value = nextOrders
     
     // Reset form
     newOrder.productId = ''
@@ -162,7 +143,7 @@ const viewOrderDetail = (order: any) => {
           
           <div v-if="orders.length === 0" class="empty-orders">
             <div class="empty-icon">
-              <span class="iconify" data-icon="mdi:clipboard-text-off"></span>
+              <LocalIcon class="iconify" name="mdi:clipboard-text-off" />
             </div>
             <div class="empty-text">{{ t('afterSales.noOrders') }}</div>
             <div class="empty-tip">{{ t('afterSales.clickToCreate') }}</div>
@@ -212,7 +193,7 @@ const viewOrderDetail = (order: any) => {
               </div>
               
               <div class="order-actions">
-                <span class="iconify arrow-icon" data-icon="mdi:chevron-right"></span>
+                <LocalIcon class="iconify arrow-icon" name="mdi:chevron-right" />
               </div>
             </div>
           </div>
@@ -226,7 +207,7 @@ const viewOrderDetail = (order: any) => {
         <div class="modal-header">
           <h3 class="modal-title">{{ t('afterSales.createOrder') }}</h3>
           <button @click="showCreateOrder = false" class="modal-close" :aria-label="t('common.close')">
-            <span class="iconify" data-icon="mdi:close"></span>
+            <LocalIcon class="iconify" name="mdi:close" />
           </button>
         </div>
         <div class="modal-body">
@@ -234,7 +215,7 @@ const viewOrderDetail = (order: any) => {
             <!-- 选择产品 -->
             <div class="form-group">
               <label class="form-label">{{ t('afterSales.selectProduct') }}</label>
-              <select v-model="newOrder.productId" class="form-select" @change="selectProduct">
+              <select id="service-product" aria-label="选择产品" v-model="newOrder.productId" class="form-select" @change="selectProduct">
                 <option value="">{{ t('afterSales.placeholderSelectProduct') }}</option>
                 <option v-for="product in products" :key="product.id" :value="product.id">
                   {{ product.name }} ({{ product.model }})
@@ -258,12 +239,17 @@ const viewOrderDetail = (order: any) => {
               <label class="form-label">{{ t('afterSales.contactPhone') }}</label>
               <input 
                 v-model="newOrder.contactPhone" 
+                id="service-contact"
+                aria-label="联系电话"
+                :aria-invalid="!!newOrder.contactPhone && !contactValid"
+                aria-describedby="service-contact-error"
                 type="tel"
                 class="form-input"
                 :placeholder="t('afterSales.inputContactPhone')"
               />
             </div>
             
+            <p v-if="newOrder.contactPhone && !contactValid" id="service-contact-error" class="field-error" role="alert">请输入有效的联系电话（7～15 位数字）</p>
             <!-- 退回快递单号 -->
             <div class="form-group">
               <label class="form-label">{{ t('afterSales.returnExpressNo') }}</label>
@@ -305,13 +291,13 @@ const viewOrderDetail = (order: any) => {
         <div class="modal-header">
           <h3 class="modal-title">{{ t('afterSales.orderDetail') }}</h3>
           <button @click="showOrderDetail = false" class="modal-close" :aria-label="t('common.close')">
-            <span class="iconify" data-icon="mdi:close"></span>
+            <LocalIcon class="iconify" name="mdi:close" />
           </button>
         </div>
         <div v-if="selectedOrder" class="modal-body">
           <div class="order-detail">
             <div class="order-detail-status" :class="selectedOrder.status">
-              <span class="iconify" :data-icon="selectedOrder.status === 'completed' ? 'mdi:check-circle-outline' : 'mdi:clock-outline'"></span>
+              <LocalIcon class="iconify" :name="selectedOrder.status === 'completed' ? 'mdi:check-circle-outline' : 'mdi:clock-outline'" />
               <strong>{{ getStatusText(selectedOrder.status) }}</strong>
             </div>
             <div class="detail-section">
@@ -324,6 +310,7 @@ const viewOrderDetail = (order: any) => {
                 <div class="detail-item">
                   <span class="detail-label">{{ t('afterSales.createTime') }}</span>
                   <span class="detail-value">{{ selectedOrder.createTime }}</span>
+                </div><div class="detail-item"><span class="detail-label">{{ t('afterSales.contactPhone') }}</span><span class="detail-value">{{ selectedOrder.contactPhone || '未填写' }}</span>
                 </div>
                 <div class="detail-item">
                   <span class="detail-label">{{ t('afterSales.status') }}</span>
@@ -390,6 +377,7 @@ const viewOrderDetail = (order: any) => {
 </template>
 
 <style scoped>
+.field-error {color:#b42318;font-size:13px;line-height:1.5;margin:0 0 12px;}
 .plus-icon { width: 22px; height: 22px; filter: brightness(0) invert(1); }
 .after-sales-page .orders-card { padding: 0; border: 0; border-radius: 0; box-shadow: none; background: transparent; }
 .after-sales-page .orders-header { margin: 0 0 16px; align-items: baseline; gap: 10px; flex-wrap: wrap; }

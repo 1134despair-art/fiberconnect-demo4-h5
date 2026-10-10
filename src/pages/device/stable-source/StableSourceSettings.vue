@@ -15,6 +15,7 @@
     </div>
 
     <DeviceSettingDialog
+      contained
       :open="activeDialog !== null"
       :title="dialogTitle"
       :description="dialogDescription"
@@ -36,9 +37,9 @@
         <div v-for="wavelength in state.capabilities.wavelengths" :key="wavelength" class="calibration-item">
           <header><strong>{{ wavelength }}nm</strong><button type="button" @click="draftOffsets[wavelength] = 0">{{ t('stableSource.restoreWavelength') }}</button></header>
           <div class="setting-stepper">
-            <button type="button" @click="adjustDraftOffset(wavelength, -state.capabilities.calibrationRange.step)">−</button>
+            <button type="button" :disabled="draftOffsets[wavelength] <= state.capabilities.calibrationRange.min" @click="adjustDraftOffset(wavelength, -state.capabilities.calibrationRange.step)">−</button>
             <strong>{{ formatOffset(draftOffsets[wavelength]) }}<small>dBm</small></strong>
-            <button type="button" @click="adjustDraftOffset(wavelength, state.capabilities.calibrationRange.step)">+</button>
+            <button type="button" :disabled="draftOffsets[wavelength] >= state.capabilities.calibrationRange.max" @click="adjustDraftOffset(wavelength, state.capabilities.calibrationRange.step)">+</button>
           </div>
         </div>
         <button class="setting-inline-action secondary" type="button" @click="resetDraftOffsets">{{ t('stableSource.restoreAll') }}</button>
@@ -51,13 +52,13 @@
       </div>
 
       <div v-else-if="activeDialog === 'language'" class="setting-options">
-        <button v-for="language in state.capabilities.languages" :key="language" class="setting-option" :class="{ active: draftLanguage === language }" type="button" @click="draftLanguage = language">
+        <button v-for="language in state.capabilities.languages" :key="language" class="setting-option" :class="{ active: draftLanguage === language }" :aria-pressed="draftLanguage === language" type="button" @click="draftLanguage = language">
           {{ language === 'en' ? t('stableSource.english') : t('stableSource.simplifiedChinese') }}
         </button>
       </div>
 
       <div v-else-if="activeDialog === 'shutdown'" class="setting-options">
-        <button v-for="minutes in shutdownOptions" :key="minutes" class="setting-option" :class="{ active: draftShutdown === minutes }" type="button" @click="draftShutdown = minutes">
+        <button v-for="minutes in shutdownOptions" :key="minutes" class="setting-option" :class="{ active: draftShutdown === minutes }" :aria-pressed="draftShutdown === minutes" type="button" @click="draftShutdown = minutes">
           {{ minutes === 0 ? t('stableSource.never') : t('stableSource.minutes', { count: minutes }) }}
         </button>
       </div>
@@ -88,12 +89,6 @@ import StableSourceFunctionNav from './StableSourceFunctionNav.vue'
 import StableSourcePageShell from './StableSourcePageShell.vue'
 import { useStableSourceDevice } from './useStableSourceDevice'
 import { resolveStableSourceCapabilities, useStableSourceState, type StableSourceAutoShutdown, type StableSourceDeviceLanguage, type StableSourceWavelength } from './useStableSourceState'
-import bluetoothIcon from '@/assets/icons/pon-meter/ui/bluetooth.png'
-import calibrationIcon from '@/assets/icons/pon-meter/ui/manual-calibration.png'
-import languageIcon from '@/assets/icons/pon-meter/ui/language.png'
-import timerIcon from '@/assets/icons/pon-meter/ui/timer.png'
-import settingsIcon from '@/assets/icons/pon-meter/ui/settings.png'
-import infoIcon from '@/assets/icons/pon-meter/ui/info.png'
 
 type SettingDialog = 'bluetooth' | 'calibration' | 'gain' | 'language' | 'shutdown' | 'info'
 
@@ -127,18 +122,18 @@ const gainHint = computed(() => t('stableSource.gainRangeHint', {
 
 const settingSections = computed<DeviceSettingSection[]>(() => [
   { key: 'connection', title: t('stableSource.bluetooth'), items: [
-    { key: 'bluetooth', label: t('stableSource.bluetooth'), description: t('stableSource.bluetoothHint'), icon: bluetoothIcon, badge: connected.value ? t('stableSource.connected') : t('stableSource.disconnected'), badgeTone: connected.value ? 'success' : 'warning' }
+    { key: 'bluetooth', label: t('stableSource.bluetooth'), description: t('stableSource.bluetoothHint'), iconName: 'bluetooth', badge: connected.value ? t('stableSource.connected') : t('stableSource.disconnected'), badgeTone: connected.value ? 'success' : 'warning' }
   ] },
   { key: 'calibration', title: t('stableSource.manualCalibration'), items: [
-    { key: 'calibration', label: t('stableSource.manualCalibration'), description: calibrationHint.value, value: calibrationSummary.value, icon: calibrationIcon },
-    { key: 'gain', label: t('stableSource.gainCoefficient'), description: gainHint.value, value: `${state.persisted.gainPercent}%`, icon: settingsIcon }
+    { key: 'calibration', label: t('stableSource.manualCalibration'), description: calibrationHint.value, value: calibrationSummary.value, iconName: 'calibration' },
+    { key: 'gain', label: t('stableSource.gainCoefficient'), description: gainHint.value, value: `${state.persisted.gainPercent}%`, iconName: 'settings' }
   ] },
   { key: 'preferences', title: t('stableSource.settingsTitle'), items: [
-    { key: 'language', label: t('stableSource.deviceLanguage'), description: t('stableSource.appLanguageUnaffected'), value: languageLabel.value, icon: languageIcon },
-    { key: 'shutdown', label: t('stableSource.autoShutdown'), value: shutdownLabel.value, icon: timerIcon }
+    { key: 'language', label: t('stableSource.deviceLanguage'), description: t('stableSource.appLanguageUnaffected'), value: languageLabel.value, iconName: 'translate' },
+    { key: 'shutdown', label: t('stableSource.autoShutdown'), value: shutdownLabel.value, iconName: 'timer' }
   ] },
   { key: 'information', title: t('stableSource.productInfo'), items: [
-    { key: 'info', label: t('stableSource.productInfo'), description: `${device.value?.model || 'SLS-1315'} · ${device.value?.productBatch || 'SLS-202607-A01'}`, value: 'V1.0.0', icon: infoIcon }
+    { key: 'info', label: t('stableSource.productInfo'), description: `${device.value?.model || 'SLS-1315'} · ${device.value?.productBatch || 'SLS-202607-A01'}`, value: 'V1.0.0', iconName: 'info' }
   ] }
 ])
 
@@ -152,7 +147,7 @@ const showSaved = () => {
   feedbackTimer = window.setTimeout(() => { feedback.value = '' }, 1600)
 }
 
-const formatOffset = (value: number) => `${value > 0 ? '+' : ''}${value.toFixed(1)}`
+const formatOffset = (value: number) => `${value > 0 ? '+' : ''}${value.toFixed(2)}`
 const openSetting = (key: string) => {
   activeDialog.value = key as SettingDialog
   draftOffsets[1310] = state.persisted.calibrationOffsets[1310]
@@ -189,7 +184,7 @@ const confirmSetting = async () => {
 @use './stableSourceUi.scss' as ui;
 @use '../components/deviceSettingsControls.scss';
 .settings-page { @include ui.page-padding; padding-bottom: 22px; }
-.connection-badge { min-width: 42px; padding: 4px 6px; border-radius: 999px; background: #fef3c7; color: #b45309; font-size: 10px; font-weight: 700; text-align: center; white-space: nowrap; }
+.connection-badge { min-width: 42px; padding: 4px 6px; border-radius: 999px; background: #fef3c7; color: #b45309; font-size:12px; font-weight: 700; text-align: center; white-space: nowrap; }
 .connection-badge.online { background: #dcfce7; color: #15803d; }
 .settings-toast { bottom: 96px; }
 .calibration-dialog { display: flex; flex-direction: column; gap: 14px; }

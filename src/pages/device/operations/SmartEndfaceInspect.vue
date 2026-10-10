@@ -1,22 +1,16 @@
 <template>
   <div class="app-container endface-app-page">
     <SmartOtdrPageShell title="端面检测" :show-quick-panel="true" @back="goBack">
-      <template #actions>
-        <span class="connection-pill" :class="connectionState">
-          <i aria-hidden="true"></i>{{ connectionLabel }}
-        </span>
-      </template>
-
       <main class="endface-main">
         <section v-if="connectionState !== 'connected'" class="connection-state" aria-live="polite">
           <div class="connection-state__icon">
             <img :src="endfaceIcon" alt="" />
           </div>
-          <h2>{{ connectionState === 'connecting' ? '正在识别端面镜头' : '连接端面镜头' }}</h2>
+          <h2>{{ connectionState === 'connecting' ? '正在识别端面镜头' : '未连接端面镜头' }}</h2>
           <p>
             {{ connectionState === 'connecting'
-              ? '正在申请 Type-C 摄像头访问权限，请保持设备连接。'
-              : '请将端面检测镜头接入手机 Type-C 接口。' }}
+              ? '正在连接，请保持设备开启。'
+              : '请连接端面检测镜头，连接成功后即可查看画面。' }}
           </p>
 
           <div class="connection-steps" aria-label="连接步骤">
@@ -28,7 +22,7 @@
           <button class="primary-button" type="button" :disabled="connectionState === 'connecting'" @click="connectCamera">
             {{ connectionState === 'connecting' ? '识别中...' : '启动演示预览' }}
           </button>
-          <p class="compatibility-note">目标设备为标准 UVC 端面镜头；当前版本仅演示交互状态，尚未接入手机 USB 适配层。</p>
+
         </section>
 
         <template v-else>
@@ -36,11 +30,7 @@
             <header class="preview-panel__header">
               <div>
                 <strong>端面预览画面</strong>
-                <span>静态演示 · UVC 待接入</span>
               </div>
-              <span class="live-state" :class="{ frozen: previewFrozen }">
-                <i aria-hidden="true"></i>{{ previewFrozen ? '画面已冻结' : '演示预览' }}
-              </span>
             </header>
 
             <div class="preview-stage" :class="[`zoom-${zoomLevel}`, { frozen: previewFrozen }]">
@@ -70,11 +60,11 @@
             </div>
           </section>
 
-          <p class="demo-disclaimer" role="status">当前画面为前端静态演示，未读取手机 Type-C 摄像头数据。</p>
+          <p class="demo-disclaimer" role="status">当前为演示画面。</p>
 
           <section class="capture-meta" aria-label="采集参数">
-            <div><span>目标连接</span><strong>Type-C / UVC</strong></div>
-            <div><span>画面规格</span><strong>待协议确认</strong></div>
+            <div><span>连接状态</span><strong>连接成功</strong></div>
+            <div><span>预览状态</span><strong>{{ previewFrozen ? '已冻结' : '预览中' }}</strong></div>
             <div><span>检测方式</span><strong>人工确认</strong></div>
           </section>
 
@@ -104,12 +94,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref } from 'vue'
+import { onBeforeUnmount, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import cameraIcon from '@/assets/app/icons/profile/camera.png'
-import endfaceIcon from '@/assets/app/icons/device/endface.png'
-import refreshIcon from '@/assets/app/icons/common/refresh.png'
-import saveIcon from '@/assets/app/icons/common/save.png'
+import cameraIcon from '@/assets/icons/iconfont/smart-otdr/camera.svg'
+import endfaceIcon from '@/assets/icons/iconfont/smart-otdr/endface.svg'
+import refreshIcon from '@/assets/icons/iconfont/smart-otdr/refresh.svg'
+import saveIcon from '@/assets/icons/iconfont/smart-otdr/save.svg'
 import SmartOtdrPageShell from '../components/SmartOtdrPageShell.vue'
 
 type ConnectionState = 'disconnected' | 'connecting' | 'connected'
@@ -123,12 +113,6 @@ const lastCapture = ref('')
 const feedback = ref('')
 let feedbackTimer: number | undefined
 let connectionTimer: number | undefined
-
-const connectionLabel = computed(() => {
-  if (connectionState.value === 'connected') return '演示预览'
-  if (connectionState.value === 'connecting') return '识别中'
-  return '未连接'
-})
 
 const showFeedback = (message: string) => {
   feedback.value = message
@@ -437,7 +421,7 @@ onBeforeUnmount(() => {
 
 .capture-meta div { min-height: 58px; display: grid; place-items: center; align-content: center; gap: 5px; border-right: 1px solid #d8e2ef; text-align: center; }
 .capture-meta div:last-child { border-right: 0; }
-.capture-meta span { color: #64748b; font-size: 10px; }
+.capture-meta span { color: #64748b; font-size:12px; }
 .capture-meta strong { color: #0f172a; font-size: 11px; font-variant-numeric: tabular-nums; }
 
 .capture-actions { display: grid; grid-template-columns: 1fr 1.6fr; gap: 10px; }
@@ -465,9 +449,9 @@ onBeforeUnmount(() => {
 .record-band__icon img { width: 22px; height: 22px; object-fit: contain; }
 .record-band__content { min-width: 0; flex: 1; display: grid; gap: 4px; }
 .record-band__content strong { color: #0f172a; font-size: 13px; }
-.record-band__content span { overflow: hidden; color: #64748b; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.record-band__content span { overflow: hidden; color: #64748b; font-size:12px; text-overflow: ellipsis; white-space: nowrap; }
 .record-band__status { color: #166534; font-size: 11px; font-weight: 700; }
-.inspection-note { margin: 0; color: #64748b; font-size: 10px; line-height: 1.6; text-align: center; }
+.inspection-note { margin: 0; color: #64748b; font-size:12px; line-height: 1.6; text-align: center; }
 
 .endface-toast {
   position: absolute;

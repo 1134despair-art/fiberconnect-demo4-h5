@@ -1,6 +1,6 @@
 <template>
   <div :class="standalone ? 'app-container dual-pon-page-app' : 'dual-shell-host'">
-    <div class="dual-shell">
+    <div class="dual-shell instrument-ui">
       <div class="dual-shell__status" aria-hidden="true">
         <strong>{{ currentTime }}</strong>
         <span>
@@ -26,11 +26,12 @@
 </template>
 
 <script setup lang="ts">
+import '../components/instrumentUi.scss'
 import { onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import backIcon from '@/assets/icons/dual-pon/back.svg'
-import bluetoothIcon from '@/assets/icons/dual-pon/bluetooth.svg'
-import batteryIcon from '@/assets/icons/dual-pon/battery.svg'
+import backIcon from '@/assets/icons/iconfont/smart-otdr/back.svg'
+import bluetoothIcon from '@/assets/icons/iconfont/smart-otdr/bluetooth.svg'
+import batteryIcon from '@/assets/icons/iconfont/smart-otdr/battery.svg'
 
 defineProps<{ title: string; subtitle?: string; standalone?: boolean }>()
 const emit = defineEmits<{ back: [] }>()
@@ -48,7 +49,7 @@ onUnmounted(() => { if (timeTimer) window.clearInterval(timeTimer) })
 .dual-shell-host { width: 100%; height: 100%; }
 .app-container.dual-pon-page-app { width: min(375px, calc(100vw - 24px)); max-width: 375px; box-sizing: border-box; border-radius: 22px; background: ui.$bg; }
 .dual-shell { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden; background: ui.$bg; }
-.dual-shell__status { height: 24px; flex: 0 0 24px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; background: #fff; color: ui.$text; font-size: 10px; }
+.dual-shell__status { height: 24px; flex: 0 0 24px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; background: #fff; color: ui.$text; font-size:12px; }
 .dual-shell__status > span { display: flex; align-items: flex-end; gap: 3px; }
 .dual-shell__status img { width: 13px; height: 13px; object-fit: contain; }
 .dual-shell__status i { width: 2px; border-radius: 2px; background: ui.$primary; }

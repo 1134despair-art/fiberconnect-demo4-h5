@@ -1,0 +1,199 @@
+/* Shared visual language for PON, stable source, port audit and dual PON only.
+   The opt-in shell class keeps the three earlier device families unchanged. */
+.app-container .instrument-ui {
+  --instrument-blue: #2563eb;
+  --instrument-text: #0f172a;
+  --instrument-muted: #64748b;
+  --instrument-border: #d8e2ef;
+  background: #f7f9fc;
+  color: var(--instrument-text);
+
+  *, *::before, *::after { box-sizing: border-box; }
+  button, input, select { font-family: inherit; }
+  button:focus-visible, input:focus-visible, select:focus-visible, [tabindex="0"]:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+  :is(.pon-shell__header, .source-shell__header, .audit-shell__header, .dual-shell__header) {
+    min-height: 58px; padding: 6px 12px;
+    grid-template-columns: 44px minmax(0, 1fr) auto;
+  }
+  :is(.pon-shell__heading, .source-shell__heading, .audit-shell__heading, .dual-shell__heading) {
+    h1 { font-size: 16px; }
+    p { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  }
+  :is(.pon-shell__action, .source-shell__action, .audit-shell__action, .dual-shell__action) { min-width: 44px; align-items: center; }
+  :is(.pon-shell__footer, .source-shell__footer, .audit-shell__footer, .dual-shell__footer) { padding: 8px 12px max(10px, env(safe-area-inset-bottom)); background: #f7f9fc; border-top: 1px solid #d8e2ef; }
+  :is(.pon-function-nav, .source-function-nav, .audit-function-nav, .dual-function-nav) {
+    border-radius: 12px; padding: 6px; gap: 6px; background: #fff; border: 1px solid #d8e2ef;
+    button { min-width: 0; min-height: 58px; border-radius: 8px; }
+    button > span { width: 28px; height: 28px; display: grid; place-items: center; background: #f5f8fc; border-radius: 8px; }
+    img { width: 24px; height: 24px; opacity: 1; filter: none; }
+    strong { font-size: 11px; }
+    button.active { background: #2563eb; color: #fff; }
+    button.active > span { background: #ffffff2e; }
+    button.active img { filter: brightness(0) invert(1); }
+  }
+  :is(.header-tool, .header-action, .icon-action) { min-width: 44px; min-height: 44px; border-radius: 8px; }
+  :is(.header-tool, .header-action, .icon-action) img { width: 24px; height: 24px; opacity: 1; }
+  :is(.pon-home-page, .source-home, .audit-home, .dual-home, .measurement-page, .control-page, .fid-page, .onu-page, .power-page, .network-page, .cable-page, .rfid-page, .remote-page, .settings-page, .records-page, .history-page, .vfl-page, .device-vfl-control) {
+    padding: 14px; gap: 12px; min-width: 0;
+  }
+  :is(.home-meter, .output-display, .light-meter, .fid-meter, .onu-screen, .power-meter, .power-stage, .network-stage, .topology-hero, .laser-stage, .vfl-instrument) { border-radius: 12px; border: 1px solid #d8e2ef; box-shadow: none; }
+  :is(.parameter-grid, .spec-grid, .spec-strip, .result-summary, .reference-strip, .reference-panel) { min-width: 0; }
+  :is(.parameter-grid, .spec-grid, .spec-strip, .result-summary) > * { min-width: 0; }
+  :is(.parameter-grid, .spec-grid, .spec-strip, .result-summary) strong { overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+  .parameter-grid button { border-radius: 10px; min-height: 64px; box-shadow: none; }
+  :is(.meter-reading, .display-reading) { min-height: 98px; }
+  :is(.meter-reading strong, .display-reading b, .opm-value strong) { font-size: clamp(32px, 10vw, 46px); }
+  :is(.task-section, .audit-section) > header { margin-bottom: 8px; }
+  :is(.task-section, .audit-section) h2 { font-size: 14px; margin: 0; font-weight: 700; }
+
+  /* Icon + name entries, matching the OTDR professional-tool grid. */
+  .instrument-function-grid {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px;
+    overflow: hidden; border: 1px solid #d8e2ef; border-radius: 12px; background: #e8edf3;
+    button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; min-width: 0; min-height: 104px; padding: 12px 5px; border: 0; background: #fff; color: #0f172a; text-align: center; cursor: pointer; }
+    strong { font-size: 12px; line-height: 1.5; font-weight: 650; }
+    button:active { background: #eff6ff; }
+  }
+  .instrument-tool-icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 10px; background: #eff6ff; }
+  .instrument-tool-icon.teal { background: #e9f8f5; }
+  .instrument-tool-icon.violet { background: #f3efff; }
+  .instrument-tool-icon img { width: 26px; height: 26px; object-fit: contain; }
+  .home-tools {
+    grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; padding: 8px 0; border: 1px solid #d8e2ef; border-radius: 12px; background: #fff;
+    button { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; min-height: 92px; padding: 8px; border: 0; background: transparent; text-align: center; }
+    strong { font-size: 12px; }
+    small { font-size: 11px; }
+    .mini-switch, .tool-chevron { display: none; }
+    .tool-icon { width: 38px; height: 38px; }
+    .tool-icon img { width: 24px; height: 24px; }
+    button:first-child .tool-icon { background: #fff7e6; }
+  }
+  .device-utility-grid {
+    margin-top: 12px; gap: 0; border: 1px solid #d8e2ef; border-radius: 12px; overflow: hidden; background: #fff;
+    button { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100px; padding: 12px 4px; text-align: center; box-shadow: none; border: 0; border-radius: 0; }
+    button + button { border-left: 1px solid #e8edf3; }
+    small { padding: 0; font-size: 11px; }
+    .utility-arrow, .mini-switch { display: none; }
+    .utility-icon img { width: 26px; height: 26px; }
+    button:first-child .utility-icon { background: #fff0f0; }
+    button:last-child .utility-icon { background: #fff7e6; }
+  }
+  :is(.status-rail, .device-status-strip) {
+    border-radius: 12px;
+    > div, > button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 10px 4px; }
+    img { width: 22px; height: 22px; opacity: 1; }
+    span, small { font-size:12px; }
+    strong { font-size: 11px; margin: 0; }
+  }
+  /* Discrete values use touch-sized choice buttons, never tiny radios. */
+  :is(.wavelength-grid, .wavelength-control, .unit-control, .instrument-choice-grid, .scenario-panel > div, .instrument-frequency-grid) {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding: 0; border: 0; background: transparent;
+    > button { min-width: 0; min-height: 44px; height: auto; display: flex; align-items: center; justify-content: center; gap: 4px; margin: 0; padding: 10px 5px; border: 1px solid #d8e2ef; border-radius: 8px; background: #f8fafc; color: #334155; font-size: 13px; line-height: 1.4; text-align: center; box-shadow: none; }
+    > button.active, > button[aria-selected="true"] { border-color: #2563eb; background: #2563eb; color: #fff; }
+    > button.active strong, > button.active span, > button.active small { color: inherit; }
+    > button:disabled { opacity: .45; }
+  }
+  :is(.wavelength-control, .scenario-panel > div, .instrument-choice-grid) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* Settings are single-column selections; measurement controls retain their grids. */
+  .setting-options { display: flex; flex-direction: column; gap: 0; border: 1px solid #d8e2ef; border-radius: 10px; overflow: hidden; background: #fff; }
+  .setting-options > .setting-option {
+    display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+    width: 100%; min-width: 0; min-height: 50px; margin: 0; padding: 12px 14px;
+    border: 0; border-bottom: 1px solid #e7eef8; border-radius: 0;
+    background: #fff; color: #334155; font-size: 14px; line-height: 1.5; text-align: left;
+  }
+  .setting-options > .setting-option:last-child { border-bottom: 0; }
+  .setting-options > .setting-option.active { background: #eff6ff; color: #1d4ed8; font-weight: 700; }
+  .setting-options > .setting-option::after { display: block; width: 18px; height: 18px; border: 2px solid #cbd5e1; border-radius: 50%; }
+  .setting-options > .setting-option.active::after { border: 5px solid #2563eb; }
+  .setting-options > .setting-option:focus-visible { outline-offset: -3px; }
+  :is(.parameter-section, .control-section, .scenario-panel, .calibration-section) { padding: 12px; border: 1px solid #d8e2ef; border-radius: 12px; background: #fff; }
+  :is(.parameter-section, .control-section, .scenario-panel, .calibration-section) > header { margin-bottom: 10px; align-items: center; gap: 8px; }
+  :is(.parameter-section, .control-section, .scenario-panel, .calibration-section) h2 { font-size: 13px; line-height: 1.5; }
+  :is(.power-stepper, .setting-stepper) { padding: 8px; grid-template-columns: 44px minmax(0, 1fr) 44px; box-shadow: none; }
+  :is(.power-stepper, .setting-stepper, .calibration-row, .calibration-value, .calibration-line .stepper) button { width: 44px; min-height: 44px; }
+  .calibration-row { flex-wrap: wrap; gap: 8px; }
+  :is(.calibration-reset, .reset-link, .reset-calibration, .reference-actions button) { min-height: 44px; }
+  :is(.action-row, .calibration-actions, .record-confirm > div, .clear-confirm > div) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  :is(.action-row, .calibration-actions, .record-confirm > div, .clear-confirm > div) > button { min-width: 0; min-height: 44px; font-size: 13px; }
+  :is(.primary-action, .measure-action, .output-action, .reading-save-action, .power-off) { min-height: 48px; border-radius: 8px; font-size: 14px; box-shadow: none; }
+  .reference-panel { flex-wrap: wrap; }
+  .reference-panel > button { min-height: 44px; }
+  .reference-row { flex-wrap: wrap; gap: 8px; }
+  .reference-actions { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .instrument-matrix-scroll { max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+  .instrument-matrix { min-width: 460px; }
+  .instrument-matrix :is(.matrix-row, .threshold-head, .threshold-row) { display: grid; grid-template-columns: 76px repeat(3, minmax(0,1fr)); gap: 8px; padding: 8px; }
+  .instrument-matrix :is(.matrix-head, .threshold-head) { background: #edf3fa; font-size: 12px; }
+  .instrument-matrix input { min-height: 44px; font-size: 13px; }
+  .instrument-matrix label span { font-size:12px; }
+  .instrument-matrix :is(.matrix-row, .threshold-row) > strong { font-size: 12px; }
+  .threshold-matrix { padding: 0; overflow: hidden; }
+
+  /* Settings keep their values and important ranges, with the OTDR rhythm. */
+  .settings-group { border-radius: 12px; box-shadow: none; }
+  .settings-row { min-height: 64px; grid-template-columns: 38px minmax(0, 1fr) auto; gap: 10px; }
+  .settings-icon { width: 38px; height: 38px; border-radius: 10px; }
+  .settings-icon img { width: 24px; height: 24px; }
+  .settings-value { max-width: 104px; }
+  .settings-copy strong { font-size: 13px; }
+  .dialog-layer { z-index: 160; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
+  .setting-dialog {
+    width: 320px; max-width: 100%; height: auto;
+    max-height: min(560px, calc(var(--smart-overlay-height) - 32px)) !important;
+    justify-self: center; border-radius: 12px; overflow: hidden;
+  }
+  .setting-dialog > header, .setting-dialog > footer { flex-shrink: 0; }
+  .setting-dialog .dialog-body { min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-width: thin; }
+  .settings-toast[role="status"] { pointer-events: none; }
+  :is(.confirm-layer, .dialog-backdrop) { z-index: 160; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
+  .feedback[role="status"] { pointer-events: none; }
+  :is(.confirm-layer, .dialog-backdrop) > section { width: min(100%, 340px); border-radius: 12px; padding: 20px; }
+  :is(.confirm-layer, .dialog-backdrop) > section > div:last-child { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  :is(.confirm-layer, .dialog-backdrop) > section > div:last-child > button { min-width: 0; min-height: 44px; border-radius: 8px; font-size: 14px; padding: 10px 8px; }
+  .setting-info-list dd { overflow-wrap: anywhere; }
+  .date-time-fields { min-width: 0; }
+  .date-time-field input { min-width: 0; width: 100%; max-width: 100%; min-height: 44px; }
+
+  /* VFL shares the centered OTDR reading and explicit laser warning. */
+  .vfl-instrument { padding: 20px 14px 14px; background: #fff; color: #0f172a; }
+  .instrument-laser-icon { display: grid; place-items: center; width: 52px; height: 52px; margin: 0 auto; border-radius: 14px; background: #fff0f0; }
+  .instrument-laser-icon img { width: 32px; height: 32px; }
+  .beam-stage { min-height: 94px; display: flex; align-items: center; justify-content: center; padding: 16px 0; }
+  .beam-stage .reading { justify-content: center; }
+  .beam-stage .reading strong { max-width: none; color: #1d4ed8; font-size: 44px; }
+  .beam-stage .reading small { color: #64748b; font-size: 16px; }
+  .vfl-instrument.active.red .reading strong { color: #dc2626; }
+  .vfl-instrument.active.green .reading strong { color: #15803d; }
+  .vfl-instrument > footer { display: flex; justify-content: center; background: transparent; padding: 0; min-height: 28px; }
+  .vfl-instrument > footer strong { color: #64748b; font-size: 12px; }
+  .instrument-mode-icon { display: block; width: 26px; height: 26px; margin: 0 auto 8px; }
+  :is(.mode-options, .mode-grid) button { min-height: 84px; border-radius: 8px; }
+  :is(.mode-symbol, .laser-mark) img { filter: none; opacity: 1; }
+  :is(.mode-options, .mode-grid) button.active { border-color: #2563eb; background: #eff6ff; }
+  .mode-symbol img { width: 26px; height: 26px; }
+  .laser-safety { border-radius: 12px; background: #fffbeb; border: 1px solid #fde68a; }
+  .laser-safety strong { color: #b91c1c; font-size: 14px; }
+  .laser-safety p { color: #92400e; font-size: 12px; }
+}
+@media (max-width: 360px) {
+  .app-container .instrument-ui {
+    :is(.pon-home-page, .source-home, .audit-home, .dual-home, .measurement-page, .control-page, .power-page, .settings-page) { padding: 12px; }
+    .instrument-function-grid strong { font-size: 11px; }
+    .settings-row { padding: 10px; gap: 8px; grid-template-columns: 34px minmax(0, 1fr) auto; }
+    .settings-icon { width: 34px; height: 34px; }
+    .settings-value { max-width: 78px; }
+    .instrument-frequency-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+}
+
+.app-container .instrument-ui .onu-screen { background: #fff; color: #0f172a; }
+.app-container .instrument-ui .onu-screen header { border-color: #e7eef8; color: #2563eb; }
+.app-container .instrument-ui .onu-result p { color: #64748b; font-size: 12px; }
+.app-container .instrument-ui .onu-result strong { color: #1d4ed8; }
+.app-container .instrument-ui .onu-screen.pass .onu-result strong { color: #15803d; }
+.app-container .instrument-ui .onu-screen.fail .onu-result strong,
+.app-container .instrument-ui .onu-screen.error .onu-result strong { color: #dc2626; }
+.app-container .instrument-ui .onu-result small { color: #64748b; }
+.app-container .instrument-ui .fid-meter__reading { padding-top: 22px; }
+.app-container .instrument-ui .result-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }

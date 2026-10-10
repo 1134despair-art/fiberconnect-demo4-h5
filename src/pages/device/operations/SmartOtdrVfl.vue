@@ -33,7 +33,6 @@
 
         <section class="smart-mode-section">
           <h2>输出模式</h2>
-          <p>CW / 1Hz / 2Hz</p>
           <div class="smart-mode-grid" role="radiogroup" aria-label="VFL输出模式">
             <button
               v-for="item in outputModes"
@@ -55,18 +54,18 @@
           <img :src="powerIcon" alt="" /><span>关闭</span>
         </button>
 
-        <p class="smart-vfl-note">激光输出时请勿直视端口，也不要将光束对准他人。</p>
+        <p class="smart-vfl-note">激光警示：请勿直视光口，严禁将光束对准人眼。</p>
 
         <div v-if="feedback" class="smart-vfl-feedback" role="status">{{ feedback }}</div>
       </main>
 
-      <div v-if="pendingMode" class="smart-confirm-layer" role="presentation">
+      <div v-if="pendingMode" v-smart-otdr-overlay class="smart-confirm-layer" role="presentation">
         <button class="smart-confirm-mask" type="button" aria-label="取消" @click="pendingMode = null"></button>
         <section role="alertdialog" aria-modal="true" aria-label="确认开启激光输出">
           <span>LASER</span>
           <h2>确认开启激光输出</h2>
           <p>请确认端口未朝向人眼，且现场人员已知晓激光正在工作。</p>
-          <div>
+          <div class="smart-dialog-actions">
             <button type="button" @click="pendingMode = null">取消</button>
             <button class="danger" type="button" @click="confirmMode">确认开启</button>
           </div>
@@ -77,14 +76,15 @@
 </template>
 
 <script setup lang="ts">
+import { vSmartOtdrOverlay } from '@/directives/smartOtdrOverlay'
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import type { Device } from '@/composables/useAuth'
-import vflIcon from '@/assets/icons/pon-meter/ui/vfl.png'
-import powerIcon from '@/assets/icons/pon-meter/ui/power-off.png'
-import pulse1HzIcon from '@/assets/icons/pon-meter/ui/pulse-1hz.png'
-import pulse2HzIcon from '@/assets/icons/pon-meter/ui/pulse-2hz.png'
-import continuousWaveIcon from '@/assets/icons/pon-meter/ui/continuous-wave.png'
+import vflIcon from '@/assets/icons/iconfont/smart-otdr/vfl.svg'
+import powerIcon from '@/assets/icons/iconfont/smart-otdr/poweroff.svg'
+import pulse1HzIcon from '@/assets/icons/iconfont/smart-otdr/pulse.svg'
+import pulse2HzIcon from '@/assets/icons/iconfont/smart-otdr/pulse-fast.svg'
+import continuousWaveIcon from '@/assets/icons/iconfont/smart-otdr/cw.svg'
 import SmartOtdrFunctionNav from '../components/SmartOtdrFunctionNav.vue'
 import SmartOtdrPageShell from '../components/SmartOtdrPageShell.vue'
 
@@ -188,8 +188,8 @@ onBeforeUnmount(() => {
 .smart-vfl-offline strong,
 .smart-vfl-offline span { display: block; }
 .smart-vfl-offline strong { color: #9a3412; font-size: 11px; }
-.smart-vfl-offline span { margin-top: 2px; color: #c2410c; font-size: 10px; }
-.smart-vfl-offline button { @include ui.secondary-button; min-height: 38px; padding: 0 8px; color: #9a3412; font-size: 10px; }
+.smart-vfl-offline span { margin-top: 2px; color: #c2410c; font-size:12px; }
+.smart-vfl-offline button { @include ui.secondary-button; min-height: 38px; padding: 0 8px; color: #9a3412; font-size:12px; }
 
 .smart-laser-stage { min-height: 218px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-bottom: 1px solid #e6edf7; }
 .smart-laser-mark { width: 72px; height: 72px; display: grid; place-items: center; }
@@ -198,7 +198,7 @@ onBeforeUnmount(() => {
 .smart-laser-stage.active.green .smart-laser-mark img { filter: brightness(0) saturate(100%) invert(55%) sepia(77%) saturate(601%) hue-rotate(90deg) brightness(91%) contrast(89%); }
 .smart-laser-stage > strong { margin-top: 8px; color: ui.$pon-text; font-size: 24px; line-height: 1; @include ui.metric-number; }
 .smart-laser-stage > strong small { font-size: 12px; font-weight: 500; }
-.smart-output-status { min-width: 96px; margin-top: 12px; padding: 5px 10px; border-radius: 999px; background: #eef2f7; color: ui.$pon-text-sub; font-size: 10px; text-align: center; }
+.smart-output-status { min-width: 96px; margin-top: 12px; padding: 5px 10px; border-radius: 999px; background: #eef2f7; color: ui.$pon-text-sub; font-size:12px; text-align: center; }
 .smart-laser-stage.active .smart-output-status { background: #fef2f2; color: #dc2626; }
 .smart-laser-stage.active.green .smart-output-status { background: #f0fdf4; color: #16a34a; }
 
@@ -212,7 +212,7 @@ onBeforeUnmount(() => {
 .smart-mode-section h2,
 .smart-mode-section p { margin: 0; }
 .smart-mode-section h2 { color: ui.$pon-text; font-size: 14px; }
-.smart-mode-section p { margin-top: 4px; color: ui.$pon-text-sub; font-size: 10px; }
+.smart-mode-section p { margin-top: 4px; color: ui.$pon-text-sub; font-size:12px; }
 .smart-mode-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
 .smart-mode-grid button { @include ui.button-reset; min-width: 0; min-height: 86px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border: 1px solid #e1e9f4; border-radius: 10px; background: #ffffff; color: ui.$pon-text; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.05); }
 .smart-mode-grid button.active { border-color: ui.$pon-primary; background: ui.$pon-primary; color: #ffffff; box-shadow: 0 8px 18px rgba(37, 99, 235, 0.2); }
@@ -223,12 +223,12 @@ onBeforeUnmount(() => {
 
 .smart-power-off { @include ui.secondary-button; min-height: 50px; display: flex; align-items: center; justify-content: center; gap: 9px; background: #f2f6fb; font-size: 14px; }
 .smart-power-off img { width: 21px; height: 21px; }
-.smart-vfl-note { margin: -8px 0 0; color: ui.$pon-text-sub; font-size: 10px; line-height: 1.5; text-align: center; }
+.smart-vfl-note { margin: -8px 0 0; color: ui.$pon-text-sub; font-size:12px; line-height: 1.5; text-align: center; }
 
 .smart-confirm-layer { position: absolute; inset: 0; z-index: 100; display: grid; place-items: center; padding: 20px; }
 .smart-confirm-mask { position: absolute; inset: 0; border: 0; background: rgba(15, 23, 42, 0.55); }
 .smart-confirm-layer section { position: relative; width: min(100%, 320px); box-sizing: border-box; padding: 20px; border-radius: 12px; background: #ffffff; text-align: center; box-shadow: 0 20px 48px rgba(15, 23, 42, 0.24); }
-.smart-confirm-layer section > span { display: inline-grid; min-width: 58px; height: 28px; place-items: center; border: 2px solid #dc2626; border-radius: 999px; color: #dc2626; font-size: 10px; font-weight: 800; }
+.smart-confirm-layer section > span { display: inline-grid; min-width: 58px; height: 28px; place-items: center; border: 2px solid #dc2626; border-radius: 999px; color: #dc2626; font-size:12px; font-weight: 800; }
 .smart-confirm-layer h2 { margin: 12px 0 0; font-size: 16px; }
 .smart-confirm-layer p { margin: 7px 0 17px; color: ui.$pon-text-sub; font-size: 11px; line-height: 1.5; }
 .smart-confirm-layer section > div { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -242,4 +242,6 @@ onBeforeUnmount(() => {
   .smart-mode-grid { gap: 7px; }
   .smart-mode-grid button { min-height: 78px; }
 }
+
+.smart-vfl-note { margin:0;padding:14px 16px;background:#fff4c2;border:1px solid #e8b633;border-left:4px solid #dc2626;border-radius:10px;color:#b91c1c;font-size:16px;font-weight:700;line-height:1.6;text-align:left; }
 </style>

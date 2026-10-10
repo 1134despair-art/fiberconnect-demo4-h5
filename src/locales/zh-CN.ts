@@ -4,6 +4,21 @@ import { portAuditMessages } from './portAudit'
 import { dualPonMessages } from './dualPon'
 
 export default {
+  avatar: {
+  "change": "更换头像",
+  "processing": "正在处理图片…",
+  "hint": "支持 JPG、PNG、WebP，最大 10MB",
+  "cropHint": "自动居中裁剪并压缩为头像",
+  "invalidType": "请选择 JPG、PNG 或 WebP 格式的图片",
+  "tooLarge": "图片超过 10MB，请选择较小的图片",
+  "invalidImage": "图片无法读取，请重新选择",
+  "selected": "已选择新头像",
+  "saveError": "保存失败，请检查浏览器存储空间后重试",
+  "nameRequired": "请输入姓名",
+  "emailInvalid": "请输入正确的邮箱地址",
+  "save": "保存头像",
+  "cancel": "取消"
+},
   common: {
     back: '返回',
     enter: '进入',
@@ -40,6 +55,19 @@ export default {
     logout: '退出',
     phone: '手机号',
     email: '邮箱号',
+    deviceOverview: '设备状态概览',
+    totalDevices: '全部设备',
+    onlineDevices: '在线设备',
+    offlineDevices: '离线设备',
+    deviceTools: '设备搜索与筛选',
+    searchDevices: '搜索设备名称、型号或序列号',
+    clearSearch: '清除搜索',
+    deviceFilter: '设备状态筛选',
+    filterAll: '全部',
+    filterOnline: '在线',
+    filterOffline: '离线',
+    noMatchingDevices: '没有找到匹配的设备',
+    adjustSearch: '请调整搜索内容或状态筛选',
     addedDevices: '已添加 {count} 台设备',
     addDevice: '添加设备',
     noDevices: '暂无设备',

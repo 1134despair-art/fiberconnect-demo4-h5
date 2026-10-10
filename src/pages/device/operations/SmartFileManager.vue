@@ -3,13 +3,13 @@
     <div class="content-flex hide-scrollbar">
       <SmartOtdrPageShell :title="shellTitle" @back="handleShellBack">
       <div class="page-body">
-        <section class="status-card">
+          <details v-if="activeView === 'manager'" class="reports-disclosure"><summary>PDF 检测报告</summary><SmartOtdrReports /></details>
+          <p v-if="legacyFilesAvailable" class="legacy-import"><button type="button" @click="importLegacyFiles">将旧版文件导入当前设备</button></p>
+        <section v-if="activeView !== 'manager'" class="status-card">
           <div>
-            <div class="status-title">{{ activeView === 'manager' ? storageSummary.current : fileSettingsStatusTitle }}</div>
+            <div class="status-title">{{ fileSettingsStatusTitle }}</div>
             <div class="status-sub">
-              {{ activeView === 'manager'
-        ? `${currentFolderName} · ${selectedNode ? '已选 1 项' : '未选择'}`
-                : fileSettingsStatusSub }}
+              {{ fileSettingsStatusSub }}
             </div>
           </div>
           <div class="status-side">
@@ -17,6 +17,8 @@
             <div v-if="actionMessage" class="status-message">{{ actionMessage }}</div>
           </div>
         </section>
+
+        <p v-if="activeView === 'manager' && actionMessage" class="status-message" role="status">{{ actionMessage }}</p>
 
         <nav class="breadcrumb" v-if="activeView === 'manager'">
           <span v-for="(item, index) in breadcrumbs" :key="item" class="crumb">
@@ -43,9 +45,7 @@
               <div>
                 <div class="pane-title">{{ storageSummary.current }}</div>
               </div>
-              <div class="selected-tag" v-if="selectedNode">
-                已选：{{ selectedNode.name }}
-              </div>
+
             </div>
 
             <div class="overview-grid">
@@ -68,12 +68,9 @@
             </div>
           </section>
 
-          <section class="manager-directory-card">
-            <div class="pane-head">
-              <div>
-                <div class="pane-title">目录</div>
-              </div>
-            </div>
+          <details class="manager-directory-card">
+            <summary>文件目录</summary>
+
 
             <div class="tree-list manager-tree-list">
               <button
@@ -85,11 +82,11 @@
                 type="button"
                 @click="openFolder(folder.id)"
               >
-                <span class="tree-icon">{{ folder.depth === 0 ? '▣' : '▸' }}</span>
+                <span class="tree-icon"><img :src="smartOtdrIcons.folder" alt="" /></span>
                 <span class="tree-label">{{ folder.name }}</span>
               </button>
             </div>
-          </section>
+          </details>
 
           <section class="manager-files-card">
             <div class="pane-head">
@@ -112,18 +109,20 @@
                 :key="node.id"
                 class="file-row"
                 :class="{ active: selectedNodeId === node.id }"
+                role="button" tabindex="0" :aria-label="node.name" :aria-pressed="selectedNodeId === node.id"
+                @keydown.enter.prevent="selectNode(node.id)" @keydown.space.prevent="selectNode(node.id)"
                 @click="selectNode(node.id)"
                 @dblclick="node.type === 'folder' ? openFolder(node.id) : undefined"
               >
                 <div class="file-main">
                   <div class="file-line">
-                    <span class="file-icon">{{ node.type === 'folder' ? '▣' : '▤' }}</span>
+                    <span class="file-icon"><img :src="fileNodeIcon(node)" alt="" /></span>
                     <span class="file-name">{{ node.name }}</span>
                     <span v-if="loadedFileId === node.id" class="loaded-badge">已加载</span>
                   </div>
                   <div class="file-meta">{{ node.type === 'folder' ? '文件夹' : fileKindLabelMap[node.kind || 'other'] }}</div>
                 </div>
-                <div class="file-date">{{ node.updatedAt }}</div>
+                <div class="file-date">{{ node.updatedAt }}<button v-if="node.type === 'folder'" type="button" class="folder-open" :aria-label="'打开' + node.name" @click.stop="openFolder(node.id)">打开</button></div>
               </div>
             </div>
 
@@ -191,10 +190,10 @@
             </div>
 
             <div class="settings-editor-body">
-              <div v-if="activeSettingKey === 'storagePath'" class="editor-group">
-                <label class="radio-row"><input v-model="fileSettingsDraft.storagePath" type="radio" value="internal" /> 内部存储</label>
-                <label class="radio-row"><input v-model="fileSettingsDraft.storagePath" type="radio" value="sd" /> SD卡</label>
-                <label class="radio-row"><input v-model="fileSettingsDraft.storagePath" type="radio" value="usb" /> U盘</label>
+              <div v-if="activeSettingKey === 'storagePath'" class="editor-group smart-choice-grid">
+                <button  type="button" class="smart-choice-button" :class="{ active: fileSettingsDraft.storagePath === 'internal' }" :aria-pressed="fileSettingsDraft.storagePath === 'internal'" @click="fileSettingsDraft.storagePath = 'internal'">内部存储</button>
+                <button  type="button" class="smart-choice-button" :class="{ active: fileSettingsDraft.storagePath === 'sd' }" :aria-pressed="fileSettingsDraft.storagePath === 'sd'" @click="fileSettingsDraft.storagePath = 'sd'">SD卡</button>
+                <button  type="button" class="smart-choice-button" :class="{ active: fileSettingsDraft.storagePath === 'usb' }" :aria-pressed="fileSettingsDraft.storagePath === 'usb'" @click="fileSettingsDraft.storagePath = 'usb'">U盘</button>
               </div>
 
               <div v-else-if="activeSettingKey === 'fileName'" class="editor-group">
@@ -212,29 +211,17 @@
                 </label>
               </div>
 
-              <div v-else-if="activeSettingKey === 'autoSave'" class="editor-group">
-                <label class="radio-row">
-                  <input :checked="fileSettingsDraft.autoSave" type="radio" @change="fileSettingsDraft.autoSave = true" />
-                  是
-                </label>
-                <label class="radio-row">
-                  <input :checked="!fileSettingsDraft.autoSave" type="radio" @change="fileSettingsDraft.autoSave = false" />
-                  否
-                </label>
+              <div v-else-if="activeSettingKey === 'autoSave'" class="editor-group smart-choice-grid">
+                <button  type="button" class="smart-choice-button" :class="{ active: fileSettingsDraft.autoSave }" :aria-pressed="fileSettingsDraft.autoSave" @click="fileSettingsDraft.autoSave = true">是</button>
+                <button  type="button" class="smart-choice-button" :class="{ active: !fileSettingsDraft.autoSave }" :aria-pressed="!fileSettingsDraft.autoSave" @click="fileSettingsDraft.autoSave = false">否</button>
               </div>
 
-              <div v-else-if="activeSettingKey === 'saveFormat'" class="editor-group">
-                <label v-for="item in saveFormatOptions" :key="item.value" class="radio-row">
-                  <input v-model="fileSettingsDraft.saveFormat" type="radio" :value="item.value" />
-                  {{ item.label }}
-                </label>
+              <div v-else-if="activeSettingKey === 'saveFormat'" class="editor-group smart-choice-grid">
+                <button v-for="item in saveFormatOptions" :key="item.value" type="button" class="smart-choice-button" :class="{ active: fileSettingsDraft.saveFormat === item.value }" :aria-pressed="fileSettingsDraft.saveFormat === item.value" @click="fileSettingsDraft.saveFormat = item.value">{{ item.label }}</button>
               </div>
 
-              <div v-else-if="activeSettingKey === 'namingRule'" class="editor-group">
-                <label v-for="item in namingRuleOptions" :key="item.value" class="radio-row">
-                  <input v-model="fileSettingsDraft.namingRule" type="radio" :value="item.value" />
-                  {{ item.label }}
-                </label>
+              <div v-else-if="activeSettingKey === 'namingRule'" class="editor-group smart-choice-grid">
+                <button v-for="item in namingRuleOptions" :key="item.value" type="button" class="smart-choice-button" :class="{ active: fileSettingsDraft.namingRule === item.value }" :aria-pressed="fileSettingsDraft.namingRule === item.value" @click="fileSettingsDraft.namingRule = item.value">{{ item.label }}</button>
                 <div class="rule-tip-list">
                   <div class="rule-tip-item">① 文件名</div>
                   <div class="rule-tip-item">② 波长</div>
@@ -263,9 +250,9 @@
                 <input v-model="fileSettingsDraft.endPoint" class="editor-input" type="text" />
               </div>
 
-              <div v-else-if="activeSettingKey === 'direction'" class="editor-group">
-                <label class="radio-row"><input v-model="fileSettingsDraft.direction" type="radio" value="O>E" /> O&gt;E</label>
-                <label class="radio-row"><input v-model="fileSettingsDraft.direction" type="radio" value="E>O" /> E&gt;O</label>
+              <div v-else-if="activeSettingKey === 'direction'" class="editor-group smart-choice-grid">
+                <button type="button" class="smart-choice-button" :class="{ active: fileSettingsDraft.direction === 'O>E' }" :aria-pressed="fileSettingsDraft.direction === 'O>E'" @click="fileSettingsDraft.direction = 'O>E'">O&gt;E</button>
+                <button type="button" class="smart-choice-button" :class="{ active: fileSettingsDraft.direction === 'E>O' }" :aria-pressed="fileSettingsDraft.direction === 'E>O'" @click="fileSettingsDraft.direction = 'E>O'">E&gt;O</button>
               </div>
 
               <div v-else-if="activeSettingKey === 'comment'" class="editor-group">
@@ -303,10 +290,19 @@
       </div>
       </SmartOtdrPageShell>
     </div>
+    <SmartOtdrDialogShell v-if="fileDialog" :title="fileDialog === 'rename' ? '重命名' : '删除文件'" :show-close="false" :max-width="360" @close="fileDialog = ''">
+      <label v-if="fileDialog === 'rename'" class="file-dialog-field">文件名称<input v-model="renameDraft" class="editor-input" @keydown.enter="confirmRename" /></label>
+      <p v-else class="file-dialog-message">确认删除 {{ fileDialogTarget?.name }} 吗？</p>
+      <template #footer><div class="smart-dialog-actions"><button type="button" @click="fileDialog = ''">取消</button><button v-if="fileDialog === 'rename'" class="primary" type="button" :disabled="!renameDraft.trim()" @click="confirmRename">确认</button><button v-else class="danger" type="button" @click="confirmDelete">确认删除</button></div></template>
+    </SmartOtdrDialogShell>
   </div>
 </template>
 
 <script setup lang="ts">
+import { scopedKey } from '@/services/scopedStorage'
+import { smartOtdrIcons } from '@/assets/icons/iconfont/smart-otdr'
+import SmartOtdrDialogShell from '../components/SmartOtdrDialogShell.vue'
+import SmartOtdrReports from '../components/SmartOtdrReports.vue'
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import SmartOtdrPageShell from '../components/SmartOtdrPageShell.vue'
@@ -399,12 +395,28 @@ interface FileSettingsState {
   comment: string
 }
 
-const SMART_OTDR_LOADED_FILE_KEY = 'smart-otdr-loaded-file'
-const FILE_MANAGER_STATE_KEY = 'smart-otdr-file-manager-state'
+
+
 
 const route = useRoute()
 const router = useRouter()
 const deviceId = String(route.params.id || '')
+const SMART_OTDR_LOADED_FILE_KEY = scopedKey('otdr-loaded-file', deviceId)
+const FILE_MANAGER_STATE_KEY = scopedKey('otdr-files', deviceId)
+
+const legacyRaw = sessionStorage.getItem('smart-otdr-file-manager-state') || localStorage.getItem('smart-otdr-file-manager-state')
+const legacyFilesAvailable = ref(!!legacyRaw && !localStorage.getItem(scopedKey('otdr-legacy-imported', deviceId)))
+const importLegacyFiles = () => {
+ try {
+  const legacy = JSON.parse(legacyRaw || '{}')
+  if (!Array.isArray(legacy.nodes)) throw new Error('invalid')
+  const combined = normalizeNodesForManager([...nodes.value, ...legacy.nodes.filter((n: FileNode) => !nodes.value.some(current => current.id === n.id))])
+  localStorage.setItem(FILE_MANAGER_STATE_KEY, JSON.stringify({ nodes: combined, activeStorage: activeStorage.value, activeFolderId: activeFolderId.value, savedFileSettings: savedFileSettings.value }))
+  nodes.value = combined
+  localStorage.setItem(scopedKey('otdr-legacy-imported', deviceId), 'true')
+  legacyFilesAvailable.value = false; actionMessage.value = '旧版文件已导入，原文件保留'
+ } catch { actionMessage.value = '导入失败，原文件保留，请检查存储空间或文件格式' }
+}
 
 const storageTabs = [
   { key: 'internal' as StorageKey, label: '内部存储' },
@@ -437,6 +449,15 @@ const getFileKindByName = (name: string): FileKind => {
   if (lowerName.endsWith('.json')) return 'event-map'
   if (lowerName.endsWith('.csv')) return 'loss-test'
   return 'other'
+}
+
+const fileNodeIcon = (node: FileNode): string => {
+  if (node.type === 'folder') return smartOtdrIcons.folder
+  if (/\.pdf$/i.test(node.name)) return smartOtdrIcons.pdf
+  if (/\.(png|jpe?g|webp)$/i.test(node.name)) return smartOtdrIcons.image
+  if (getFileKindByName(node.name) === 'sor') return smartOtdrIcons.measure
+  if (getFileKindByName(node.name) === 'event-map') return smartOtdrIcons.event
+  return smartOtdrIcons.file
 }
 
 const normalizeNode = (node: FileNode): FileNode => ({
@@ -720,7 +741,7 @@ const moveNodeTree = (sourceId: string, newParentId: string, targetStorage: Stor
 }
 
 const readLoadedFile = () => {
-  const raw = sessionStorage.getItem(SMART_OTDR_LOADED_FILE_KEY)
+  const raw = localStorage.getItem(SMART_OTDR_LOADED_FILE_KEY)
   if (!raw) {
     loadedFileId.value = ''
     return
@@ -735,7 +756,7 @@ const readLoadedFile = () => {
 }
 
 const restoreFileManagerState = () => {
-  const raw = sessionStorage.getItem(FILE_MANAGER_STATE_KEY)
+  const raw = localStorage.getItem(FILE_MANAGER_STATE_KEY)
   if (!raw) return
 
   try {
@@ -801,7 +822,8 @@ watch(
       activeSettingKey: activeSettingKey.value,
       savedFileSettings: savedFileSettings.value
     }
-    sessionStorage.setItem(FILE_MANAGER_STATE_KEY, JSON.stringify(payload))
+    try { localStorage.setItem(FILE_MANAGER_STATE_KEY, JSON.stringify(payload)) }
+    catch { actionMessage.value = '文件操作未保存，存储空间不足，请导出后重试' }
   },
   { deep: true }
 )
@@ -886,12 +908,25 @@ const pasteNode = () => {
   selectedNodeId.value = ''
 }
 
+const fileDialog = ref<'' | 'rename' | 'delete'>('')
+const fileDialogTargetId = ref('')
+const renameDraft = ref('')
+const fileDialogTarget = computed(() => getNodeById(fileDialogTargetId.value))
 const renameNode = () => {
   if (!selectedNode.value) return
-  const nextName = window.prompt('请输入新名称', selectedNode.value.name)?.trim()
-  if (!nextName) return
-
-  const index = nodes.value.findIndex(node => node.id === selectedNode.value?.id)
+  fileDialogTargetId.value = selectedNode.value.id
+  renameDraft.value = selectedNode.value.name
+  fileDialog.value = 'rename'
+}
+const deleteNode = () => {
+  if (!selectedNode.value) return
+  fileDialogTargetId.value = selectedNode.value.id
+  fileDialog.value = 'delete'
+}
+const confirmRename = () => {
+  const nextName = renameDraft.value.trim()
+  if (!nextName || !fileDialogTarget.value) return
+  const index = nodes.value.findIndex(node => node.id === fileDialogTargetId.value)
   if (index < 0) return
 
   const current = nodes.value[index]
@@ -904,23 +939,22 @@ const renameNode = () => {
   nodes.value[index] = normalizeNode(nodes.value[index])
 
   actionMessage.value = '重命名成功'
+  fileDialog.value = ''
 }
 
-const deleteNode = () => {
-  if (!selectedNode.value) return
-  const confirmed = window.confirm(`确认删除 ${selectedNode.value.name} 吗？`)
-  if (!confirmed) return
-
-  const ids = collectDescendantIds(selectedNode.value.id)
+const confirmDelete = () => {
+  if (!fileDialogTarget.value) return
+  const ids = collectDescendantIds(fileDialogTargetId.value)
   nodes.value = nodes.value.filter(node => !ids.includes(node.id))
 
   if (ids.includes(loadedFileId.value)) {
-    sessionStorage.removeItem(SMART_OTDR_LOADED_FILE_KEY)
+    localStorage.removeItem(SMART_OTDR_LOADED_FILE_KEY)
     loadedFileId.value = ''
   }
 
   selectedNodeId.value = ''
   actionMessage.value = '删除成功'
+  fileDialog.value = ''
 }
 
 const goBackByTreeState = () => {
@@ -947,7 +981,7 @@ const loadSorFile = () => {
     payload: fileNode.payload
   }
 
-  sessionStorage.setItem(SMART_OTDR_LOADED_FILE_KEY, JSON.stringify(payload))
+  localStorage.setItem(SMART_OTDR_LOADED_FILE_KEY, JSON.stringify(payload))
   loadedFileId.value = payload.fileId
   router.push(fileNode.kind === 'event-map'
     ? `/device/${deviceId}/event-map`
@@ -989,7 +1023,8 @@ const saveFileSettings = () => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@use '../components/smartOtdrChoices.scss';
 .app-container {
   display: flex;
   flex-direction: column;
@@ -1545,11 +1580,11 @@ const saveFileSettings = () => {
 .breadcrumb,
 .pane-desc,
 .file-meta,
-.file-date { font-size: 10px; }
+.file-date { font-size:12px; }
 .status-side { flex-direction: row; align-items: center; }
 .status-chip,
 .loaded-badge,
-.selected-tag { padding: 4px 8px; border-radius: 6px; font-size: 10px; }
+.selected-tag { padding: 4px 8px; border-radius: 6px; font-size:12px; }
 .breadcrumb { padding: 0 2px; }
 .storage-switch { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 4px; background: #eef3f9; }
 .storage-btn { min-height: 40px; padding: 0 6px; border: 0; border-radius: 8px; background: transparent; font-size: 11px; }
@@ -1564,10 +1599,10 @@ const saveFileSettings = () => {
 .overview-metric { min-height: 52px; justify-content: center; gap: 3px; padding: 8px 10px; border: 0; border-right: 1px solid #d8e2ef; border-bottom: 1px solid #d8e2ef; border-radius: 0; background: #ffffff; }
 .overview-metric:nth-child(2n) { border-right: 0; }
 .overview-metric:nth-last-child(-n + 2) { border-bottom: 0; }
-.overview-label { font-size: 10px; }
+.overview-label { font-size:12px; }
 .overview-metric strong { font-size: 13px; }
 .tree-node { min-height: 44px; font-size: 12px; }
-.table-head { grid-template-columns: minmax(0, 1fr) 88px; gap: 8px; padding: 10px 12px; font-size: 10px; }
+.table-head { grid-template-columns: minmax(0, 1fr) 88px; gap: 8px; padding: 10px 12px; font-size:12px; }
 .file-row { grid-template-columns: minmax(0, 1fr) 88px; gap: 8px; padding: 10px 12px; }
 .settings-menu-item,
 .settings-tab,
@@ -1586,4 +1621,21 @@ const saveFileSettings = () => {
   .settings-editor-card,
   .settings-list-card { border-radius: 12px; }
 }
+
+.file-dialog-field { display:grid;gap:10px;font-size:13px;color:#334155; }.file-dialog-field input { width:100%;min-height:44px; }.file-dialog-message { font-size:14px;line-height:1.7;color:#475569;overflow-wrap:anywhere; }
+
+.tree-icon { width:22px;flex:0 0 22px; }
+.tree-icon img, .file-icon img { display:block;width:22px;height:22px;object-fit:contain;flex-shrink:0; }
+.reports-disclosure { order:5;background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:12px; }
+.reports-disclosure summary,.manager-directory-card summary {min-height:44px;display:flex;align-items:center;font-size:14px;font-weight:600;cursor:pointer;}
+.page-body {display:flex;flex-direction:column;gap:12px;}
+.manager-overview-card {padding:12px;}.overview-grid {grid-template-columns:repeat(2,minmax(0,1fr));}
+.overview-metric:nth-child(n+3) {display:none;}.manager-directory-card {padding:4px 12px;}
+.manager-tree-list {max-height:200px;overflow:auto;}.file-row {min-height:64px;}.file-row:focus-visible {outline:2px solid #2563eb;outline-offset:-2px;}
+.folder-open,.legacy-import button {min-height:44px;border:1px solid #dbe5f0;background:#eff6ff;color:#1d4ed8;border-radius:8px;cursor:pointer;}
+.manager-actions-card {position:static;box-shadow:none;}
+.manager-files-card .table-body {max-height:320px;overflow:auto;}.manager-actions-card .action-grid {grid-template-columns:repeat(3,minmax(0,1fr));}.manager-actions-card .action-btn {min-height:44px;}
+.file-date {display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:6px;}
+.folder-open {display:block;min-width:44px;flex-shrink:0;}
+.overview-head .pane-title {white-space:nowrap;}
 </style>

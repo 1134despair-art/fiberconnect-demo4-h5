@@ -540,7 +540,7 @@ const summaryText = computed(() => {
 
 .axis-label {
   fill: rgba(191, 219, 254, 0.6);
-  font-size: 10px;
+  font-size:12px;
 
   &.left {
     text-anchor: start;
@@ -566,7 +566,8 @@ const summaryText = computed(() => {
 .curve-line {
   fill: none;
   stroke: #f8b84e;
-  stroke-width: 2.4;
+  stroke-width: 1.15;
+  vector-effect: non-scaling-stroke;
   stroke-linecap: round;
   stroke-linejoin: round;
   filter: drop-shadow(0 0 7px rgba(248, 184, 78, 0.3));
@@ -607,7 +608,7 @@ const summaryText = computed(() => {
 
 .ab-marker-label {
   fill: #dbeafe;
-  font-size: 10px;
+  font-size:12px;
   font-weight: 700;
   text-anchor: middle;
 }

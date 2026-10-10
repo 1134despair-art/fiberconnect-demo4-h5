@@ -18,7 +18,7 @@
         </article>
       </section>
 
-      <div v-if="pendingDelete || confirmClear" class="dialog-backdrop" @click.self="closeConfirm">
+      <div v-if="pendingDelete || confirmClear" v-smart-otdr-overlay class="dialog-backdrop" @click.self="closeConfirm">
         <section class="confirm-dialog" role="dialog" aria-modal="true"><h2>{{ pendingDelete ? t('dualPon.deleteRecordTitle') : t('dualPon.clearRecordsTitle') }}</h2><p>{{ pendingDelete ? t('dualPon.deleteRecordText') : t('dualPon.clearRecordsText') }}</p><div><button type="button" @click="closeConfirm">{{ t('common.cancel') }}</button><button class="danger" type="button" @click="confirmAction">{{ t('common.confirm') }}</button></div></section>
       </div>
     </div>
@@ -26,6 +26,7 @@
 </template>
 
 <script setup lang="ts">
+import { vSmartOtdrOverlay } from '@/directives/smartOtdrOverlay'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -33,10 +34,10 @@ import DualPonPageShell from './DualPonPageShell.vue'
 import DualPonFunctionNav from './DualPonFunctionNav.vue'
 import { useDualPonState, type DualPonRecordKind } from './useDualPonState'
 import { useDualPonDevice } from './useDualPonDevice'
-import recordsIcon from '@/assets/app/icons/device/records.png'
-import networkIcon from '@/assets/app/icons/device/network-test.png'
-import powerIcon from '@/assets/app/icons/device/power-meter.png'
-import cableIcon from '@/assets/app/icons/device/wiremap.png'
+import recordsIcon from '@/assets/icons/iconfont/smart-otdr/records.svg'
+import networkIcon from '@/assets/icons/iconfont/instrument/network.svg'
+import powerIcon from '@/assets/icons/iconfont/smart-otdr/power.svg'
+import cableIcon from '@/assets/icons/iconfont/smart-otdr/cable.svg'
 
 type Filter = 'all' | DualPonRecordKind
 const router = useRouter(); const { t } = useI18n(); const { deviceId, device } = useDualPonDevice(); const state = useDualPonState(deviceId.value)

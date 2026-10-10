@@ -64,7 +64,7 @@ const startTest = async () => {
 .wire-page { @include ui.page-surface; display: flex; flex-direction: column; gap: 12px; padding-bottom: 18px; }
 .mode-card { @include ui.card; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; }
 .mode-card span, .mode-card strong { display: block; }
-.mode-card span { color: ui.$text-sub; font-size: 10px; }
+.mode-card span { color: ui.$text-sub; font-size:12px; }
 .mode-card strong { margin-top: 3px; color: ui.$text; font-size: 13px; }
 .segments { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 4px; border-radius: 8px; background: #eef2f7; }
 .segments button { @include ui.button-reset; min-height: 36px; padding: 0 10px; border-radius: 6px; background: transparent; color: ui.$text-sub; font-size: 11px; font-weight: 700; }
@@ -72,11 +72,11 @@ const startTest = async () => {
 .wire-card { @include ui.card; overflow: hidden; }
 .wire-card header { min-height: 46px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; border-bottom: 1px solid ui.$border; }
 .wire-card header strong { font-size: 13px; }
-.wire-card header span { color: ui.$text-sub; font-size: 10px; }
+.wire-card header span { color: ui.$text-sub; font-size:12px; }
 .wire-card header span.testing { color: ui.$primary; }
 .wire-card header span.ok { color: ui.$success; }
 .port-row { display: grid; grid-template-columns: 42px 1fr 42px; align-items: center; gap: 8px; padding: 5px 14px; }
-.port-row--label { padding-block: 9px 4px; color: ui.$text-sub; font-size: 9px; text-align: center; }
+.port-row--label { padding-block: 9px 4px; color: ui.$text-sub; font-size:12px; text-align: center; }
 .port-row b { width: 32px; height: 26px; display: grid; place-items: center; justify-self: center; box-sizing: border-box; border: 2px solid ui.$border; border-radius: 6px; background: #fff; color: ui.$text; font-size: 11px; }
 .port-row i { height: 4px; border-radius: 2px; background: #dbe3ef; }
 .port-row i.testing { background: linear-gradient(90deg, #dbe3ef, ui.$primary, #dbe3ef); background-size: 200% 100%; animation: scan 1s linear infinite; }
@@ -86,7 +86,7 @@ const startTest = async () => {
 .result-strip div { padding: 10px; text-align: center; }
 .result-strip div + div { border-left: 1px solid ui.$border; }
 .result-strip span, .result-strip strong { display: block; }
-.result-strip span { color: ui.$text-sub; font-size: 9px; }
+.result-strip span { color: ui.$text-sub; font-size:12px; }
 .result-strip strong { margin-top: 4px; color: ui.$text; font-size: 12px; }
 .result-strip strong.ok { color: ui.$success; }
 .primary-button { @include ui.primary-button; width: 100%; min-height: 48px; }

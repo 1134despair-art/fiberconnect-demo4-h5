@@ -4,16 +4,6 @@
       <SmartOtdrPageShell :title="t('device.opm.title')" @back="goBack">
         <main class="opm-app-main">
           <section class="reading-card">
-            <div class="card-head">
-              <div class="card-title-group">
-                <h3 class="section-title">光功率计</h3>
-                <p class="section-desc">{{ pageDescription }}</p>
-              </div>
-              <div class="status-badge" :class="opmState.viewState">
-                {{ stateText }}
-              </div>
-            </div>
-
             <div class="meter-screen">
               <div class="screen-head">
                 <span>{{ opmState.wavelength }}nm</span>
@@ -45,6 +35,10 @@
             </div>
           </section>
 
+          <section class="wavelength-card" aria-label="选择波长">
+            <h3>测量波长 <small>nm</small></h3>
+            <div class="wavelength-options smart-choice-grid"><button class="smart-choice-button" v-for="wave in wavelengths" :key="wave" type="button" :aria-pressed="opmState.wavelength === wave" :class="{active:opmState.wavelength === wave}" @click="selectWavelength(wave)">{{ wave }}</button></div>
+          </section>
           <section class="probe-card" aria-label="光功率探头能力">
             <button type="button" :class="{ active: probeMode === 'standard' }" @click="setProbeMode('standard')"><span>标准量程探头</span><strong>-70 ~ +10dBm</strong></button>
             <button type="button" :class="{ active: probeMode === 'high' }" @click="setProbeMode('high')"><span>高量程探头</span><strong>-50 ~ +26dBm</strong></button>
@@ -67,9 +61,7 @@
                 {{ opmState.viewState === 'off' ? '开启' : '关闭' }}
               </button>
 
-              <button class="action-secondary" type="button" @click="cycleWavelength">
-                波长切换
-              </button>
+
 
               <button class="action-secondary" type="button" @click="cycleDisplayUnit">
                 单位切换 · {{ opmState.displayUnit }}
@@ -122,7 +114,6 @@
               <div class="card-title-group">
                 <h3 class="section-title">校准</h3>
               </div>
-              <div class="status-badge calibration">校准中</div>
             </div>
 
             <div class="calibration-panel">
@@ -131,12 +122,13 @@
                 <div class="calibration-chip">{{ opmState.wavelength }}nm</div>
               </div>
 
-              <div class="calibration-wavelengths">
+              <div class="calibration-wavelengths smart-choice-grid">
                 <button
                   v-for="wavelength in wavelengths"
                   :key="`cal-${wavelength}`"
-                  class="calibration-wave-btn"
+                  class="calibration-wave-btn smart-choice-button"
                   :class="{ active: opmState.wavelength === wavelength }"
+                  :aria-pressed="opmState.wavelength === wavelength"
                   type="button"
                   @click="setCalibrationWavelength(wavelength)"
                 >
@@ -211,12 +203,6 @@ const stateText = computed(() => {
   if (opmState.viewState === 'off') return '关闭'
   if (opmState.viewState === 'calibration') return '校准'
   return '开启'
-})
-
-const pageDescription = computed(() => {
-  if (opmState.viewState === 'off') return '开启后显示测量读数'
-  if (opmState.viewState === 'calibration') return '保存后返回测量'
-  return '波长 · 参考值 · 校准'
 })
 
 const referenceDisplay = computed(() => `${opmState.referenceValue}dBm`)
@@ -309,10 +295,9 @@ const setProbeMode = (mode: 'standard' | 'high') => {
   if (opmState.viewState === 'on') applyMockReading()
 }
 
-const cycleWavelength = () => {
-  const currentIndex = wavelengths.indexOf(opmState.wavelength)
-  const nextIndex = (currentIndex + 1) % wavelengths.length
-  opmState.wavelength = wavelengths[nextIndex]
+const selectWavelength = (wavelength: number) => {
+  if (!wavelengths.includes(wavelength)) return
+  opmState.wavelength = wavelength
 
   if (opmState.viewState === 'on') {
     applyMockReading()
@@ -390,6 +375,7 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+@use '../components/smartOtdrChoices.scss';
 @use '../components/smartOtdrUi.scss' as ui;
 
 .opm-app-page {
@@ -450,7 +436,7 @@ onMounted(() => {
 .probe-card > button:nth-child(2) { border-right: 0; }
 .probe-card > button.active { background: #eff6ff; box-shadow: inset 0 0 0 1px #60a5fa; }
 .probe-card .probe-status { grid-column: 1 / -1; min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 10px; border-top: 1px solid #e2e8f0; background: #f8fafc; }
-.probe-card span { color: #64748b; font-size: 10px; }
+.probe-card span { color: #64748b; font-size:12px; }
 .probe-card strong { color: #0f172a; font-size: 11px; font-variant-numeric: tabular-nums; }
 .probe-card > button.active strong { color: #2563eb; }
 
@@ -787,7 +773,7 @@ onMounted(() => {
 .reading-card > .card-head { min-height: 44px; padding: 0 14px; border-bottom: 1px solid #e6edf7; }
 .reading-card .section-title { color: #1d4ed8; font-size: 13px; }
 .reading-card .section-desc { display: none; }
-.status-badge { padding: 4px 9px; border-radius: 6px; font-size: 10px; }
+.status-badge { padding: 4px 9px; border-radius: 6px; font-size:12px; }
 .meter-screen {
   margin: 0;
   padding: 0;
@@ -805,7 +791,7 @@ onMounted(() => {
 .screen-metrics { gap: 0; margin: 0; border-top: 1px solid #e6edf7; }
 .metric-item { padding: 11px 8px; border: 0; border-right: 1px solid #e6edf7; border-radius: 0; background: #ffffff; text-align: center; }
 .metric-item:last-child { border-right: 0; }
-.metric-label { color: #64748b; font-size: 10px; }
+.metric-label { color: #64748b; font-size:12px; }
 .metric-value { color: #0f172a; font-size: 11px; }
 .operation-card .section-title,
 .calibration-card .section-title { font-size: 14px; }
@@ -827,4 +813,12 @@ onMounted(() => {
   .screen-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .action-primary { grid-column: 1 / -1; }
 }
+
+.wavelength-card { padding:14px; background:#fff; border:1px solid #e2e8f0; border-radius:12px; }
+.wavelength-card h3 { margin:0 0 10px; font-size:13px; }.wavelength-card small { color:#64748b; font-weight:400; }
+.wavelength-options { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:6px; }
+.wavelength-options button { min-height:40px; padding:0 3px; border:1px solid #dce3ec; border-radius:7px; background:#f8fafc; color:#334155; font-size:12px; }
+.wavelength-options button.active { border-color:#2563eb; background:#eaf1ff; color:#174eab; font-weight:700; }
+
+.opm-app-main .action-grid, .opm-app-main .calibration-actions { grid-template-columns:repeat(2,minmax(0,1fr)); }.opm-app-main .calibration-actions .action-primary { grid-column:auto; }
 </style>

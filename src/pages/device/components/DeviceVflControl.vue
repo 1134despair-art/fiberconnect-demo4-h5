@@ -12,13 +12,10 @@
     </section>
 
     <section class="vfl-instrument" :class="[color, { active: mode !== 'off' }]">
-      <header>
-        <div><span>VFL</span><strong>VISUAL FAULT LOCATOR</strong></div>
-        <b>{{ modeLabel }}</b>
-      </header>
+      <span class="instrument-laser-icon"><img :src="vflIcon" alt="" /></span>
       <div class="beam-stage">
-        <span class="emitter"><i></i></span>
-        <span class="beam"><i></i></span>
+
+
         <span class="reading">
           <strong v-if="color === 'red'">650</strong>
           <strong v-else>{{ copy.greenLabel }}</strong>
@@ -27,13 +24,12 @@
       </div>
       <footer>
         <span class="status-dot"></span>
-        <strong>{{ mode === 'off' ? copy.outputOff : copy.outputActive }}</strong>
-        <span>{{ mode === 'off' ? copy.readyHint : copy.activeHint }}</span>
+        <strong>{{ modeLabel }}</strong>
       </footer>
     </section>
 
     <section class="control-block">
-      <header><h2>{{ copy.colorTitle }}</h2><p>{{ copy.colorHint }}</p></header>
+      <header><h2>{{ copy.colorTitle }}</h2></header>
       <div class="color-options" :class="{ single: !supportsGreen }">
         <button
           type="button"
@@ -58,7 +54,7 @@
     </section>
 
     <section class="control-block">
-      <header><h2>{{ copy.modeTitle }}</h2><p>{{ copy.modeHint }}</p></header>
+      <header><h2>{{ copy.modeTitle }}</h2></header>
       <div class="mode-options" :style="{ '--mode-columns': supportedModes.length }">
         <button
           v-for="item in supportedModes"
@@ -69,8 +65,7 @@
           :aria-pressed="mode === item"
           @click="emit('mode-request', item)"
         >
-          <strong>{{ formatMode(item) }}</strong>
-          <span>{{ item === 'off' ? copy.stopLabel : mode === item ? copy.outputActive : copy.startLabel }}</span>
+          <img class="instrument-mode-icon" :src="modeIcons[item]" alt="" /><strong>{{ formatMode(item) }}</strong>
         </button>
       </div>
     </section>
@@ -82,7 +77,7 @@
 
     <div v-if="feedback" class="vfl-feedback" role="status">{{ feedback }}</div>
 
-    <div v-if="pendingMode" class="confirm-layer" role="presentation">
+    <div v-if="pendingMode" v-smart-otdr-overlay class="confirm-layer" role="presentation">
       <button class="confirm-mask" type="button" :aria-label="copy.cancelLabel" @click="emit('cancel-confirm')"></button>
       <section role="alertdialog" aria-modal="true" :aria-label="copy.confirmTitle">
         <span class="dialog-mark">LASER</span>
@@ -98,6 +93,14 @@
 </template>
 
 <script setup lang="ts">
+import { vSmartOtdrOverlay } from '@/directives/smartOtdrOverlay'
+import vflIcon from '@/assets/icons/iconfont/smart-otdr/vfl.svg'
+import cwIcon from '@/assets/icons/iconfont/smart-otdr/cw.svg'
+import pulseIcon from '@/assets/icons/iconfont/smart-otdr/pulse.svg'
+import pulseFastIcon from '@/assets/icons/iconfont/smart-otdr/pulse-fast.svg'
+import offIcon from '@/assets/icons/iconfont/smart-otdr/poweroff.svg'
+const modeIcons = { off: offIcon, cw: cwIcon, '1hz': pulseIcon, '2hz': pulseFastIcon }
+
 import { computed } from 'vue'
 
 export type DeviceVflMode = 'off' | 'cw' | '1hz' | '2hz'

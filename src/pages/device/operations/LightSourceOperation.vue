@@ -9,20 +9,10 @@
     >
       <main class="page-body">
         <section class="panel-card status-card">
-          <div class="card-title-row">
-            <div>
-              <h3 class="section-title">{{ t('deviceDetail.lightSource') }}</h3>
-              <div class="section-desc">{{ pageDescription }}</div>
-            </div>
-            <div class="status-badge" :class="{ on: lightState.isEnabled }">
-              {{ lightState.isEnabled ? '开启' : '关闭' }}
-            </div>
-          </div>
-
           <div class="light-screen" :class="{ active: lightState.isEnabled }">
             <div class="screen-head">
               <span>LS</span>
-              <span>{{ lightState.isEnabled ? lightState.frequencyMode : '关闭' }}</span>
+              <span>{{ lightState.frequencyMode }}</span>
             </div>
 
             <div class="screen-body">
@@ -98,12 +88,6 @@ const lightState = reactive({
   wavelength: 1310,
   frequencyMode: '270Hz'
 })
-
-const pageDescription = computed(() => (
-  lightState.isEnabled
-    ? '已开启，可继续切换当前波长与频率模式。'
-    : '默认关闭，开启后开始输出当前光源。'
-))
 
 const goBack = () => {
   router.push(`/device/${String(route.params.id || '')}`)
@@ -379,7 +363,7 @@ const cycleFrequency = () => {
 .status-card > .card-title-row { min-height: 44px; align-items: center; padding: 0 14px; border-bottom: 1px solid #e6edf7; }
 .status-card .section-title { color: #1d4ed8; font-size: 13px; }
 .status-card .section-desc { display: none; }
-.status-badge { padding: 4px 9px; border-radius: 6px; font-size: 10px; }
+.status-badge { padding: 4px 9px; border-radius: 6px; font-size:12px; }
 .light-screen { margin: 0; padding: 0; border-radius: 0; background: #ffffff; color: #0f172a; box-shadow: none; }
 .light-screen.active { box-shadow: none; }
 .screen-head { min-height: 38px; padding: 0 14px; color: #2563eb; }
@@ -387,9 +371,9 @@ const cycleFrequency = () => {
 .laser-graphic { max-width: 110px; }
 .reading-wave { color: #1d4ed8; font-size: 42px; letter-spacing: 0; }
 .reading-unit { color: #0f172a; font-size: 14px; }
-.screen-warning { margin: 0 14px 14px; padding: 9px 10px; border-radius: 8px; background: #fff7ed; color: #9a3412; font-size: 10px; }
+.screen-warning { margin: 0 14px 14px; padding: 9px 10px; border-radius: 8px; background: #fff7ed; color: #9a3412; font-size:12px; }
 .action-card .section-title { font-size: 14px; }
-.action-card .section-desc { font-size: 10px; line-height: 1.5; }
+.action-card .section-desc { font-size:12px; line-height: 1.5; }
 .action-grid { gap: 8px; }
 .action-btn { min-height: 44px; border-radius: 8px; font-size: 12px; }
 

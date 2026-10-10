@@ -1,23 +1,13 @@
 ﻿<template>
   <section class="threshold-panel">
-    <section class="threshold-group-card">
+    <SmartOtdrSettingLayout :items="settingItems" v-slot="{ activeKey }">
+    <section v-show="activeKey === 'loss'" class="threshold-group-card">
       <header class="threshold-group-card__head">
         <h3>衰减门限</h3>
       </header>
       <div class="threshold-group-card__body">
-        <div class="threshold-option-list">
-          <label class="threshold-option-row">
-            <div class="threshold-option-main">
-              <input
-                :checked="form.lossMode === 'auto'"
-                :disabled="disabled"
-                type="radio"
-                name="lossMode"
-                @change="updateField('lossMode', 'auto')"
-              />
-              <span>{{ t('deviceDetail.smartOtdrModeAuto') }}</span>
-            </div>
-          </label>
+        <div class="threshold-option-list smart-choice-grid smart-choice-grid--compact">
+          <button :disabled="disabled" type="button" class="smart-choice-button" :class="{ active: form.lossMode === 'auto' }" :aria-pressed="form.lossMode === 'auto'" @click="updateField('lossMode', 'auto')">{{ t('deviceDetail.smartOtdrModeAuto') }}</button>
           <label class="threshold-option-row threshold-option-row--input">
             <div class="threshold-option-main">
               <input
@@ -43,25 +33,13 @@
         </div>
       </div>
     </section>
-
-    <section class="threshold-group-card">
+    <section v-show="activeKey === 'reflect'" class="threshold-group-card">
       <header class="threshold-group-card__head">
         <h3>反射门限</h3>
       </header>
       <div class="threshold-group-card__body">
-        <div class="threshold-option-list">
-          <label class="threshold-option-row">
-            <div class="threshold-option-main">
-              <input
-                :checked="form.reflectMode === 'auto'"
-                :disabled="disabled"
-                type="radio"
-                name="reflectMode"
-                @change="updateField('reflectMode', 'auto')"
-              />
-              <span>{{ t('deviceDetail.smartOtdrModeAuto') }}</span>
-            </div>
-          </label>
+        <div class="threshold-option-list smart-choice-grid smart-choice-grid--compact">
+          <button :disabled="disabled" type="button" class="smart-choice-button" :class="{ active: form.reflectMode === 'auto' }" :aria-pressed="form.reflectMode === 'auto'" @click="updateField('reflectMode', 'auto')">{{ t('deviceDetail.smartOtdrModeAuto') }}</button>
           <label class="threshold-option-row threshold-option-row--input">
             <div class="threshold-option-main">
               <input
@@ -87,25 +65,13 @@
         </div>
       </div>
     </section>
-
-    <section class="threshold-group-card">
+    <section v-show="activeKey === 'end'" class="threshold-group-card">
       <header class="threshold-group-card__head">
         <h3>末端门限</h3>
       </header>
       <div class="threshold-group-card__body">
-        <div class="threshold-option-list">
-          <label class="threshold-option-row">
-            <div class="threshold-option-main">
-              <input
-                :checked="form.endMode === 'auto'"
-                :disabled="disabled"
-                type="radio"
-                name="endMode"
-                @change="updateField('endMode', 'auto')"
-              />
-              <span>{{ t('deviceDetail.smartOtdrModeAuto') }}</span>
-            </div>
-          </label>
+        <div class="threshold-option-list smart-choice-grid smart-choice-grid--compact">
+          <button :disabled="disabled" type="button" class="smart-choice-button" :class="{ active: form.endMode === 'auto' }" :aria-pressed="form.endMode === 'auto'" @click="updateField('endMode', 'auto')">{{ t('deviceDetail.smartOtdrModeAuto') }}</button>
           <label class="threshold-option-row threshold-option-row--input">
             <div class="threshold-option-main">
               <input
@@ -131,8 +97,7 @@
         </div>
       </div>
     </section>
-
-    <section class="threshold-group-card">
+    <section v-show="activeKey === 'backscatter'" class="threshold-group-card">
       <header class="threshold-group-card__head">
         <h3>散射系数</h3>
       </header>
@@ -184,8 +149,7 @@
         </div>
       </div>
     </section>
-
-    <section class="threshold-group-card">
+    <section v-show="activeKey === 'pass'" class="threshold-group-card">
       <header class="threshold-group-card__head">
         <h3>合格判断门限</h3>
       </header>
@@ -218,6 +182,7 @@
         </div>
       </div>
     </section>
+    </SmartOtdrSettingLayout>
 
     <section class="save-bar" :class="statusToneClass">
       <div class="save-copy">
@@ -240,6 +205,7 @@
 </template>
 
 <script setup lang="ts">
+import SmartOtdrSettingLayout from './SmartOtdrSettingLayout.vue'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { OtdrConfigUsageNotice, PassRuleGroup, ThresholdForm } from './smartOtdrTypes'
@@ -299,9 +265,17 @@ const updatePassRule = <K extends keyof PassRuleGroup>(field: K, value: PassRule
     [field]: value
   } as Partial<PassRuleGroup>)
 }
+const settingItems = computed(() => [
+  { key: 'loss', label: '衰减门限', value: String(props.form.lossMode === 'auto' ? '自动' : props.form.lossThreshold + ' dB') },
+  { key: 'reflect', label: '反射门限', value: String(props.form.reflectMode === 'auto' ? '自动' : props.form.reflectThreshold + ' dB') },
+  { key: 'end', label: '末端门限', value: String(props.form.endMode === 'auto' ? '自动' : props.form.endThreshold + ' dB') },
+  { key: 'backscatter', label: '散射系数', value: String(props.form.backscatter1310) },
+  { key: 'pass', label: '合格判断门限', value: String('合格判断') }
+])
 </script>
 
 <style scoped lang="scss">
+@use './smartOtdrChoices.scss';
 @use './smartOtdrUi.scss' as ui;
 
 .threshold-panel {
@@ -568,4 +542,13 @@ const updatePassRule = <K extends keyof PassRuleGroup>(field: K, value: PassRule
     width: 100%;
   }
 }
+
+.threshold-panel.threshold-panel { display:block; }
+.parameter-action-stack { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px; }
+.parameter-action-stack .calibration-panel,.parameter-action-stack .save-bar { position:static; min-height:44px; padding:8px; margin:0; }
+.parameter-action-stack .action-desc { display:none; }
+.threshold-panel > .save-bar { position:static; margin-top:8px; padding:8px 10px; }
+.threshold-panel > .save-bar .save-desc { display:none; }
+
+.threshold-panel > .save-bar { display:flex;flex-direction:column;align-items:stretch;gap:8px; }.threshold-panel .save-actions { display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%; }.threshold-panel .save-actions button { width:100%;min-width:0;min-height:44px; }.threshold-option-main,.threshold-rule-main { flex-direction:row;align-items:center;min-width:0; }.threshold-option-row,.threshold-rule-row { flex-wrap:wrap;min-width:0; }
 </style>

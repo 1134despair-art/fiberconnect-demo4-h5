@@ -18,10 +18,10 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import powerIcon from '@/assets/icons/pon-meter/ui/opm-meter.png'
-import measureIcon from '@/assets/icons/pon-meter/ui/pon-dual-channel.png'
-import vflIcon from '@/assets/icons/pon-meter/ui/vfl.png'
-import settingsIcon from '@/assets/icons/pon-meter/ui/settings.png'
+import powerIcon from '@/assets/icons/iconfont/smart-otdr/power.svg'
+import measureIcon from '@/assets/icons/iconfont/instrument/split.svg'
+import vflIcon from '@/assets/icons/iconfont/smart-otdr/vfl.svg'
+import settingsIcon from '@/assets/icons/iconfont/smart-otdr/navigation/settings.svg'
 
 export type PonFunctionKey = 'opm' | 'pon' | 'vfl' | 'settings'
 
@@ -91,7 +91,7 @@ const open = (key: PonFunctionKey) => {
 }
 
 .pon-function-nav img { width: 19px; height: 19px; object-fit: contain; opacity: .72; }
-.pon-function-nav strong { max-width: 100%; overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.pon-function-nav strong { max-width: 100%; overflow: hidden; font-size:12px; text-overflow: ellipsis; white-space: nowrap; }
 .pon-function-nav button.active { background: ui.$pon-primary; color: #ffffff; box-shadow: 0 6px 14px rgba(37, 99, 235, .22); }
 .pon-function-nav button.active span { background: rgba(255, 255, 255, .18); }
 .pon-function-nav button.active img { filter: brightness(0) invert(1); opacity: 1; }

@@ -3,8 +3,8 @@
     <button
       ref="triggerRef"
       class="smart-otdr-quick-panel__trigger"
-      :class="{ 'is-dragging': dragging }"
-      :style="triggerStyle"
+      :class="{ 'is-dragging': dragging, 'is-inline': inlineTrigger }"
+      :style="inlineTrigger ? undefined : triggerStyle"
       type="button"
       aria-label="快捷菜单"
       @pointerdown="handlePointerDown"
@@ -17,7 +17,7 @@
       <img :src="quickMenuIcon" alt="" />
     </button>
 
-    <div v-if="panelVisible" class="smart-otdr-quick-panel__mask" @click.self="closePanel">
+    <div v-if="panelVisible" v-smart-otdr-overlay class="smart-otdr-quick-panel__mask" @click.self="closePanel">
       <section class="smart-otdr-quick-panel__dialog" role="dialog" aria-modal="true">
         <header class="smart-otdr-quick-panel__header">
           <div class="smart-otdr-quick-panel__title">快捷菜单</div>
@@ -39,6 +39,7 @@
             >
               <div
                 class="smart-otdr-quick-panel__item-icon"
+                :data-action="item.key"
                 :class="{
                   'is-active': item.state === 'on',
                   'is-inactive': item.state === 'off'
@@ -68,19 +69,22 @@
 </template>
 
 <script setup lang="ts">
+import { vSmartOtdrOverlay } from '@/directives/smartOtdrOverlay'
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useSmartOtdrConnectionState } from '@/composables/useSmartOtdrConnectionState'
-import quickMenuIcon from '@/assets/app/icons/device/quick-menu.png'
-import testModeIcon from '@/assets/app/icons/device/test-mode.png'
-import homeIcon from '@/assets/app/icons/navigation/home-active.png'
-import filesIcon from '@/assets/app/icons/device/file-manager.png'
-import flashlightIcon from '@/assets/app/icons/device/flashlight.png'
-import screenshotIcon from '@/assets/app/icons/device/screenshot.png'
-import cellularIcon from '@/assets/app/icons/device/cellular.png'
-import bluetoothIcon from '@/assets/app/icons/connection/bluetooth.png'
-import bluetoothOffIcon from '@/assets/app/icons/connection/bluetooth-off.png'
-import shutdownIcon from '@/assets/app/icons/device/power-off.png'
+import quickMenuIcon from '@/assets/icons/iconfont/smart-otdr/menu.svg'
+import testModeIcon from '@/assets/icons/iconfont/smart-otdr/measure.svg'
+import homeIcon from '@/assets/icons/iconfont/smart-otdr/home.svg'
+import filesIcon from '@/assets/icons/iconfont/smart-otdr/folder.svg'
+import flashlightIcon from '@/assets/icons/iconfont/smart-otdr/flashlight.svg'
+import screenshotIcon from '@/assets/icons/iconfont/smart-otdr/screenshot.svg'
+import cellularIcon from '@/assets/icons/iconfont/smart-otdr/cellular.svg'
+import bluetoothIcon from '@/assets/icons/iconfont/smart-otdr/bluetooth.svg'
+import bluetoothOffIcon from '@/assets/icons/iconfont/smart-otdr/bluetooth.svg'
+import shutdownIcon from '@/assets/icons/iconfont/smart-otdr/poweroff.svg'
+
+const props = defineProps<{ inlineTrigger?: boolean }>()
 
 type SmartOtdrQuickActionKey =
   | 'test-mode'
@@ -410,6 +414,7 @@ function isActivePointer(event: PointerEvent) {
 }
 
 function handlePointerDown(event: PointerEvent) {
+  if (props.inlineTrigger) return
   if (dragState.pointerActive) return
   dragState.activePointerId = event.pointerId
   beginDrag(event.clientX, event.clientY)
@@ -613,7 +618,7 @@ onBeforeUnmount(() => {
 
 .smart-otdr-quick-panel__grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -716,4 +721,15 @@ onBeforeUnmount(() => {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+.smart-otdr-quick-panel__trigger.is-inline { position:static;width:40px;height:40px;border:1px solid #e0e7ef;border-radius:8px;background:#f8fafc;box-shadow:none;touch-action:manipulation; }
+.smart-otdr-quick-panel__trigger.is-inline img { width:20px;height:20px;filter:none; }
+
+.smart-otdr-quick-panel__dialog { display:flex;flex-direction:column; }.smart-otdr-quick-panel__header { flex-shrink:0; }.smart-otdr-quick-panel__content { min-height:0;overflow:auto; }
+
+.smart-otdr-quick-panel__item-icon[data-action="files"], .smart-otdr-quick-panel__item-icon[data-action="flashlight"] { background:#fff7e6; }
+.smart-otdr-quick-panel__item-icon[data-action="screenshot"] { background:#f3efff; }
+.smart-otdr-quick-panel__item-icon[data-action="shutdown"] { background:#fff0f0; }
+.smart-otdr-quick-panel__item-icon[data-action="network-4g"] { background:#e9f8f5; }
+.smart-otdr-quick-panel__item-icon.is-inactive { background:#f1f5f9; }
+.smart-otdr-quick-panel__item-icon.is-inactive img { opacity:.65; }
 </style>

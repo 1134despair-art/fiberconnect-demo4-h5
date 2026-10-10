@@ -1,0 +1,1232 @@
+[
+  {
+    "path": "dual-pon/back.svg",
+    "bytes": 186,
+    "sha256": "7c13b2c5c2be120866a8d284f4e399c47ab4c1ab1b24a64f9a7c27212d9d61d3"
+  },
+  {
+    "path": "dual-pon/battery.svg",
+    "bytes": 232,
+    "sha256": "0eae2481fa663910b642874e5678dde1dcc0e5baa2cd18c91b3c9adc0fe3837d"
+  },
+  {
+    "path": "dual-pon/bluetooth.svg",
+    "bytes": 199,
+    "sha256": "4363aab421b71097afb98b75b4d5d79c12fc94c56ecca28ad58db3eab88d2979"
+  },
+  {
+    "path": "dual-pon/cable-length.svg",
+    "bytes": 211,
+    "sha256": "5a923f83a04ca74aa6370fe73dd925d284b0c21863ea23986080f69a2d5fae87"
+  },
+  {
+    "path": "dual-pon/flashlight.svg",
+    "bytes": 304,
+    "sha256": "531ed3123ca115baa77f452c278e65c204bdaa87f89bef34a22a2e6094ed8c4d"
+  },
+  {
+    "path": "dual-pon/home.svg",
+    "bytes": 338,
+    "sha256": "c380ad9689700f3dce925ec0e9b4dba07aba8908a51e76a650455eaac6458758"
+  },
+  {
+    "path": "dual-pon/network-test.svg",
+    "bytes": 305,
+    "sha256": "58bcdffe9bd2085e9a3c00efac6ab491bee796f8c9521999ca41f9c49b6fa924"
+  },
+  {
+    "path": "dual-pon/power.svg",
+    "bytes": 196,
+    "sha256": "7fe3bccd2f2a9a9c0ff1153c3d5cd595cd0a6c572ea4e2bdee7b554e778e4331"
+  },
+  {
+    "path": "dual-pon/records.svg",
+    "bytes": 260,
+    "sha256": "3ea0dbdbe5721576af9147dd4ae683ecffb4f3a893697e37ffba4e1ee2414795"
+  },
+  {
+    "path": "dual-pon/save.svg",
+    "bytes": 240,
+    "sha256": "0fabb311d77833cd6887bc45ccf4bd11b18f6591312c505a54a6e92fd89535a7"
+  },
+  {
+    "path": "dual-pon/settings.svg",
+    "bytes": 397,
+    "sha256": "30d0aa1123d13dfff7d92c925f19ad1970e3267e1438abdfcaff52920ff1b401"
+  },
+  {
+    "path": "dual-pon/trace.svg",
+    "bytes": 266,
+    "sha256": "4f7a19dd74d96dd7418e75358c1e9013171edfb6bc11427bfb512ae940ea2286"
+  },
+  {
+    "path": "dual-pon/vfl.svg",
+    "bytes": 288,
+    "sha256": "0337ae9bef7d361031d24384117afd868cb2f7e7449dc4ad1e60947e57c111b0"
+  },
+  {
+    "path": "dual-pon/wiremap.svg",
+    "bytes": 254,
+    "sha256": "866bdd7e6dfad82936c14bceddc8ebd718e744f5e106a47c66354e7eb19b10c8"
+  },
+  {
+    "path": "home/bluetooth-connect.svg",
+    "bytes": 309,
+    "sha256": "fe6a1d7fb4ba4a738cabce8f31f0e1b9954c347dd5cd344c513a864baa9a5b86"
+  },
+  {
+    "path": "home/chevron-down.svg",
+    "bytes": 159,
+    "sha256": "07debe65109ed17516b489d94e4568036ce12dee25de25308f88195c78fd0c8e"
+  },
+  {
+    "path": "home/chevron-right.svg",
+    "bytes": 161,
+    "sha256": "391f6b0267c48b1dbb4197cde4ab7637084a34eadb1746571809f743ef0903aa"
+  },
+  {
+    "path": "home/chevron-up.svg",
+    "bytes": 159,
+    "sha256": "50961491909308e7cc46f01b5dca4bf82be902f9afe14768166c05212ab19f73"
+  },
+  {
+    "path": "home/clock-outline.svg",
+    "bytes": 296,
+    "sha256": "41bcc5f1d85f49dbe5aa0e48be533a16919a99edadab3eb51cffac23798e4cbf"
+  },
+  {
+    "path": "home/close-circle.svg",
+    "bytes": 301,
+    "sha256": "ca44eb07c551c138305cf8849cd2b02f881933f768efdc96cf6c0b7f3511ce88"
+  },
+  {
+    "path": "home/devices-off.svg",
+    "bytes": 614,
+    "sha256": "a3136f1ec7946cac6f29606d30d60fcaf2ce2ce84a5a113ce21449ea186c642b"
+  },
+  {
+    "path": "home/search.svg",
+    "bytes": 353,
+    "sha256": "b124fa65c6c54b96b595f76f24ef2de114866a81cb2a5b75beaf86af964eff91"
+  },
+  {
+    "path": "iconfont/add.svg",
+    "bytes": 358,
+    "sha256": "80b5045a371acfa7b8c79fc6622d8b84e5b1ae585b58897c819058acea75fd23"
+  },
+  {
+    "path": "iconfont/device/back.svg",
+    "bytes": 231,
+    "sha256": "434ede7abd74db94d6393c22553b518c2f7924642cc0dccff1491738647c98b0"
+  },
+  {
+    "path": "iconfont/device/battery.svg",
+    "bytes": 408,
+    "sha256": "0bb7c92bb913e1f522397dc0bc4935f8e8b166003749f9719fb85b78e009cc63"
+  },
+  {
+    "path": "iconfont/device/bluetooth.svg",
+    "bytes": 1043,
+    "sha256": "29256e7f6e75f19af81bbd6fc783bdde00afb6711bcb725fd891087e794f0921"
+  },
+  {
+    "path": "iconfont/device/brightness.svg",
+    "bytes": 657,
+    "sha256": "a57edde225a9d73a6836119b2d28cadd71f2fa2dd9b64360953176ebfa7ff02e"
+  },
+  {
+    "path": "iconfont/device/buzzer.svg",
+    "bytes": 1042,
+    "sha256": "b2d1c1781efc8c0be411643b89c37edaa1e59c3cd70829b664eb8c290359dca5"
+  },
+  {
+    "path": "iconfont/device/cable.svg",
+    "bytes": 1625,
+    "sha256": "00f710d48b153d113a1b1c89c9415c449e9a1a19d3a0c34ff8c637e2ac89dd85"
+  },
+  {
+    "path": "iconfont/device/calendar.svg",
+    "bytes": 946,
+    "sha256": "741723da2bf29830ba92602a43e0845dc75b901d361984ceae21a24563c0af0d"
+  },
+  {
+    "path": "iconfont/device/calibration.svg",
+    "bytes": 1491,
+    "sha256": "f3950f49171031a5ffaf92ad23eea81d95bb22eea55037e3c1e2f1d60979c554"
+  },
+  {
+    "path": "iconfont/device/camera.svg",
+    "bytes": 1126,
+    "sha256": "920191920ecf7874fc8fac5d04de44cac6cc4c61d53e997aefed1dc2a7af8c1d"
+  },
+  {
+    "path": "iconfont/device/cellular.svg",
+    "bytes": 1447,
+    "sha256": "a3add581d2264955c54e9ac022321f178712d8dd700b0bbbf28a288209833501"
+  },
+  {
+    "path": "iconfont/device/check.svg",
+    "bytes": 1338,
+    "sha256": "06b3ae169d8658b065a7c7e18285e7a64ee0ccdb53e8bfa7b15f604472babf43"
+  },
+  {
+    "path": "iconfont/device/chevron.svg",
+    "bytes": 515,
+    "sha256": "ea3aab97cb85db258cf4d9e1ae4b587deb05128590b0f4646b6c651a6d2c6720"
+  },
+  {
+    "path": "iconfont/device/chip.svg",
+    "bytes": 1333,
+    "sha256": "6e83d2c1bc593da3835bc52cb81dd3c9a4bff4b61bb1a5a3235311ae51e31bcc"
+  },
+  {
+    "path": "iconfont/device/close.svg",
+    "bytes": 376,
+    "sha256": "fd4cff8a7e1da18d4623501d2b0f3fb304bb52e1ff45134002bed88b268fc26a"
+  },
+  {
+    "path": "iconfont/device/convert.svg",
+    "bytes": 436,
+    "sha256": "5ba9156c6b0414c9ac4e4ee9fb04c6b00002c5e16dc507d69e0de90f509eecf5"
+  },
+  {
+    "path": "iconfont/device/delete.svg",
+    "bytes": 671,
+    "sha256": "dd6462308cff6c3d0a054624ce22be0cf5e2d8bd4663b7c24e41079aa208a155"
+  },
+  {
+    "path": "iconfont/device/download.svg",
+    "bytes": 380,
+    "sha256": "5a82f6b99349aeeceb91d320df778053ac9350d3237fbc2a4e3479d8870733b3"
+  },
+  {
+    "path": "iconfont/device/edit.svg",
+    "bytes": 2494,
+    "sha256": "f1fecc6bc93166c4baffd372e73393859776d1b009d958d299597a731e1e23f7"
+  },
+  {
+    "path": "iconfont/device/endface.svg",
+    "bytes": 2089,
+    "sha256": "2fd0fd138e2a7c64e0f92432a919dc474eba46c57dd6078f2a4cf104540ef34a"
+  },
+  {
+    "path": "iconfont/device/event.svg",
+    "bytes": 514,
+    "sha256": "f99f3471f728c342a78a172cd5e6ee17039fbde938f5baa0643b78363bf9782b"
+  },
+  {
+    "path": "iconfont/device/fid.svg",
+    "bytes": 1767,
+    "sha256": "ebf5467f11f94725094f8f8cf1cfde501fb09b988185307fa9f111051cbdd5bb"
+  },
+  {
+    "path": "iconfont/device/fire.svg",
+    "bytes": 1942,
+    "sha256": "14f79200e4f8c4e665b0f8f277c10e2bcd511a00b4179d3de59398c68714d001"
+  },
+  {
+    "path": "iconfont/device/flashlight.svg",
+    "bytes": 1309,
+    "sha256": "d29589f2a972bf0aa12598cf3e7c5d886575841c86a6d44f4b1246ca952590c3"
+  },
+  {
+    "path": "iconfont/device/folder.svg",
+    "bytes": 451,
+    "sha256": "8a9efb0cda497bf0ece460955ea4caa4f42caaeb5566388af86c4efefff8ac4c"
+  },
+  {
+    "path": "iconfont/device/fusion.svg",
+    "bytes": 641,
+    "sha256": "36df9a3b9626f85b191f0fccf8ee4a4169c5dd39af216d47e470971ffb4bfea0"
+  },
+  {
+    "path": "iconfont/device/home.svg",
+    "bytes": 1443,
+    "sha256": "7b9b939d7ee9a86a9f5ed45d993a893c97afaabef59901a5adca97a9593382fb"
+  },
+  {
+    "path": "iconfont/device/image.svg",
+    "bytes": 1303,
+    "sha256": "5c2c7a53f43238ff9a77747309455af76fc84139250e50fa4d895ffe6f761868"
+  },
+  {
+    "path": "iconfont/device/info.svg",
+    "bytes": 1247,
+    "sha256": "62ab574b710c5601851c82b536984285441dee842d8a46d13d1ef55119249bb9"
+  },
+  {
+    "path": "iconfont/device/key.svg",
+    "bytes": 529,
+    "sha256": "465ab6646120b11fa88fd7a729e12cc9b65c31fb2eee008df07173fa767c5f80"
+  },
+  {
+    "path": "iconfont/device/language.svg",
+    "bytes": 4277,
+    "sha256": "3145e000b10b7fb9c2f06c281cb425c306bd85613ec7abc487ac83caeaa1bb0e"
+  },
+  {
+    "path": "iconfont/device/lightning.svg",
+    "bytes": 525,
+    "sha256": "82c8e13ec502ec1968e79fde94e4a7ed88424ebe645a05357da1c37db1ae5abd"
+  },
+  {
+    "path": "iconfont/device/loss.svg",
+    "bytes": 277,
+    "sha256": "981885ec892e92be89b93530a84e2454c1650e917618140b865841255721421d"
+  },
+  {
+    "path": "iconfont/device/maintenance.svg",
+    "bytes": 952,
+    "sha256": "f43d60c74cf58f4966311e9094745040ad69a55f97bdaf2aa08568af3419db7b"
+  },
+  {
+    "path": "iconfont/device/measure.svg",
+    "bytes": 422,
+    "sha256": "9b722aca05fa8415da230bf5a8e9df5a740ffff51129275e87359af4fcb9c47e"
+  },
+  {
+    "path": "iconfont/device/menu.svg",
+    "bytes": 449,
+    "sha256": "1b2af699d553d9794273d08eef2c198b4078173e264b82e9947c66b1af9ee8e0"
+  },
+  {
+    "path": "iconfont/device/network.svg",
+    "bytes": 3364,
+    "sha256": "8e91b932ababe10bc45f6e5ba2da2d9c1f33a2edfb23ddffe6443125c403ca2e"
+  },
+  {
+    "path": "iconfont/device/onu.svg",
+    "bytes": 392,
+    "sha256": "d89116993cdfd8f5a1efd9037d2a6d1d686eeb40b381fdbd5b9d77c8667e2034"
+  },
+  {
+    "path": "iconfont/device/output.svg",
+    "bytes": 2204,
+    "sha256": "775e40fb5f72342991c780d6752ef710924f1c26b5789ef5b2ed9b1c4ddfc926"
+  },
+  {
+    "path": "iconfont/device/power.svg",
+    "bytes": 1680,
+    "sha256": "56b0c16e5e2b086eedf9bba94381e6247ddfd36868f8caec407d7a2e41227a7e"
+  },
+  {
+    "path": "iconfont/device/poweroff.svg",
+    "bytes": 1479,
+    "sha256": "f3976519cf236d872ca727a8afb4afefc5a22585872e4fae89747cff198696eb"
+  },
+  {
+    "path": "iconfont/device/pulse.svg",
+    "bytes": 898,
+    "sha256": "18848bd323710aff0461be77fe7d39c25a642554c7019226532b27365549f507"
+  },
+  {
+    "path": "iconfont/device/radar.svg",
+    "bytes": 1141,
+    "sha256": "90b31529dc3f4c9d49a7db5dab76d14bc1ba530260a162c8a5d2931e7467df80"
+  },
+  {
+    "path": "iconfont/device/records.svg",
+    "bytes": 675,
+    "sha256": "3261fb64fae7ffb8f5894883fd269a6f83140fee169028baff1e6ffdaf0c8d37"
+  },
+  {
+    "path": "iconfont/device/refresh.svg",
+    "bytes": 434,
+    "sha256": "fe09167a1e3d512cf4bd06bcdbac81ef5b5e4dc7cff13db6c2a4d9b135ba6443"
+  },
+  {
+    "path": "iconfont/device/restore.svg",
+    "bytes": 1424,
+    "sha256": "107fb7069b55ef9826234b4c0a41260f39e720bc7aab30d6ca83dbbb121b68f1"
+  },
+  {
+    "path": "iconfont/device/rfid.svg",
+    "bytes": 3442,
+    "sha256": "5e8f841d1c46550c87aae609e5d9973346af8e2bacbf16ccf8ce1ac52ad80e3f"
+  },
+  {
+    "path": "iconfont/device/ruler.svg",
+    "bytes": 1012,
+    "sha256": "99f58dbc95bfe833b4e4e47ac0492d7379cfb1aebb4054c8cef4c30041c0b497"
+  },
+  {
+    "path": "iconfont/device/save.svg",
+    "bytes": 907,
+    "sha256": "6f2ebebfa4f19a50d75b6f4eed072b9f1034d58dcd0e7213379b64ef80c38323"
+  },
+  {
+    "path": "iconfont/device/screenshot.svg",
+    "bytes": 1189,
+    "sha256": "7e587d6e80d79c45dbe5acf9a851a55edd8c2c23e28e93fc940ac29fa65ea9fa"
+  },
+  {
+    "path": "iconfont/device/settings.svg",
+    "bytes": 4252,
+    "sha256": "98f25db64deba278739948a5d796f91bdb0fd29c667825d41880267443436359"
+  },
+  {
+    "path": "iconfont/device/split.svg",
+    "bytes": 755,
+    "sha256": "898e57c9cb3e0ebd1960ee116e2824a2a2333edc3d75a9ba643af88003c16cb4"
+  },
+  {
+    "path": "iconfont/device/temperature.svg",
+    "bytes": 785,
+    "sha256": "37f0961cfef38f44978c65d6119cacd4bd4317516669bb1b93a23b1ba5935ed9"
+  },
+  {
+    "path": "iconfont/device/timer.svg",
+    "bytes": 1268,
+    "sha256": "df8c65990ba934c6c2592ac8d91e19b49b9c5c8acdcca4e21830ec5d5a49c28c"
+  },
+  {
+    "path": "iconfont/device/upload.svg",
+    "bytes": 369,
+    "sha256": "105272fc5be3b25cf7101e01b003e0808a593b3b83afadfed01fb918f7931d81"
+  },
+  {
+    "path": "iconfont/device/vfl-active.svg",
+    "bytes": 1478,
+    "sha256": "b2d4b485959cf9f7a977d0a8142644b53e53152c0bdf8de1c1659dbc9c4c4074"
+  },
+  {
+    "path": "iconfont/device/vfl-disabled.svg",
+    "bytes": 1478,
+    "sha256": "a430467b04e831b853c28fb3d3cc9feb77fa486bf250b91cffcf232183aac430"
+  },
+  {
+    "path": "iconfont/device/vfl.svg",
+    "bytes": 1478,
+    "sha256": "18907c37ca927fc5e02195c544cb325d072e8283302fb3182f14ea3e16e6ddd1"
+  },
+  {
+    "path": "iconfont/device/warning.svg",
+    "bytes": 337,
+    "sha256": "ea07586698ce9ff7f9b20d15fe3d59222072bdaf7b90d418485705859a85d8e5"
+  },
+  {
+    "path": "iconfont/device/wave.svg",
+    "bytes": 3229,
+    "sha256": "1249da3d5a4927fe3a4fb54b42d88e18edc2707af09b037073088e959dd87689"
+  },
+  {
+    "path": "iconfont/home-outline.svg",
+    "bytes": 1802,
+    "sha256": "7fe4f4a5922b25d9e086e3a11306a2d029463048634d7de923aab14115401bdc"
+  },
+  {
+    "path": "iconfont/home.svg",
+    "bytes": 1802,
+    "sha256": "7fe4f4a5922b25d9e086e3a11306a2d029463048634d7de923aab14115401bdc"
+  },
+  {
+    "path": "iconfont/instrument/convert.svg",
+    "bytes": 437,
+    "sha256": "45dab7fb2e0900bfadd638633a9f3d75191693682619033427670b72f09023da"
+  },
+  {
+    "path": "iconfont/instrument/fid.svg",
+    "bytes": 1768,
+    "sha256": "fcb2a1ad3c893af899cf9c3a8e61e5e34bc635cba0b827134a044c9ab86bdc1d"
+  },
+  {
+    "path": "iconfont/instrument/network.svg",
+    "bytes": 3365,
+    "sha256": "a0082791f09830eaf7767775eef2705db6d46860b6bc38fa7f34db38048d0e48"
+  },
+  {
+    "path": "iconfont/instrument/onu.svg",
+    "bytes": 393,
+    "sha256": "06e56b9a7c8ec4433c7d21fc66910b496ce8fc935ab0d61c9215b2f00027cbc6"
+  },
+  {
+    "path": "iconfont/instrument/radar.svg",
+    "bytes": 1142,
+    "sha256": "58875bf201fa7c3158ef56727de919aab023c5e2d16407f9a72000305d639d39"
+  },
+  {
+    "path": "iconfont/instrument/rfid.svg",
+    "bytes": 3443,
+    "sha256": "fc5ebc2f79ac845e90999313ec80dbe91289e46994a3473785e2620a30010ee9"
+  },
+  {
+    "path": "iconfont/instrument/split.svg",
+    "bytes": 756,
+    "sha256": "f07558dbd96bfdff4a77f91bda3c3842cf716709a2c5674f1fbf7813b994e86c"
+  },
+  {
+    "path": "iconfont/instrument/wave.svg",
+    "bytes": 3230,
+    "sha256": "3ee2f7b421e1ec0229c9f2cecb12717c18af17a247a0046e06ca1c0206e888f5"
+  },
+  {
+    "path": "iconfont/product.svg",
+    "bytes": 1973,
+    "sha256": "dc39162fd2d085fe6b13f957eedb86c5d1d0a493e81ebcae9be15a3e61ece0bb"
+  },
+  {
+    "path": "iconfont/search.svg",
+    "bytes": 961,
+    "sha256": "b6db490c5ad3eed8447223814234892dfe0aa05887249a78afe9feed1a1c3477"
+  },
+  {
+    "path": "iconfont/settings/account.svg",
+    "bytes": 1171,
+    "sha256": "a7e49915224fde6212abf1bfe5e26353d5d9b245a754d956d099654722ec7a4d"
+  },
+  {
+    "path": "iconfont/settings/book.svg",
+    "bytes": 712,
+    "sha256": "a4831012bcc9f6375d104b85b5cca771cc2d6f5260c2057cee528408a4f87651"
+  },
+  {
+    "path": "iconfont/settings/logout.svg",
+    "bytes": 460,
+    "sha256": "242012d0e445440779854600ccf3798641ab177fd2e1372d066f22963ab4595c"
+  },
+  {
+    "path": "iconfont/settings/phone.svg",
+    "bytes": 1019,
+    "sha256": "bd36c83533b235466ad3a4ddc8d0d7ad5f1656368796ce293bc011db670b96f8"
+  },
+  {
+    "path": "iconfont/settings/support.svg",
+    "bytes": 1262,
+    "sha256": "a1bcad612ad076e346b8336956d78133f5c8d4097796196ef7a237f9c8923c60"
+  },
+  {
+    "path": "iconfont/settings/translate.svg",
+    "bytes": 1660,
+    "sha256": "d694ed780860ee82bc5548be629b6c7990c96794b92f8e738d6bd10e2750c5aa"
+  },
+  {
+    "path": "iconfont/settings-ui/account.svg",
+    "bytes": 1210,
+    "sha256": "990b9fa77a6290a5ea99c1c871a07e4a0fd3845be7ba352c05383d7ebcaef931"
+  },
+  {
+    "path": "iconfont/settings-ui/agreement.svg",
+    "bytes": 1377,
+    "sha256": "499e7db4f1446c2cf814c39c8560269eaf20a808b397946109796db350e850fc"
+  },
+  {
+    "path": "iconfont/settings-ui/bluetooth.svg",
+    "bytes": 1067,
+    "sha256": "6c58b2a5d258d9188710b5f337526280f8102d392def8e621b94e6ac0b45929e"
+  },
+  {
+    "path": "iconfont/settings-ui/book.svg",
+    "bytes": 751,
+    "sha256": "9ec2708d4a3dcb0ec15c88c736b46fe24dcfbbfdf725b775ea72ea6a7a8a1a3e"
+  },
+  {
+    "path": "iconfont/settings-ui/brightness.svg",
+    "bytes": 681,
+    "sha256": "9b71bca1de54a7457d09897f8fad6faf82ceadb8dd6267614dc9afea8262ce18"
+  },
+  {
+    "path": "iconfont/settings-ui/buzzer.svg",
+    "bytes": 1066,
+    "sha256": "571b6bd3a1a626d99226e58397fa70af05141a96293771fc164048b654ddb583"
+  },
+  {
+    "path": "iconfont/settings-ui/calendar.svg",
+    "bytes": 985,
+    "sha256": "bd32301f7c6bcc1325cb2ccd5b7ded06bd4efce9c77093f95faf9ab9c97cb850"
+  },
+  {
+    "path": "iconfont/settings-ui/calibration.svg",
+    "bytes": 1515,
+    "sha256": "bd8f3611db70b6a84a546e68c46769aef3e3b72fcd9754790eb44db0eac6983f"
+  },
+  {
+    "path": "iconfont/settings-ui/cellular.svg",
+    "bytes": 1471,
+    "sha256": "586d819ee116e59e3072dcdf45969adcf15aae04433cdc64552eea7fc4d16bb4"
+  },
+  {
+    "path": "iconfont/settings-ui/chevron.svg",
+    "bytes": 554,
+    "sha256": "38ce90820c88dcf229120f4945273676988d6cd7b20ac924cf4b08ccbc4ac637"
+  },
+  {
+    "path": "iconfont/settings-ui/close.svg",
+    "bytes": 400,
+    "sha256": "2af13fc985a5cccd2261be97856710a45ad14e894b5ddd1a638061c62f888b86"
+  },
+  {
+    "path": "iconfont/settings-ui/info.svg",
+    "bytes": 1286,
+    "sha256": "76c0d6dfb6ad0f347a9787b23b1edb6246b368f45e9735a17dda4dfdb41b8f93"
+  },
+  {
+    "path": "iconfont/settings-ui/logout.svg",
+    "bytes": 484,
+    "sha256": "cb866f4e3c5ed7c8f7c9f7f02ca3158c3c91529b6b1fafcd138e209ed75782a6"
+  },
+  {
+    "path": "iconfont/settings-ui/pdf.svg",
+    "bytes": 1369,
+    "sha256": "40a27502721c8551b7cccc3abb00927c91e5f4d920e8dc6652d2424a5cc754e5"
+  },
+  {
+    "path": "iconfont/settings-ui/phone.svg",
+    "bytes": 1058,
+    "sha256": "20a7e41885f6755337f895d0b55d6767024be29595eed674b9b3f3541c8032a2"
+  },
+  {
+    "path": "iconfont/settings-ui/privacy.svg",
+    "bytes": 810,
+    "sha256": "4dc7a337433ce512fc089279633f5d654d8c6c8f95aa8a5f0e2ea9aaa5570dd0"
+  },
+  {
+    "path": "iconfont/settings-ui/restore.svg",
+    "bytes": 1463,
+    "sha256": "5c2c6474e83ade63df26a7acbfe859a979e35f6bbdfdd0dc3c05e11e715c0087"
+  },
+  {
+    "path": "iconfont/settings-ui/search.svg",
+    "bytes": 985,
+    "sha256": "610f7f4d6dac25d7ad99d289f2b39b9e041490b6a099d3bdce62f524d4804330"
+  },
+  {
+    "path": "iconfont/settings-ui/settings.svg",
+    "bytes": 4291,
+    "sha256": "114725918560735ba77aa8be5f82e436e4a82f31b1c5fab2a82a7d8b0a91125c"
+  },
+  {
+    "path": "iconfont/settings-ui/support.svg",
+    "bytes": 1286,
+    "sha256": "e11d166ae141a9fe8e4033bbb46bef6a0867ef03b5e110160276aa8cfd8a162c"
+  },
+  {
+    "path": "iconfont/settings-ui/timer.svg",
+    "bytes": 1307,
+    "sha256": "442f131420af282d1c15b1df51c8ba67f5c1bd74d1351eed7376b4a237abf8ae"
+  },
+  {
+    "path": "iconfont/settings-ui/translate.svg",
+    "bytes": 1699,
+    "sha256": "64167025c5b6b836d3918e3b38dd0f56369a7e0c56e6af35e28a95d87f997867"
+  },
+  {
+    "path": "iconfont/settings-ui/upload.svg",
+    "bytes": 408,
+    "sha256": "a73cc036d8db9684899ee7df935264510e1a8a36e158d2e7b30958c382be33da"
+  },
+  {
+    "path": "iconfont/settings.svg",
+    "bytes": 5166,
+    "sha256": "a9a2778e1abf822926f805359e222feaa14fe7363217d41c7da518411521a021"
+  },
+  {
+    "path": "iconfont/smart-otdr/back.svg",
+    "bytes": 230,
+    "sha256": "7f830e9121a75779213a98de77e0c2a39a73324230311a89d8deb3b6f8547366"
+  },
+  {
+    "path": "iconfont/smart-otdr/battery.svg",
+    "bytes": 407,
+    "sha256": "706dc235af73451bd2e6127d4b55023e3a4b4aa65cee770a1facb8273064072b"
+  },
+  {
+    "path": "iconfont/smart-otdr/bluetooth.svg",
+    "bytes": 1042,
+    "sha256": "b97406ffe832ecc10bd8a5025ff5374b517877c0bf0b2cc8369d3e416aa0c65e"
+  },
+  {
+    "path": "iconfont/smart-otdr/brightness.svg",
+    "bytes": 656,
+    "sha256": "e8f005f0c05e80a581749eb30ada3da76cfb62b4c6904b6993b077be2706595a"
+  },
+  {
+    "path": "iconfont/smart-otdr/buzzer.svg",
+    "bytes": 1041,
+    "sha256": "700590a3d7cb2748006b7d6f2ecda7581fd176f302db3a59c6a7e506c5f3901d"
+  },
+  {
+    "path": "iconfont/smart-otdr/cable.svg",
+    "bytes": 435,
+    "sha256": "f6323d28e8dc63a8a9a0b511638503ac4f9655654de2ddfdbaed9ff0e6ef4063"
+  },
+  {
+    "path": "iconfont/smart-otdr/calendar.svg",
+    "bytes": 960,
+    "sha256": "f0429a2620cebfec3f7a313ebd24af9b882716f9e617e90ea203b97b70cb1cdd"
+  },
+  {
+    "path": "iconfont/smart-otdr/calibration.svg",
+    "bytes": 1490,
+    "sha256": "53c747f6d109ac1de585c74647c2dcb6d124591a3f505b260ab1c5d67ef64786"
+  },
+  {
+    "path": "iconfont/smart-otdr/camera.svg",
+    "bytes": 1140,
+    "sha256": "b867604d8753dc2f7f4622a34701b725364381562c303f0070d873919fa0a93b"
+  },
+  {
+    "path": "iconfont/smart-otdr/cellular.svg",
+    "bytes": 1446,
+    "sha256": "1100e16ab7252325f221be658cd037e219aa095bfffb4058a36ad5fb55f1cb84"
+  },
+  {
+    "path": "iconfont/smart-otdr/cw.svg",
+    "bytes": 189,
+    "sha256": "1dd5fc2db2e17d0e6013d0ae443b39248c1ca519d0c9118f06e435939852a483"
+  },
+  {
+    "path": "iconfont/smart-otdr/delete.svg",
+    "bytes": 670,
+    "sha256": "d2c0764b52ea322c06f98336a5d19a969521afd1e4ee07d8a3bd63d1dd691fdd"
+  },
+  {
+    "path": "iconfont/smart-otdr/download.svg",
+    "bytes": 394,
+    "sha256": "3dfb2b8b9170578ccc0b525183482b015b1085638742ec86858f006d5c301f3f"
+  },
+  {
+    "path": "iconfont/smart-otdr/endface.svg",
+    "bytes": 1276,
+    "sha256": "809b41d153b727a1c9052d0e7a4b43f97e64ff7c71a3df6393b14d5699a9da09"
+  },
+  {
+    "path": "iconfont/smart-otdr/event.svg",
+    "bytes": 2608,
+    "sha256": "cdbcc89aadea4bc4f1385ac15f2c40c9c4df99f3f455b159bf8c1d98a1fe6d6c"
+  },
+  {
+    "path": "iconfont/smart-otdr/file.svg",
+    "bytes": 991,
+    "sha256": "1f4b2fc609a8d5fe104997bc25f6856af4257492727d835eba1d0ee92b1bd59a"
+  },
+  {
+    "path": "iconfont/smart-otdr/fit.svg",
+    "bytes": 1138,
+    "sha256": "0c1344242bc853171db4694f1a428cb4f920acbbc5d3eb2c29ab7d02f13005c2"
+  },
+  {
+    "path": "iconfont/smart-otdr/flashlight.svg",
+    "bytes": 400,
+    "sha256": "419be366fa9ea43863a497b7fe380a97dd28225372db831094012be18685726b"
+  },
+  {
+    "path": "iconfont/smart-otdr/folder.svg",
+    "bytes": 479,
+    "sha256": "6ced4efbf557d4a9aac3c6ad9a3ff56ed56a7e7af3cc660f0c721c57ca624470"
+  },
+  {
+    "path": "iconfont/smart-otdr/home.svg",
+    "bytes": 1442,
+    "sha256": "db9557d1d0f257ed177828fc4327efb506d0a764c5bc86d38720a7092f6846d7"
+  },
+  {
+    "path": "iconfont/smart-otdr/image.svg",
+    "bytes": 1317,
+    "sha256": "dbb468aafea00a1a499bdf6c4ad0e0511a33ba796bf52a688931a70eea5764b9"
+  },
+  {
+    "path": "iconfont/smart-otdr/info.svg",
+    "bytes": 1261,
+    "sha256": "773fbe60d16c0e4600be6093f001a60b431137c46e1bd7a38470e316bbf8d2f4"
+  },
+  {
+    "path": "iconfont/smart-otdr/language.svg",
+    "bytes": 4291,
+    "sha256": "f22315153d6dd2f63ef6ae4f9689e7c3210fb03ecf97dcff49ed2aecf36d1321"
+  },
+  {
+    "path": "iconfont/smart-otdr/loss.svg",
+    "bytes": 1150,
+    "sha256": "1f4a058509887eb1e793c8ec4f5c33cc4d40bcc9fc6553d65045f029a14bc2dc"
+  },
+  {
+    "path": "iconfont/smart-otdr/measure.svg",
+    "bytes": 421,
+    "sha256": "b10c45b988b3dc08aaab78fa7c969b40db5623bb8d08a26dedf454e89b7a3b1d"
+  },
+  {
+    "path": "iconfont/smart-otdr/menu.svg",
+    "bytes": 463,
+    "sha256": "aeb464ed151884d7d00e8962938a76a8db60ec507aa6d0a821ab033059528c35"
+  },
+  {
+    "path": "iconfont/smart-otdr/navigation/event-map.svg",
+    "bytes": 1744,
+    "sha256": "ab91aaff35071fcebbcc84709982c1f5a5e7eb0215a2c4e81db792170197b43d"
+  },
+  {
+    "path": "iconfont/smart-otdr/navigation/home.svg",
+    "bytes": 546,
+    "sha256": "9ca42a8cb4a699eb0a58dd8f48c41704121eabede93bb3e4edf650d26f97dd27"
+  },
+  {
+    "path": "iconfont/smart-otdr/navigation/measure.svg",
+    "bytes": 484,
+    "sha256": "6d9f67c59313195b20793977808d53bd52474c405caee7598783d13c6661bd26"
+  },
+  {
+    "path": "iconfont/smart-otdr/navigation/settings.svg",
+    "bytes": 2033,
+    "sha256": "9363cbcbaba03415b45b1d31b1f9152b9a6e04ca0196bdf93f172f5e4f5d19d7"
+  },
+  {
+    "path": "iconfont/smart-otdr/output.svg",
+    "bytes": 2217,
+    "sha256": "989433e06412e456aaf64472bc3fb49cfedcf7e871eeba8ec8f689f98b513ccb"
+  },
+  {
+    "path": "iconfont/smart-otdr/pdf.svg",
+    "bytes": 1358,
+    "sha256": "59af6d1279282974812c05bb862aa87a06a59a85be7af3b9163c9fb49128c72a"
+  },
+  {
+    "path": "iconfont/smart-otdr/power.svg",
+    "bytes": 1891,
+    "sha256": "93ce02d0bf42d7a2decf9a78964cbc1ec70ebb350b8ce54143e8b358e6f6a860"
+  },
+  {
+    "path": "iconfont/smart-otdr/poweroff.svg",
+    "bytes": 1478,
+    "sha256": "12d70b347275a3a22e885087d74c4cda8837e97f282678110beeab2710fbb7bd"
+  },
+  {
+    "path": "iconfont/smart-otdr/pulse-fast.svg",
+    "bytes": 228,
+    "sha256": "540fa2a3ae4eef26f3fa6108d732d12fa9c98b0eca3f5cac029b4da3111253cf"
+  },
+  {
+    "path": "iconfont/smart-otdr/pulse.svg",
+    "bytes": 364,
+    "sha256": "f3f1ba94cd6ac6923bc3c7eefb8311f2b15e1d775a86b2ab587ce1ba2e111919"
+  },
+  {
+    "path": "iconfont/smart-otdr/records.svg",
+    "bytes": 689,
+    "sha256": "dde02c151114c448ed799038e364286b761cfc8a5fef4bed848e4a271e4ed4ba"
+  },
+  {
+    "path": "iconfont/smart-otdr/refresh.svg",
+    "bytes": 448,
+    "sha256": "533fa92e618d28e75cf739ed7928f3b432228ad9fff6ca60495cb86b34e202c0"
+  },
+  {
+    "path": "iconfont/smart-otdr/restore.svg",
+    "bytes": 1438,
+    "sha256": "e8398a867c89a4f4a9537f6400a7605ad91ecdea9c306970b3293673e9699625"
+  },
+  {
+    "path": "iconfont/smart-otdr/ruler.svg",
+    "bytes": 1011,
+    "sha256": "e6d51af0d48bc2123bf5eab2c53e0f2aeef138fa398abeb229eb20a90caf9537"
+  },
+  {
+    "path": "iconfont/smart-otdr/save.svg",
+    "bytes": 921,
+    "sha256": "2156bc16dd31f2329ac004ee1ce71b216b8eb5bfd8e882fff404f8aeca70c09e"
+  },
+  {
+    "path": "iconfont/smart-otdr/screenshot.svg",
+    "bytes": 1132,
+    "sha256": "7220f9575b155a1bc99caa59eb6d90128bb9ed99947ee82b0941dcd9fa19c786"
+  },
+  {
+    "path": "iconfont/smart-otdr/settings.svg",
+    "bytes": 4266,
+    "sha256": "8dc7755db07b1bed31fd0f23ee25df2a5780c2a1fa27240530f639bc57095ca1"
+  },
+  {
+    "path": "iconfont/smart-otdr/timer.svg",
+    "bytes": 1282,
+    "sha256": "b32846beb8787b77b0c057a8ba11180275dda025b8e1c3774316340f8a58dd54"
+  },
+  {
+    "path": "iconfont/smart-otdr/upload.svg",
+    "bytes": 383,
+    "sha256": "91ea70df31fc9c0d91eee1de8aaa44c5f9da735ee373d92d410fbd3293755eee"
+  },
+  {
+    "path": "iconfont/smart-otdr/usb.svg",
+    "bytes": 566,
+    "sha256": "dd5f91e68b96003c616a235774a275a39b2ff025db62ff5f3efea3f60693a68b"
+  },
+  {
+    "path": "iconfont/smart-otdr/vfl.svg",
+    "bytes": 1506,
+    "sha256": "e03eeedd3f992ddaeb57e990146486a7b2d4c7257a729ba227726c640b645b41"
+  },
+  {
+    "path": "iconfont/smart-otdr/warning.svg",
+    "bytes": 351,
+    "sha256": "bd2323e68d9a3d0ee57764d9e22d4aee42bc9c72c09ec042e6ec0394b3acca68"
+  },
+  {
+    "path": "iconfont/smart-otdr/zoom-in.svg",
+    "bytes": 571,
+    "sha256": "3991ddca9bfd4485348e99495cfc7e57ef0f74a5ea6d8fe6eda6fa22b00e61d1"
+  },
+  {
+    "path": "iconfont/smart-otdr/zoom-out.svg",
+    "bytes": 511,
+    "sha256": "121b1d6553a488d8d2496fc04409ba27ac45c7f6bc987d9fbeffa736621e25af"
+  },
+  {
+    "path": "mdi-local/account-edit.svg",
+    "bytes": 418,
+    "sha256": "51efd25e8f8368cbce22e92be64f3b06710c4a540fb5da4706671fc942a362b4"
+  },
+  {
+    "path": "mdi-local/account-group.svg",
+    "bytes": 678,
+    "sha256": "c555dd898aeefd2e59a7e5c3ebf100a836a292c1dc4168d23f82330661eaba23"
+  },
+  {
+    "path": "mdi-local/account.svg",
+    "bytes": 222,
+    "sha256": "319e0b386f266e0c4cf2325a463d0b3ec688daabc35c3b45fb264b809437ac32"
+  },
+  {
+    "path": "mdi-local/bell-cog.svg",
+    "bytes": 1302,
+    "sha256": "c358d21b8895891f619f4b50fd195da11d46c7b89b45c1c9ba4c9f69a34138a1"
+  },
+  {
+    "path": "mdi-local/calendar-check.svg",
+    "bytes": 289,
+    "sha256": "122a3d13006b267959120f3ef4a199f2a2d7bd38b0ccd0f27fe838fbd144968a"
+  },
+  {
+    "path": "mdi-local/certificate.svg",
+    "bytes": 319,
+    "sha256": "2bc8a3acaff0dbb2c64f8f7a56ee0e19e84b3d095e5fae240fc08b46cb7edb5c"
+  },
+  {
+    "path": "mdi-local/check-circle-outline.svg",
+    "bytes": 297,
+    "sha256": "fe703402c22d1478e1364f08fde1785d03c9344188b8c3ae1fec5bf67883b302"
+  },
+  {
+    "path": "mdi-local/check-circle.svg",
+    "bytes": 216,
+    "sha256": "cba60d5cff35a64b6de7c04a011294728143e0061b55703835c0b0b138d1afb0"
+  },
+  {
+    "path": "mdi-local/chevron-right.svg",
+    "bytes": 161,
+    "sha256": "391f6b0267c48b1dbb4197cde4ab7637084a34eadb1746571809f743ef0903aa"
+  },
+  {
+    "path": "mdi-local/clipboard-check.svg",
+    "bytes": 343,
+    "sha256": "3569bdee153f07b79c1b8c3a4bda9d1d29297bcb1c518c3b51f23813798618c0"
+  },
+  {
+    "path": "mdi-local/clipboard-text-off.svg",
+    "bytes": 472,
+    "sha256": "d9203012ae261655308d7adf19659dca461f9f5256262b7b89ee56756b1d55a2"
+  },
+  {
+    "path": "mdi-local/clock-outline.svg",
+    "bytes": 296,
+    "sha256": "41bcc5f1d85f49dbe5aa0e48be533a16919a99edadab3eb51cffac23798e4cbf"
+  },
+  {
+    "path": "mdi-local/close.svg",
+    "bytes": 203,
+    "sha256": "518399857748e824a3e3f3c7654e259f07f337bf0f76fb72108d8572b21ab840"
+  },
+  {
+    "path": "mdi-local/email.svg",
+    "bytes": 207,
+    "sha256": "9aa5faa6c02396170d5316dd0506b57565a2977c9c4564cefd1fea5fea760a1c"
+  },
+  {
+    "path": "mdi-local/eye-settings.svg",
+    "bytes": 409,
+    "sha256": "ae4cd570676bb3c7cd13a89a3ffffc287e619ff6df859c69c3f5448e0bbdfbd4"
+  },
+  {
+    "path": "mdi-local/file-document.svg",
+    "bytes": 229,
+    "sha256": "bf60e95a76faa5fbb2901ca68ec2a73856e1f7cc89d5b3448488cde38aabd6d6"
+  },
+  {
+    "path": "mdi-local/headset.svg",
+    "bytes": 235,
+    "sha256": "1671336f55f05cf1094afb59935278d87cb4dc8194e555986a4036d8e9e126db"
+  },
+  {
+    "path": "mdi-local/logout.svg",
+    "bytes": 215,
+    "sha256": "d9645ae781b93019882696fa45f24ce5e441665f533e362cb5b77a19c3ff2c5f"
+  },
+  {
+    "path": "mdi-local/phone.svg",
+    "bytes": 373,
+    "sha256": "1e823c255fd315051b52e3f31e8c1239c3b3e4167f5a701afadb25a08536f707"
+  },
+  {
+    "path": "mdi-local/shield-account.svg",
+    "bytes": 425,
+    "sha256": "3b622f9bbe8c660848337593f9208c05743865259264ddfbeeb8918a39e40ea4"
+  },
+  {
+    "path": "mdi-local/star.svg",
+    "bytes": 193,
+    "sha256": "85603305b4699215041c13389d933397965b275cbd6d3c3b59058575c3a89459"
+  },
+  {
+    "path": "mdi-local/video.svg",
+    "bytes": 198,
+    "sha256": "9f9e5a3a8712350739f01d5858df5735da6c22aaa43701294dfbfa39a9c102d7"
+  },
+  {
+    "path": "mdi-package-variant-closed.svg",
+    "bytes": 435,
+    "sha256": "e9d8ba1e99c9aab117d73a656237f3cc02d24e1f09de60aa2e443a8abbd8a588"
+  },
+  {
+    "path": "mdi-plus.svg",
+    "bytes": 156,
+    "sha256": "895fa92ea49a5ec6104696c9c92dea204dfa47913bf159dbd18454e859246c5c"
+  },
+  {
+    "path": "nav-home.svg",
+    "bytes": 139,
+    "sha256": "56eb9a319d5e4262e19ff7a2d64c9ff746d3e60cd8a80895fe64af011ee92f84"
+  },
+  {
+    "path": "nav-product.svg",
+    "bytes": 265,
+    "sha256": "71bff6129993b18b690ebd54bb191beab78b57781c941cf7284fb532443382b6"
+  },
+  {
+    "path": "nav-settings.svg",
+    "bytes": 964,
+    "sha256": "7e68f07d550bb5712a5e7a83066ba590ffcd32edcad53439bd3245b9b2a5e103"
+  },
+  {
+    "path": "pon-meter/back.svg",
+    "bytes": 214,
+    "sha256": "ab9f3c410eddac8fe75a1a7237a85d0c6186a7353a528d54287ec046755dde20"
+  },
+  {
+    "path": "pon-meter/batch.svg",
+    "bytes": 309,
+    "sha256": "77445533a0cab299d3ad66c8a5212ec0eee3fdbd20f8b5d4f321a63e85587d1d"
+  },
+  {
+    "path": "pon-meter/battery.svg",
+    "bytes": 280,
+    "sha256": "e39da789f13e2f41833a38aa1bd432aca1bdf1df74efeba2ccc96cdfbbc72ec7"
+  },
+  {
+    "path": "pon-meter/bluetooth.svg",
+    "bytes": 224,
+    "sha256": "c39f994043e96b1342003a0138a743a5c005562f1938a91c656544f59824e199"
+  },
+  {
+    "path": "pon-meter/flashlight.svg",
+    "bytes": 302,
+    "sha256": "b2b45ada962dc9ef139c8533d50a66e667888aac534429dd24e9a60d522cb84a"
+  },
+  {
+    "path": "pon-meter/history.svg",
+    "bytes": 339,
+    "sha256": "c47b8fa99b782d4e77bb6f07d34dd77c72314c8783cb395a09a899434dc856af"
+  },
+  {
+    "path": "pon-meter/language.svg",
+    "bytes": 297,
+    "sha256": "323160144be4bc9468b5975231ed0e9d7669da741f761a719a182c7328aa4bda"
+  },
+  {
+    "path": "pon-meter/measure.svg",
+    "bytes": 236,
+    "sha256": "e1c5f09326cf44806e0cf6091dc40562f1c49d310337a7939132158ba680fefe"
+  },
+  {
+    "path": "pon-meter/power.svg",
+    "bytes": 262,
+    "sha256": "47df5b6f79aebff4c3e1ddee76121639b41d7bd67275c555034df0ec37c0f0cb"
+  },
+  {
+    "path": "pon-meter/save.svg",
+    "bytes": 290,
+    "sha256": "0758f963edec4d8f87a58fe83ae75aaa79651a9c25b03b0d47bfa7403a189d83"
+  },
+  {
+    "path": "pon-meter/settings.svg",
+    "bytes": 711,
+    "sha256": "0f5f643d59b839dfdbdf361a0473d39bdb3716d9b556ef7603cabf17bf4f8a8d"
+  },
+  {
+    "path": "pon-meter/temperature.svg",
+    "bytes": 304,
+    "sha256": "d4396533d49d1ec7dbc4cd4a5064ea4d292d8bf5ed1ffadd6b51e05cfb784dfc"
+  },
+  {
+    "path": "pon-meter/timer.svg",
+    "bytes": 305,
+    "sha256": "813bf73e864d8def5c8fef9254034796360599ec2e1695b9f01cc44eb36657eb"
+  },
+  {
+    "path": "pon-meter/ui/buzzer.svg",
+    "bytes": 450,
+    "sha256": "8b86e57892d25a0fa6c1bbb2a0ca06b2a52b02f38ed6898b692c9526573f5628"
+  },
+  {
+    "path": "pon-meter/ui/frequency-signal.svg",
+    "bytes": 307,
+    "sha256": "a6661a66e3d15bbc1d9981a1712bcc4bfcaadb64612d0f4a15b2ee6a0d9f82a9"
+  },
+  {
+    "path": "pon-meter/ui/manual-calibration.svg",
+    "bytes": 376,
+    "sha256": "f1d0a06b081a9b9064a1b246c45c523cedae230b4de366ddde1809fcdee50da9"
+  },
+  {
+    "path": "pon-meter/ui/opm-meter.svg",
+    "bytes": 492,
+    "sha256": "95caf04bfd981bc014dfcbd3950977e31b39f3a91a336ca4b63c527a142b5f91"
+  },
+  {
+    "path": "pon-meter/ui/pon-dual-channel.svg",
+    "bytes": 577,
+    "sha256": "fd74604a4e2e92cede1923c8e23239cd5a97058e8f57db8660c9dbaa24d2244c"
+  },
+  {
+    "path": "pon-meter/ui/screen-brightness.svg",
+    "bytes": 395,
+    "sha256": "05424a707a6765f20e3780456e01a0dd77b2bf49319a73edff4d5c7e94edd924"
+  },
+  {
+    "path": "pon-meter/ui/unit-convert.svg",
+    "bytes": 366,
+    "sha256": "5dcde362df949cc005548e54bfdae3d26540148f57c093b84d3c9f48124dc544"
+  },
+  {
+    "path": "pon-meter/vfl.svg",
+    "bytes": 337,
+    "sha256": "b1c5bc3716d7a546c05f3e974e8ab9eab67b60807945c5548799e9d694445c4f"
+  },
+  {
+    "path": "port-audit/back.svg",
+    "bytes": 210,
+    "sha256": "1684b1ee70ba4076382e7f6e520151047d0f10766b049951b1be43b752d277da"
+  },
+  {
+    "path": "port-audit/battery.svg",
+    "bytes": 234,
+    "sha256": "c27dc6c9928786deecb19c8231de836c94a8c3ec0fb75b7a687605886a81787b"
+  },
+  {
+    "path": "port-audit/bluetooth.svg",
+    "bytes": 222,
+    "sha256": "aae123a0a1bbc73b8d6e6616b3fcc8e023e189cef0634042ddea925e0a7affb6"
+  },
+  {
+    "path": "port-audit/buzzer.svg",
+    "bytes": 332,
+    "sha256": "516a60f967573cf508f0831b79f49dbb35bad003e6d96286ae0b3c90bfa46375"
+  },
+  {
+    "path": "port-audit/fid.svg",
+    "bytes": 323,
+    "sha256": "0b407cf0233b826246eb5dd333deb5ae0cbb5aa826c951312adad87ad8e88395"
+  },
+  {
+    "path": "port-audit/flashlight.svg",
+    "bytes": 269,
+    "sha256": "1f0fb54b4e66919630d5974a2fbf4f2a6d914196e0e17ecfc31fb3f6790be156"
+  },
+  {
+    "path": "port-audit/home.svg",
+    "bytes": 354,
+    "sha256": "7a8368dbbd8aa3fd72c310e3370fe5a1af1767e849a9b36e773e9163f703a477"
+  },
+  {
+    "path": "port-audit/network.svg",
+    "bytes": 207,
+    "sha256": "546ee7a2906203cc0cd57409dd4ce5ef5151555cdc6c95aa1055f7c43f59b598"
+  },
+  {
+    "path": "port-audit/onu.svg",
+    "bytes": 283,
+    "sha256": "dc262bed464a060b358544227ce4e745208ba1cea2f6d2328b27e2e664b063e5"
+  },
+  {
+    "path": "port-audit/power.svg",
+    "bytes": 225,
+    "sha256": "63de0e46dcba7c21e157ca55508243b00cd9374fd6adc30e8b4121a0547081c6"
+  },
+  {
+    "path": "port-audit/rfid.svg",
+    "bytes": 342,
+    "sha256": "a56ae3631b1c14e9605f1640ef2d0c954abbb8f1de5296d06a1392f84aa27d8e"
+  },
+  {
+    "path": "port-audit/settings.svg",
+    "bytes": 437,
+    "sha256": "4fc12f4c1c7688d3c823416710291d897c11c26ed66415c62fa1113790f3fd62"
+  },
+  {
+    "path": "port-audit/upload.svg",
+    "bytes": 234,
+    "sha256": "cf0b653cdf3018dbc4e90b841244aa4ccf7d072c23f11b969277a8b63889afa3"
+  },
+  {
+    "path": "port-audit/vfl.svg",
+    "bytes": 299,
+    "sha256": "b904c0c95c3c871f3c080066c2b72dee7976383b7b916502f2fde3905b6c2537"
+  },
+  {
+    "path": "stable-source/back.svg",
+    "bytes": 210,
+    "sha256": "1684b1ee70ba4076382e7f6e520151047d0f10766b049951b1be43b752d277da"
+  },
+  {
+    "path": "stable-source/battery.svg",
+    "bytes": 234,
+    "sha256": "7b15e3934baa8d9d9217aed5ecf2171a307f0bc3634e6a6af15dc4d636d95fef"
+  },
+  {
+    "path": "stable-source/bluetooth.svg",
+    "bytes": 222,
+    "sha256": "aae123a0a1bbc73b8d6e6616b3fcc8e023e189cef0634042ddea925e0a7affb6"
+  },
+  {
+    "path": "stable-source/calibration.svg",
+    "bytes": 412,
+    "sha256": "9c0fc54cf83d1049bc390ca7b0f3df63b9e0b47c85db738a723a8fdd904f4f09"
+  },
+  {
+    "path": "stable-source/flashlight.svg",
+    "bytes": 269,
+    "sha256": "1f0fb54b4e66919630d5974a2fbf4f2a6d914196e0e17ecfc31fb3f6790be156"
+  },
+  {
+    "path": "stable-source/language.svg",
+    "bytes": 305,
+    "sha256": "e814d737393be11ef39b39e91839188662ac4dbc787dad6b412c194d35c1928a"
+  },
+  {
+    "path": "stable-source/output.svg",
+    "bytes": 230,
+    "sha256": "b5f1e2714cfd6224c25c6888b12189952252e6e9586b039fe80d580dae9237f3"
+  },
+  {
+    "path": "stable-source/settings.svg",
+    "bytes": 437,
+    "sha256": "5416d52c3f1ff2d67242aa984689d4807f39811996c9cb39359e5314de5799bd"
+  },
+  {
+    "path": "stable-source/timer.svg",
+    "bytes": 281,
+    "sha256": "76ff1d7f56fb7b79c8adfdbbdf716e2e485f1a4d3e476f6813a3da1a67f55f5b"
+  },
+  {
+    "path": "stable-source/vfl.svg",
+    "bytes": 325,
+    "sha256": "5eb9ba6913b6be8db29da36803efa72a3673c7488a67f87a6d0715d2cb303f90"
+  }
+]

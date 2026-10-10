@@ -18,10 +18,10 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import homeIcon from '@/assets/icons/stable-source/nav-home.png'
-import outputIcon from '@/assets/icons/stable-source/nav-output.png'
-import vflIcon from '@/assets/icons/pon-meter/ui/vfl.png'
-import settingsIcon from '@/assets/icons/pon-meter/ui/settings.png'
+import homeIcon from '@/assets/icons/iconfont/smart-otdr/navigation/home.svg'
+import outputIcon from '@/assets/icons/iconfont/smart-otdr/output.svg'
+import vflIcon from '@/assets/icons/iconfont/smart-otdr/vfl.svg'
+import settingsIcon from '@/assets/icons/iconfont/smart-otdr/navigation/settings.svg'
 
 export type StableSourceFunctionKey = 'home' | 'output' | 'vfl' | 'settings'
 
@@ -96,7 +96,7 @@ const open = (key: StableSourceFunctionKey) => {
 }
 
 .source-function-nav img { width: 20px; height: 20px; display: block; margin: 0 auto; object-fit: contain; object-position: 50% 50%; opacity: .72; }
-.source-function-nav strong { width: 100%; max-width: 100%; display: block; justify-self: center; overflow: hidden; margin: 0; font-size: 10px; line-height: 14px; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+.source-function-nav strong { width: 100%; max-width: 100%; display: block; justify-self: center; overflow: hidden; margin: 0; font-size:12px; line-height: 14px; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
 .source-function-nav button.active { background: ui.$source-primary; color: #ffffff; box-shadow: 0 6px 14px rgba(37, 99, 235, .22); }
 .source-function-nav button.active span { background: rgba(255, 255, 255, .18); }
 .source-function-nav button.active img { filter: brightness(0) invert(1); opacity: 1; }

@@ -3,7 +3,7 @@
   <div v-else class="app-container legacy-operation-page">
     <header class="header">
       <button @click="goBack" class="back-btn">
-        ← {{ t('common.back') }}
+        <DeviceIcon name="back" style="font-size: 18px; vertical-align: middle" /> {{ t('common.back') }}
       </button>
       <div class="page-title">{{ t('deviceDetail.cableSeek') }}</div>
     </header>
@@ -71,6 +71,7 @@
 </template>
 
 <script setup lang="ts">
+import DeviceIcon from '@/components/DeviceIcon.vue'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'

@@ -35,7 +35,7 @@
           
           <div v-if="filteredProducts.length === 0" class="empty-products">
             <div class="empty-icon">
-              <span class="iconify" data-icon="mdi:package-variant"></span>
+              <img :src="productPlaceholderIcon" alt="" />
             </div>
             <div class="empty-text">{{ t('product.noProducts') }}</div>
           </div>
@@ -48,15 +48,15 @@
               @click="viewProductDetail(product)"
             >
               <div class="product-image">
-                <img v-if="product.image" :src="product.image" :alt="product.name" class="product-thumb" />
-                <span v-else class="iconify image-icon" data-icon="mdi:package-variant-closed"></span>
+                <img v-if="product.image" :src="product.image" :alt="product.name" class="product-thumb" loading="lazy" @error="onCoverError" />
+                <img v-else :src="productPlaceholderIcon" alt="" class="image-icon" />
               </div>
               <div class="product-info">
                 <div class="product-name">{{ product.name }}</div>
                 <div class="product-model">型号: {{ product.model }}</div>
                 <div class="product-desc">{{ product.description }}</div>
               </div>
-              <span class="iconify arrow-icon" data-icon="mdi:chevron-right"></span>
+              <img :src="chevronRightIcon" alt="" class="arrow-icon" />
             </button>
           </div>
         </div>
@@ -72,145 +72,18 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { catalogCategories, catalogProducts } from '@/data/productCatalog'
 import BottomNavigation from '@/components/BottomNavigation.vue'
 import '@/styles/workspace.css'
-import fusionSplicerImage from '@/assets/app/products/fusion-splicer.png'
-import portableOtdrImage from '@/assets/app/products/portable-otdr.png'
-import smartOtdrImage from '@/assets/app/products/smart-otdr.png'
-import multiOpmImage from '@/assets/app/products/multi-opm.png'
+import productPlaceholderIcon from '@/assets/icons/iconfont/product.svg'
+import chevronRightIcon from '@/assets/icons/home/chevron-right.svg'
 
+const onCoverError = (event: Event) => { const img = event.target as HTMLImageElement; if (img.src !== productPlaceholderIcon) img.src = productPlaceholderIcon }
 const router = useRouter()
 const { t } = useI18n()
 
-// 分类数据
-const categories = computed(() => [
-  { id: 1, name: 'OTDR', count: 2 },
-  { id: 2, name: '光纤熔接机', count: 15 },
-  { id: 3, name: '光纤热剥钳', count: 3 },
-  { id: 4, name: '光纤切割刀', count: 19 },
-  { id: 5, name: '光功率计/一体机', count: 5 },
-  { id: 6, name: '光纤剥线钳', count: 5 },
-  { id: 7, name: '光纤冷接子', count: 9 },
-  { id: 8, name: 'SC冷接子', count: 31 },
-  { id: 9, name: '插片式分光器', count: 12 },
-  { id: 10, name: '拉锥盒式分光器', count: 12 },
-  { id: 11, name: '光纤红光笔', count: 5 },
-  { id: 12, name: '光纤开缆刀', count: 9 },
-  { id: 13, name: '光纤耦合器/法兰', count: 17 },
-  { id: 14, name: '光纤转接头', count: 27 },
-  { id: 15, name: '单模单芯跳线', count: 28 },
-  { id: 16, name: '单模双芯跳线', count: 10 },
-  { id: 17, name: '单模单头尾纤跳线', count: 4 },
-  { id: 18, name: '熔接工具', count: 10 },
-  { id: 19, name: '冷接工具', count: 1 },
-  { id: 20, name: '作业工具', count: 21 },
-  { id: 21, name: '清洁工具', count: 15 },
-  { id: 22, name: '测试工具', count: 3 },
-  { id: 23, name: '工具套装', count: 4 }
-])
-
-// 产品数据
-const products = computed(() => [
-  {
-    id: 1,
-    categoryId: 1,
-    name: 'OTDR光时域反射仪',
-    model: 'S-900D',
-    description: '双波长智能链路测试与事件分析',
-    image: smartOtdrImage,
-    details: ''
-  },
-  {
-    id: 2,
-    categoryId: 1,
-    name: '寻障笔',
-    model: 'OT-10',
-    description: '便携式光纤故障定位与测量',
-    image: portableOtdrImage,
-    details: ''
-  },
-  {
-    id: 3,
-    categoryId: 2,
-    name: '六马达光纤熔接机',
-    model: 'FS-90S',
-    description: '全自动熔接、加热及电极维护',
-    image: fusionSplicerImage,
-    details: ''
-  },
-  {
-    id: 4,
-    categoryId: 5,
-    name: '手持式多功能光功率计',
-    model: 'OPM-HNB',
-    description: '光功率、光源、网线测试一体机',
-    image: multiOpmImage,
-    details: ''
-  },
-  {
-    id: 5,
-    categoryId: 5,
-    name: '光功率计 PM-200',
-    model: 'PM-200',
-    description: '专业级光功率计，带数据存储功能',
-    image: '',
-    details: ''
-  },
-  {
-    id: 6,
-    categoryId: 11,
-    name: '光纤红光笔 VFL-650',
-    model: 'VFL-650',
-    description: '650nm红光可视故障定位仪',
-    image: '',
-    details: ''
-  },
-  {
-    id: 7,
-    categoryId: 11,
-    name: '光纤红光笔 VFL-650Pro',
-    model: 'VFL-650Pro',
-    description: '专业级红光可视故障定位仪',
-    image: '',
-    details: ''
-  },
-  {
-    id: 8,
-    categoryId: 22,
-    name: '光纤链路测试仪 OTDR-700',
-    model: 'OTDR-700',
-    description: '便携式OTDR，支持多波长测试',
-    image: '',
-    details: ''
-  },
-  {
-    id: 9,
-    categoryId: 18,
-    name: '电极棒',
-    model: 'Electrode-01',
-    description: '熔接机专用电极棒',
-    image: '',
-    details: ''
-  },
-  {
-    id: 10,
-    categoryId: 18,
-    name: '热缩管套装',
-    model: 'HeatShrink-Kit',
-    description: '各种规格热缩管套装',
-    image: '',
-    details: ''
-  },
-  {
-    id: 11,
-    categoryId: 6,
-    name: '光纤剥线钳',
-    model: 'Stripper-01',
-    description: '专业光纤剥线工具',
-    image: '',
-    details: ''
-  }
-])
+const categories = computed(() => catalogCategories)
+const products = computed(() => catalogProducts)
 
 // 选中的分类
 const selectedCategory = ref(1)
@@ -224,7 +97,7 @@ const filteredProducts = computed(() => {
  * 获取分类产品数量
  */
 const getCategoryProductCount = (categoryId: number) => {
-  return categories.value.find(category => category.id === categoryId)?.count || 0
+  return products.value.filter(product => product.categoryId === categoryId).length
 }
 
 /**
@@ -268,8 +141,8 @@ const viewProductDetail = (product: any) => {
 .workspace-page .products-grid { gap: 18px; }
 .workspace-page .product-card { width: 100%; padding: 0 0 16px; display: grid; grid-template-columns: minmax(0, 1fr) 20px; gap: 12px 4px; text-align: left; border: 0; border-bottom: 1px solid #eceef1; border-radius: 0; background: #fff; box-shadow: none; }
 .workspace-page .product-card:hover { transform: none; box-shadow: none; }
-.workspace-page .product-image { grid-column: 1 / -1; width: 100%; height: 144px; border-radius: 6px; background: #f5f6f8; padding: 12px 22px; }
-.workspace-page .product-card:hover .product-image { background: #eef2f7; }
+.workspace-page .product-image { grid-column: 1 / -1; width: 100%; height: 144px; overflow: hidden; border: 1px solid #eceff3; border-radius: 6px; background: #fff; padding: 8px 18px; }
+.workspace-page .product-card:hover .product-image { background: #fff; border-color: #dce3ec; }
 .workspace-page .product-name { font-size: 14px; line-height: 1.6; white-space: normal; overflow: visible; overflow-wrap: anywhere; }
 .workspace-page .product-model { margin: 3px 0; padding: 0; font-size: 11px; color: #2d62bc; background: transparent; }
 .workspace-page .product-desc { font-size: 11px; line-height: 1.7; white-space: normal; overflow: visible; color: #818792; }
@@ -445,6 +318,12 @@ const viewProductDetail = (product: any) => {
   color: #CBD5E1;
 }
 
+.empty-icon img {
+  width: 44px;
+  height: 44px;
+  opacity: .42;
+}
+
 .empty-text {
   font-size: 14px;
 }
@@ -489,11 +368,14 @@ const viewProductDetail = (product: any) => {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  border-radius: 4px;
+  background: #fff;
 }
 
 .image-icon {
-  font-size: 32px;
-  color: #2563EB;
+  width: 34px;
+  height: 34px;
+  opacity: .38;
 }
 
 .product-info {
@@ -532,8 +414,9 @@ const viewProductDetail = (product: any) => {
 }
 
 .arrow-icon {
-  font-size: 20px;
-  color: #CBD5E1;
+  width: 18px;
+  height: 18px;
+  opacity: .4;
   flex-shrink: 0;
 }
 
@@ -554,4 +437,13 @@ const viewProductDetail = (product: any) => {
     font-size: 28px;
   }
 }
+.workspace-page .category-sidebar {width:96px;flex-shrink:0;}
+.workspace-page .category-item {min-height:56px;padding:12px 8px;}
+.workspace-page .category-name {font-size:13px;line-height:1.5;white-space:normal;overflow-wrap:anywhere;}
+.workspace-page .category-count {display:block;margin-top:4px;font-size:12px;}
+.workspace-page .product-image {width:100%;height:auto;aspect-ratio:4 / 3;padding:12px;box-sizing:border-box;}
+.workspace-page .product-thumb {width:100%;height:100%;object-fit:contain;}
+.workspace-page .product-name {font-size:14px;line-height:1.5;white-space:normal;}
+.workspace-page .product-model {font-size:12px;max-width:100%;overflow-wrap:anywhere;}
+@media(max-width:360px){.workspace-page .category-sidebar{width:84px;}.workspace-page .category-name{font-size:12px;}}
 </style>

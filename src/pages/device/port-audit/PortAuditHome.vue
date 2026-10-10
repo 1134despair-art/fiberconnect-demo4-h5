@@ -30,13 +30,12 @@
       </section>
 
       <section class="audit-section">
-        <header><h2>{{ t('portAudit.auditControls') }}</h2><p>{{ t('portAudit.auditControlsHint') }}</p></header>
-        <div class="primary-grid">
-          <button type="button" @click="open('port-fid')"><span class="icon"><img :src="fidIcon" alt="" /></span><strong>{{ t('portAudit.fidTitle') }}</strong><small>{{ fidSummary }}</small><i>›</i></button>
-          <button type="button" @click="open('port-onu')"><span class="icon"><img :src="onuIcon" alt="" /></span><strong>{{ t('portAudit.onuTitle') }}</strong><small>{{ onuSummary }}</small><i>›</i></button>
+        <header><h2>{{ t('portAudit.auditControls') }}</h2></header>
+        <div class="instrument-function-grid">
+          <button type="button" :aria-label="fidSummary" @click="open('port-fid')"><span class="instrument-tool-icon violet"><img :src="fidIcon" alt="" /></span><strong>{{ t('portAudit.fidTitle') }}</strong></button>
+          <button type="button" :aria-label="onuSummary" @click="open('port-onu')"><span class="instrument-tool-icon"><img :src="onuIcon" alt="" /></span><strong>{{ t('portAudit.onuTitle') }}</strong></button>
+          <button type="button" :aria-label="rfidSummary" @click="open('port-rfid')"><span class="instrument-tool-icon violet"><img :src="rfidIcon" alt="" /></span><strong>{{ t('portAudit.rfidTitle') }}</strong></button>
         </div>
-
-        <button class="wide-entry" type="button" @click="open('port-rfid')"><span class="icon"><img :src="rfidIcon" alt="" /></span><span><strong>{{ t('portAudit.rfidTitle') }}</strong><small>{{ rfidSummary }}</small></span><i>›</i></button>
 
         <DeviceUtilityControlGrid
           :vfl-title="t('portAudit.vflTitle')"
@@ -63,13 +62,13 @@ import { useAuth, type Device } from '@/composables/useAuth'
 import PortAuditPageShell from './PortAuditPageShell.vue'
 import PortAuditFunctionNav from './PortAuditFunctionNav.vue'
 import { usePortAuditState } from './usePortAuditState'
-import fidIcon from '@/assets/app/icons/device/fid.png'
-import onuIcon from '@/assets/app/icons/device/onu.png'
-import rfidIcon from '@/assets/app/icons/device/rfid.png'
-import bluetoothIcon from '@/assets/app/icons/connection/bluetooth.png'
-import networkIcon from '@/assets/app/icons/device/cellular.png'
-import batteryIcon from '@/assets/app/icons/connection/battery.png'
-import flashlightIcon from '@/assets/icons/port-audit/flashlight.svg'
+import fidIcon from '@/assets/icons/iconfont/instrument/fid.svg'
+import onuIcon from '@/assets/icons/iconfont/instrument/onu.svg'
+import rfidIcon from '@/assets/icons/iconfont/instrument/rfid.svg'
+import bluetoothIcon from '@/assets/icons/iconfont/smart-otdr/bluetooth.svg'
+import networkIcon from '@/assets/icons/iconfont/smart-otdr/cellular.svg'
+import batteryIcon from '@/assets/icons/iconfont/smart-otdr/battery.svg'
+import flashlightIcon from '@/assets/icons/iconfont/smart-otdr/flashlight.svg'
 import DeviceUtilityControlGrid from '../components/DeviceUtilityControlGrid.vue'
 
 const props = defineProps<{ device: Device }>()
@@ -103,7 +102,7 @@ const open = (path: string) => router.push(`/device/${props.device.id}/${path}`)
 .offline-state { @include ui.surface; display: grid; grid-template-columns: 38px 1fr auto; gap: 9px; align-items: center; padding: 11px; }.offline-state img { width: 23px; }.offline-state strong { display: block; font-size: 12px; }.offline-state p { margin: 3px 0 0; color: ui.$audit-sub; font-size: 11px; }.offline-state button { @include ui.reset-button; min-height: 42px; padding: 0 11px; border-radius: 10px; background: ui.$audit-primary; color: #fff; font-size: 11px; font-weight: 700; }
 .home-meter { overflow: hidden; border: 1px solid #dbe7f5; border-radius: 12px; background: #fff; box-shadow: 0 8px 22px rgba(37,99,235,.08); }
 .home-meter > header { min-height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; border-bottom: 1px solid #e7eef8; }
-.home-meter > header strong { color: #1d4ed8; font-size: 13px; }.home-meter > header span { padding: 4px 8px; border-radius: 10px; background: #eff6ff; color: ui.$audit-primary; font-size: 10px; font-weight: 750; }
+.home-meter > header strong { color: #1d4ed8; font-size: 13px; }.home-meter > header span { padding: 4px 8px; border-radius: 10px; background: #eff6ff; color: ui.$audit-primary; font-size:12px; font-weight: 750; }
 .home-meter > header span.pass { background: #ecfdf5; color: ui.$audit-success; }.home-meter > header span.fail { background: #fef2f2; color: ui.$audit-danger; }.home-meter > header span.run { background: #fff7ed; color: ui.$audit-amber; }
 .meter-mode { padding-top: 14px; color: ui.$audit-primary; font-size: 15px; text-align: center; @include ui.numeric; }
 .meter-reading { min-height: 72px; display: grid; grid-template-columns: minmax(72px, auto) 34px; align-items: center; justify-content: center; column-gap: 7px; color: #1d4ed8; }

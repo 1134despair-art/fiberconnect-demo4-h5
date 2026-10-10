@@ -27,9 +27,9 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
-import backIcon from '@/assets/icons/pon-meter/ui/back.png'
-import bluetoothIcon from '@/assets/icons/pon-meter/ui/bluetooth.png'
-import batteryIcon from '@/assets/icons/pon-meter/ui/battery.png'
+import backIcon from '@/assets/icons/iconfont/device/back.svg'
+import bluetoothIcon from '@/assets/icons/iconfont/device/bluetooth.svg'
+import batteryIcon from '@/assets/icons/iconfont/device/battery.svg'
 
 defineProps<{ title: string; subtitle?: string }>()
 const emit = defineEmits<{ back: [] }>()
@@ -45,7 +45,7 @@ onUnmounted(() => { if (timer) window.clearInterval(timer) })
 @use './multiOpmUi.scss' as ui;
 
 .multi-opm-shell { width: 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden; background: ui.$bg; }
-.multi-opm-shell__status { height: 24px; flex: 0 0 24px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; background: #fff; color: ui.$text; font-size: 10px; }
+.multi-opm-shell__status { height: 24px; flex: 0 0 24px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; background: #fff; color: ui.$text; font-size:12px; }
 .multi-opm-shell__status > span { display: flex; align-items: flex-end; gap: 3px; }
 .multi-opm-shell__status img { width: 13px; height: 13px; object-fit: contain; }
 .multi-opm-shell__status i { width: 2px; border-radius: 2px; background: ui.$primary; }

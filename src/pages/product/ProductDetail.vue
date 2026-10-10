@@ -5,15 +5,10 @@
     
     <!-- 主内容区域 -->
     <div class="content-flex hide-scrollbar">
-      <div class="p-4">
-        <!-- 产品图片 -->
-        <div class="product-image-section">
-          <div class="image-placeholder">
-            <img v-if="productImage" :src="productImage" :alt="getLocalizedContent(product?.name)" class="detail-product-image" />
-            <span v-else class="iconify product-icon" data-icon="mdi:package-variant-closed"></span>
-          </div>
-        </div>
-        
+      <div v-if="product" class="p-4">
+        <ProductGallery v-if="productImages.length" :key="String(product.id)" :images="productImages" :name="product.name" />
+        <div v-else class="product-image-section"><div class="image-placeholder"><img :src="productPlaceholderIcon" :alt="product.name" class="detail-product-image" /></div></div>
+
         <!-- 产品基本信息 -->
         <div class="product-info-section mb-4">
           <h2 class="product-name">{{ getLocalizedContent(product?.name) }}</h2>
@@ -24,33 +19,36 @@
         <!-- 产品详情 -->
         <div class="product-detail-section">
           <h3 class="section-title">{{ t('productDetail.title') }}</h3>
-          <div class="detail-content" v-html="getLocalizedContent(product?.details)"></div>
+          <div class="detail-content released-detail" v-html="productDetails"></div>
         </div>
         
       </div>
     </div>
     
-    <div class="page-actions">
+    <div v-if="product" class="page-actions">
       <button @click="requestAfterSales" class="primary-action">
-        <span class="iconify" data-icon="mdi:headset"></span>
+        <LocalIcon class="iconify" name="mdi:headset" />
         {{ t('productDetail.applyAfterSales') }}
       </button>
     </div>
+    <div v-if="!product" class="product-not-found"><h2>未找到该产品</h2><p>产品可能已更新，请返回产品列表重新选择。</p><button class="primary-action" @click="router.push('/catalog')">返回产品列表</button></div>
     <!-- 底部导航栏 -->
     <BottomNavigation />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import LocalIcon from '@/components/LocalIcon.vue'
+import { computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { findCatalogProduct } from '@/data/productCatalog'
+import productPlaceholderIcon from '@/assets/icons/iconfont/product.svg'
+import ProductGallery from '@/components/ProductGallery.vue'
+import { safeProductDetails } from '@/data/releasedContent'
 import BottomNavigation from '@/components/BottomNavigation.vue'
 import { useI18n } from 'vue-i18n'
 import WorkspaceHeader from '@/components/WorkspaceHeader.vue'
 import '@/styles/subpages.css'
-import fusionImage from '@/assets/app/products/fusion-splicer.png'
-import opmImage from '@/assets/app/products/multi-opm.png'
-import otdrImage from '@/assets/app/products/portable-otdr.png'
 
 const { t, locale } = useI18n()
 const router = useRouter()
@@ -59,184 +57,22 @@ const route = useRoute()
 // 辅助函数：获取本地化内容
 const getLocalizedContent = (data: any) => {
   if (!data) return ''
+  if (typeof data === 'string') return data
   // 尝试获取当前语言内容
   const content = data[locale.value]
   // 如果当前语言内容不存在，回退到简体中文，再回退到第一个可用的语言
   return content || data['zh-CN'] || Object.values(data)[0] || ''
 }
 
-// 产品数据
-const products = ref([
-  {
-    id: 1,
-    name: {
-      'zh-CN': '六马达熔接机 WM-6000',
-      'zh-TW': '六馬達熔接機 WM-6000',
-      'en': 'Six-Motor Fusion Splicer WM-6000'
-    },
-    model: 'WM-6000',
-    description: {
-      'zh-CN': '高精度六马达光纤熔接机，支持多种光纤类型',
-      'zh-TW': '高精度六馬達光纖熔接機，支持多種光纖類型',
-      'en': 'High-precision six-motor fiber fusion splicer, supports multiple fiber types'
-    },
-    details: {
-      'zh-CN': '<p><strong>产品特点：</strong></p><ul><li>六马达自动对准系统</li><li>高精度熔接损耗</li><li>快速熔接时间</li><li>彩色LCD显示屏</li><li>蓝牙连接功能</li></ul><p><strong>技术参数：</strong></p><ul><li>适用光纤：SM/MM/DS/NZ-DS</li><li>熔接损耗：0.02dB</li><li>熔接时间：9秒</li><li>加热时间：25秒</li><li>电池容量：连续熔接约200次</li></ul>',
-      'zh-TW': '<p><strong>產品特點：</strong></p><ul><li>六馬達自動對準系統</li><li>高精度熔接損耗</li><li>快速熔接時間</li><li>彩色LCD顯示屏</li><li>藍牙連接功能</li></ul><p><strong>技術參數：</strong></p><ul><li>適用光纖：SM/MM/DS/NZ-DS</li><li>熔接損耗：0.02dB</li><li>熔接時間：9秒</li><li>加熱時間：25秒</li><li>電池容量：連續熔接約200次</li></ul>',
-      'en': '<p><strong>Features:</strong></p><ul><li>Six-motor core alignment system</li><li>High precision splicing loss</li><li>Fast splicing time</li><li>Color LCD display</li><li>Bluetooth connectivity</li></ul><p><strong>Specifications:</strong></p><ul><li>Applicable Fibers: SM/MM/DS/NZ-DS</li><li>Splice Loss: 0.02dB</li><li>Splicing Time: 9s</li><li>Heating Time: 25s</li><li>Battery: ~200 cycles</li></ul>'
-    }
-  },
-  {
-    id: 2,
-    name: {
-      'zh-CN': '四马达熔接机 WM-4000',
-      'zh-TW': '四馬達熔接機 WM-4000',
-      'en': 'Four-Motor Fusion Splicer WM-4000'
-    },
-    model: 'WM-4000',
-    description: {
-      'zh-CN': '经济型四马达光纤熔接机，性价比之选',
-      'zh-TW': '經濟型四馬達光纖熔接機，性價比之選',
-      'en': 'Economical four-motor fiber fusion splicer, value choice'
-    },
-    details: {
-      'zh-CN': '<p><strong>产品特点：</strong></p><ul><li>四马达自动对准</li><li>稳定可靠的性能</li><li>简单易用的操作</li><li>长效电池续航</li></ul>',
-      'zh-TW': '<p><strong>產品特點：</strong></p><ul><li>四馬達自動對準</li><li>穩定可靠的性能</li><li>簡單易用的操作</li><li>長效電池續航</li></ul>',
-      'en': '<p><strong>Features:</strong></p><ul><li>Four-motor alignment</li><li>Stable performance</li><li>Easy operation</li><li>Long battery life</li></ul>'
-    }
-  },
-  {
-    id: 3,
-    name: {
-      'zh-CN': '便携式熔接机 WM-2000',
-      'zh-TW': '便攜式熔接機 WM-2000',
-      'en': 'Portable Fusion Splicer WM-2000'
-    },
-    model: 'WM-2000',
-    description: {
-      'zh-CN': '轻便便携，适合现场作业',
-      'zh-TW': '輕便便攜，適合現場作業',
-      'en': 'Lightweight and portable, suitable for field work'
-    },
-    details: {
-      'zh-CN': '<p><strong>产品特点：</strong></p><ul><li>超轻便设计</li><li>内置电池</li><li>快速启动</li></ul>',
-      'zh-TW': '<p><strong>產品特點：</strong></p><ul><li>超輕便設計</li><li>內置電池</li><li>快速啟動</li></ul>',
-      'en': '<p><strong>Features:</strong></p><ul><li>Ultra-light design</li><li>Built-in battery</li><li>Fast startup</li></ul>'
-    }
-  },
-  {
-    id: 4,
-    name: {
-      'zh-CN': '光功率计 PM-100',
-      'zh-TW': '光功率計 PM-100',
-      'en': 'Optical Power Meter PM-100'
-    },
-    model: 'PM-100',
-    description: {
-      'zh-CN': '高精度光功率测量仪，支持多种波长',
-      'zh-TW': '高精度光功率測量儀，支持多種波長',
-      'en': 'High-precision optical power meter, supports multiple wavelengths'
-    },
-    details: {
-      'zh-CN': '<p><strong>产品特点：</strong></p><ul><li>850nm-1650nm波长范围</li><li>高精度测量</li><li>便携设计</li></ul>',
-      'zh-TW': '<p><strong>產品特點：</strong></p><ul><li>850nm-1650nm波長範圍</li><li>高精度測量</li><li>便攜設計</li></ul>',
-      'en': '<p><strong>Features:</strong></p><ul><li>850nm-1650nm range</li><li>High precision</li><li>Portable design</li></ul>'
-    }
-  },
-  {
-    id: 5,
-    name: {
-      'zh-CN': '光功率计 PM-200',
-      'zh-TW': '光功率計 PM-200',
-      'en': 'Optical Power Meter PM-200'
-    },
-    model: 'PM-200',
-    description: {
-      'zh-CN': '专业级光功率计，带数据存储功能',
-      'zh-TW': '專業級光功率計，帶數據存儲功能',
-      'en': 'Professional grade power meter with data storage'
-    },
-    details: {
-      'zh-CN': '<p><strong>产品特点：</strong></p><ul><li>宽波长范围</li><li>高灵敏度</li><li>数据记录功能</li><li>USB数据传输</li></ul>',
-      'zh-TW': '<p><strong>產品特點：</strong></p><ul><li>寬波長範圍</li><li>高靈敏度</li><li>數據記錄功能</li><li>USB數據傳輸</li></ul>',
-      'en': '<p><strong>Features:</strong></p><ul><li>Wide wavelength range</li><li>High sensitivity</li><li>Data logging</li><li>USB transfer</li></ul>'
-    }
-  },
-  {
-    id: 6,
-    name: {
-      'zh-CN': '红光源 VFL-650',
-      'zh-TW': '紅光源 VFL-650',
-      'en': 'Visual Fault Locator VFL-650'
-    },
-    model: 'VFL-650',
-    description: {
-      'zh-CN': '650nm红光可视故障定位仪',
-      'zh-TW': '650nm紅光可視故障定位儀',
-      'en': '650nm Red Light Visual Fault Locator'
-    },
-    details: {
-      'zh-CN': '<p><strong>产品特点：</strong></p><ul><li>650nm激光波长</li><li>输出功率≥1mW</li><li>连续工作时间≥8小时</li></ul>',
-      'zh-TW': '<p><strong>產品特點：</strong></p><ul><li>650nm激光波長</li><li>輸出功率≥1mW</li><li>連續工作時間≥8小時</li></ul>',
-      'en': '<p><strong>Features:</strong></p><ul><li>650nm laser wavelength</li><li>Output power ≥1mW</li><li>Continuous operation ≥8 hours</li></ul>'
-    }
-  },
-  {
-    id: 7,
-    name: {
-      'zh-CN': '红光源 VFL-650Pro',
-      'zh-TW': '紅光源 VFL-650Pro',
-      'en': 'Visual Fault Locator VFL-650Pro'
-    },
-    model: 'VFL-650Pro',
-    description: {
-      'zh-CN': '专业级红光可视故障定位仪',
-      'zh-TW': '專業級紅光可視故障定位儀',
-      'en': 'Professional Visual Fault Locator'
-    },
-    details: {
-      'zh-CN': '<p><strong>产品特点：</strong></p><ul><li>高功率输出</li><li>多种工作模式</li><li>坚固耐用</li></ul>',
-      'zh-TW': '<p><strong>產品特點：</strong></p><ul><li>高功率輸出</li><li>多種工作模式</li><li>堅固耐用</li></ul>',
-      'en': '<p><strong>Features:</strong></p><ul><li>High power output</li><li>Multiple modes</li><li>Durable build</li></ul>'
-    }
-  },
-  {
-    id: 8,
-    name: {
-      'zh-CN': '光时域反射仪 OTDR-700',
-      'zh-TW': '光時域反射儀 OTDR-700',
-      'en': 'OTDR-700'
-    },
-    model: 'OTDR-700',
-    description: {
-      'zh-CN': '便携式OTDR，支持多波长测试',
-      'zh-TW': '便攜式OTDR，支持多波長測試',
-      'en': 'Portable OTDR, supports multi-wavelength testing'
-    },
-    details: {
-      'zh-CN': '<p><strong>产品特点：</strong></p><ul><li>1310/1550nm双波长</li><li>测量距离40km</li><li>高精度事件定位</li><li>波形存储和回放</li></ul>',
-      'zh-TW': '<p><strong>產品特點：</strong></p><ul><li>1310/1550nm雙波長</li><li>測量距離40km</li><li>高精度事件定位</li><li>波形存儲和回放</li></ul>',
-      'en': '<p><strong>Features:</strong></p><ul><li>1310/1550nm dual wavelength</li><li>40km range</li><li>High precision event location</li><li>Waveform storage and playback</li></ul>'
-    }
-  }
-])
-
-const product = ref<any>(null)
-const productImage = computed(() => {
-  const model = product.value?.model || ''
-  if (model.startsWith('WM-')) return fusionImage
-  if (model.startsWith('PM-')) return opmImage
-  if (model.startsWith('OTDR')) return otdrImage
-  return ''
+const product = computed(() => findCatalogProduct(route.params.id))
+const productImages = computed(() => product.value?.images || [])
+const productDetails = computed(() => {
+ const p = product.value
+ if (!p) return ''
+ const translations = p.detailsTranslations as Record<string, string> | undefined
+ const html = translations?.[locale.value] || p.details || (p.description ? `<p>${p.description}</p>` : '')
+ return safeProductDetails(html || p.images.map(src => `<p><img src="${src}"></p>`).join(''))
 })
-
-/**
- * 获取产品信息
- */
-const getProduct = () => {
-  const productId = parseInt(route.params.id as string)
-  product.value = products.value.find(p => p.id === productId) || null
-}
 
 /**
  * 返回上一页
@@ -249,21 +85,26 @@ const goBack = () => {
  * 申请售后服务
  */
 const requestAfterSales = () => {
-  router.push('/after-sales')
+  if (product.value) router.push({ path: '/after-sales', query: { productId: String(product.value.id), create: '1' } })
 }
 
 
 
-onMounted(() => {
-  getProduct()
-})
+
 </script>
 
 <style scoped>
+.product-not-found { padding:24px;text-align:center; }.product-not-found p {color:#64748b;line-height:1.6;margin:16px 0;}
+.released-detail :deep(img){display:block;width:100%;max-width:100%;height:auto;object-fit:contain}
+.released-detail :deep(p){margin:0!important}
+.released-detail :deep(table){display:block;max-width:100%;overflow-x:auto}
+.product-detail-page .product-detail-section:has(.released-detail){padding:16px 0 0}
+.product-detail-page .product-detail-section:has(.released-detail) .section-title{padding:0 16px}
+
 .product-detail-page .p-4 { padding: 0; }
-.product-detail-page .product-image-section { padding: 20px 30px; margin: 0; background: #f3f5f8; }
-.product-detail-page .image-placeholder { height: 190px; border-radius: 0; background: transparent; box-shadow: none; }
-.detail-product-image { width: 100%; height: 100%; object-fit: contain; }
+.product-detail-page .product-image-section { padding: 18px 24px; margin: 0; background: #fff; border-bottom: 1px solid #eceff3; }
+.product-detail-page .image-placeholder { height: 220px; border-radius: 0; background: #fff; box-shadow: none; }
+.detail-product-image { width: 100%; height: 100%; object-fit: contain; border-radius: 6px; background: #fff; }
 .product-detail-page .product-info-section, .product-detail-page .product-detail-section { padding: 20px; border-radius: 0; background: #fff; box-shadow: none; margin: 0; }
 .product-detail-page .product-info-section:active, .product-detail-page .product-detail-section:active { transform: none; }
 .product-detail-page .product-detail-section { margin-top: 12px; }

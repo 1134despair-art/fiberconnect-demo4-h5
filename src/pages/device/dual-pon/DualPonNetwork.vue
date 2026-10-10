@@ -22,8 +22,12 @@
 
       <section v-if="showThresholds" class="threshold-panel">
         <header><div><h2>{{ t('dualPon.thresholdSettings') }}</h2><p>{{ t('dualPon.thresholdHint') }}</p></div><button type="button" @click="restoreThresholds">{{ t('dualPon.restore') }}</button></header>
+        <div class="instrument-matrix-scroll" role="region" :aria-label="t('dualPon.thresholdSettings')" tabindex="0">
+          <div class="instrument-matrix">
         <div class="threshold-head"><span>{{ t('dualPon.wavelength') }}</span><span>{{ t('dualPon.reference') }}</span><span>{{ t('dualPon.alarmThreshold') }}</span><span>{{ t('dualPon.lowerThreshold') }}</span></div>
         <div v-for="wavelength in wavelengths" :key="wavelength" class="threshold-row"><strong>{{ wavelength }}nm</strong><label><input v-model.number="state.persisted.thresholds[wavelength].reference" type="number" step="0.1" aria-label="reference" /><span>dBm</span></label><label><input v-model.number="state.persisted.thresholds[wavelength].alarm" type="number" step="0.1" aria-label="alarm" /><span>dBm</span></label><label><input v-model.number="state.persisted.thresholds[wavelength].low" type="number" step="0.1" aria-label="low" /><span>dBm</span></label></div>
+          </div>
+        </div>
       </section>
 
       <section class="action-row">
@@ -44,7 +48,7 @@ import DualPonPageShell from './DualPonPageShell.vue'
 import DualPonFunctionNav from './DualPonFunctionNav.vue'
 import { DUAL_PON_WAVELENGTHS, useDualPonState, type DualPonLinkCase } from './useDualPonState'
 import { useDualPonDevice } from './useDualPonDevice'
-import deviceImage from '@/assets/app/products/dual-pon.png'
+import deviceImage from '@/assets/app/products/dual-pon-realistic.jpg'
 
 const router = useRouter(); const route = useRoute(); const { t } = useI18n(); const { deviceId, device } = useDualPonDevice(); const state = useDualPonState(deviceId.value)
 const wavelengths = DUAL_PON_WAVELENGTHS
@@ -91,9 +95,9 @@ onBeforeUnmount(state.stopLink)
 .result-row strong { color: ui.$text; }
 .feedback { bottom: 92px; }
 .threshold-head,.threshold-row { grid-template-columns: 55px repeat(3,minmax(0,1fr)); gap: 4px; padding-right: 8px; padding-left: 8px; }
-.threshold-head { font-size: 9px; text-align: center; }
-.threshold-row strong { font-size: 10px; }
+.threshold-head { font-size:12px; text-align: center; }
+.threshold-row strong { font-size:12px; }
 .threshold-row label { min-width: 0; }
-.threshold-row input { padding: 0 1px; font-size: 10px; }
+.threshold-row input { padding: 0 1px; font-size:12px; }
 .threshold-row label span { padding-right: 2px; font-size: 8px; }
 </style>

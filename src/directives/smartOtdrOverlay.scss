@@ -1,0 +1,65 @@
+/* Structural rules apply only to Smart OTDR overlays registered by the directive. */
+.smart-otdr-overlay-bound {
+  position: fixed !important;
+  inset: auto !important;
+  left: var(--smart-overlay-left) !important;
+  top: var(--smart-overlay-top) !important;
+  width: var(--smart-overlay-width) !important;
+  height: var(--smart-overlay-height) !important;
+  padding: 16px !important;
+  margin: 0 !important;
+  box-sizing: border-box;
+  border-radius: var(--smart-overlay-radius);
+  overflow: hidden;
+  align-items: center !important;
+  justify-content: center;
+
+}
+.smart-otdr-overlay-bound > :is(section, .modal-content) {
+  box-sizing: border-box;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  margin: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.smart-otdr-overlay-bound :is(.dialog-actions, .form-actions, .firmware-actions, .smart-confirm-actions, .device-alert-actions, .smart-dialog-actions) {
+  display: grid !important;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-template-columns: none !important;
+  width: 100% !important;
+  min-width: 0;
+  gap: 12px !important;
+  align-items: stretch;
+}
+.smart-otdr-overlay-bound :is(.dialog-actions, .form-actions, .firmware-actions, .smart-confirm-actions, .device-alert-actions, .smart-dialog-actions) > button {
+  box-sizing: border-box;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 44px !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 10px 12px !important;
+  border-radius: 8px;
+  font-size: 14px !important;
+  line-height: 1.4;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.smart-otdr-overlay-bound :is(.smart-confirm-actions, .firmware-actions) > button.secondary { order: -1; }
+.smart-otdr-overlay-bound :is(.modal-header, .smart-otdr-dialog__header, .smart-otdr-dialog__footer) { flex-shrink: 0; min-width: 0; }
+.smart-otdr-overlay-bound :is(.modal-title, .smart-otdr-dialog__title) { min-width: 0; overflow-wrap: anywhere; }
+.smart-otdr-overlay-bound :is(.modal-close, .smart-otdr-dialog__close, .smart-otdr-quick-panel__close) { min-width: 44px; min-height: 44px; flex-shrink: 0; }
+.smart-otdr-overlay-bound :is(.modal-body, .smart-otdr-dialog__content, .smart-otdr-quick-panel__content) { min-height: 0; min-width: 0; overflow: auto; overscroll-behavior: contain; }
+.smart-otdr-overlay-bound .smart-otdr-dialog__footer > * { width: 100%; min-width: 0; }
+.smart-otdr-overlay-bound .modal-content { display: flex; flex-direction: column; }
+.smart-otdr-overlay-bound :is(input:not([type=radio]):not([type=checkbox]), select, textarea) { box-sizing: border-box; max-width: 100%; min-width: 0; }
+.smart-otdr-overlay-bound .smart-dialog-actions button { border: 1px solid #d4dfed; background: #f8fafc; color: #37516e; cursor: pointer; }
+.smart-otdr-overlay-bound .smart-dialog-actions button.primary { border-color: #2563eb; background: #2563eb; color: white; }
+.smart-otdr-overlay-bound .smart-dialog-actions button.danger { border-color: #dc2626; background: #dc2626; color: white; }
+.smart-otdr-overlay-bound .smart-dialog-actions button:disabled { opacity: .45; cursor: not-allowed; }

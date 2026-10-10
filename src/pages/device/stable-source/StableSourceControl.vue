@@ -61,8 +61,36 @@
         </section>
 
         <section class="parameter-section">
-          <header><h2>{{ t('stableSource.frequencyMode') }}</h2><span>{{ outputModesLabel }}</span></header>
-          <div class="mode-control" role="group" :aria-label="t('stableSource.frequencyMode')">
+          <header>
+            <h2>{{ t('stableSource.manualCalibration') }}</h2>
+            <span>{{ state.persisted.selectedWavelength }}nm · {{ calibrationRangeLabel }}</span>
+          </header>
+          <div class="power-stepper calibration-stepper">
+            <button
+              type="button"
+              :aria-label="`-${calibrationStepLabel}dBm`"
+              :disabled="currentOffset <= state.capabilities.calibrationRange.min"
+              @click="adjustCalibration(-state.capabilities.calibrationRange.step)"
+            >−</button>
+            <div>
+              <strong>{{ signedOffset }}</strong><span>dBm</span>
+              <small>{{ t('stableSource.powerStep') }} {{ calibrationStepLabel }}dBm</small>
+            </div>
+            <button
+              type="button"
+              :aria-label="`+${calibrationStepLabel}dBm`"
+              :disabled="currentOffset >= state.capabilities.calibrationRange.max"
+              @click="adjustCalibration(state.capabilities.calibrationRange.step)"
+            >+</button>
+          </div>
+          <button class="calibration-reset" type="button" :disabled="currentOffset === 0" @click="state.resetCalibration(state.persisted.selectedWavelength)">
+            {{ t('stableSource.restoreWavelength') }}
+          </button>
+        </section>
+
+        <section class="parameter-section">
+          <header><h2>{{ t('stableSource.frequencyMode') }}</h2></header>
+          <div class="mode-control instrument-frequency-grid" role="group" :aria-label="t('stableSource.frequencyMode')">
             <button
               v-for="mode in state.capabilities.outputModes"
               :key="mode"
@@ -84,7 +112,7 @@
       </template>
     </div>
 
-    <div v-if="confirmingStart" class="dialog-backdrop" role="presentation" @click.self="confirmingStart = false">
+    <div v-if="confirmingStart" v-smart-otdr-overlay class="dialog-backdrop" role="presentation" @click.self="confirmingStart = false">
       <section class="confirm-dialog" role="alertdialog" aria-modal="true" :aria-label="t('stableSource.laserConfirmTitle')">
         <span class="laser-mark">LASER</span>
         <h2>{{ t('stableSource.laserConfirmTitle') }}</h2>
@@ -101,6 +129,7 @@
 </template>
 
 <script setup lang="ts">
+import { vSmartOtdrOverlay } from '@/directives/smartOtdrOverlay'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -113,7 +142,7 @@ import {
   resolveStableSourceCapabilities,
   useStableSourceState
 } from './useStableSourceState'
-import bluetoothIcon from '@/assets/icons/pon-meter/ui/bluetooth.png'
+import bluetoothIcon from '@/assets/icons/iconfont/smart-otdr/bluetooth.svg'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -129,12 +158,20 @@ let feedbackTimer: number | undefined
 const goToDeviceHome = () => router.replace(`/device/${deviceId.value}`)
 
 const connected = computed(() => device.value?.status === 'connected' && state.persisted.bluetoothEnabled)
-const correctedPower = computed(() => (state.persisted.outputPowerDbm + state.persisted.calibrationOffsets[state.persisted.selectedWavelength]).toFixed(1))
+const correctedPower = computed(() => {
+  const value = state.persisted.outputPowerDbm + state.persisted.calibrationOffsets[state.persisted.selectedWavelength]
+  const hundredths = value.toFixed(2)
+  return hundredths.endsWith('0') ? value.toFixed(1) : hundredths
+})
 const signedPower = computed(() => `${state.persisted.outputPowerDbm > 0 ? '+' : ''}${state.persisted.outputPowerDbm.toFixed(1)}`)
 const currentOffset = computed(() => state.persisted.calibrationOffsets[state.persisted.selectedWavelength])
-const signedOffset = computed(() => `${currentOffset.value > 0 ? '+' : ''}${currentOffset.value.toFixed(1)}`)
+const signedOffset = computed(() => `${currentOffset.value > 0 ? '+' : ''}${currentOffset.value.toFixed(2)}`)
+const calibrationStepLabel = computed(() => state.capabilities.calibrationRange.step.toFixed(2))
+const calibrationRangeLabel = computed(() => {
+  const { min, max } = state.capabilities.calibrationRange
+  return `${min.toFixed(2)} ~ ${max > 0 ? '+' : ''}${max.toFixed(2)}dBm`
+})
 const wavelengthCapability = computed(() => `${state.capabilities.wavelengths.join(' / ')}nm`)
-const outputModesLabel = computed(() => state.capabilities.outputModes.map(formatStableSourceMode).join(' / '))
 const powerRangeLabel = computed(() => {
   const { min, max } = state.capabilities.powerRange
   return `${min.toFixed(1)} ~ ${max > 0 ? '+' : ''}${max.toFixed(1)}dBm`
@@ -167,6 +204,10 @@ const reconnect = async () => {
 }
 
 const adjustPower = (delta: number) => state.setOutputPower(state.persisted.outputPowerDbm + delta)
+const adjustCalibration = (delta: number) => state.setCalibrationOffset(
+  state.persisted.selectedWavelength,
+  currentOffset.value + delta
+)
 
 const handleOutputAction = async () => {
   if (state.runtime.outputStatus === 'emitting') {
@@ -198,7 +239,7 @@ const confirmStart = async () => {
 
 .output-display { overflow: hidden; border: 1px solid #dbe7f5; border-radius: 12px; background: #fff; color: ui.$source-text; box-shadow: 0 8px 22px rgba(37, 99, 235, .08); }
 .display-topline { min-height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; border-bottom: 1px solid #e7eef8; }
-.display-topline strong { color: #1d4ed8; font-size: 13px; }.display-topline span { display: flex; align-items: center; gap: 6px; color: ui.$source-text-sub; font-size: 10px; }
+.display-topline strong { color: #1d4ed8; font-size: 13px; }.display-topline span { display: flex; align-items: center; gap: 6px; color: ui.$source-text-sub; font-size:12px; }
 .display-topline i { width: 7px; height: 7px; border-radius: 50%; background: #64748b; }.emitting .display-topline i { background: ui.$source-amber; box-shadow: 0 0 0 4px rgba(245,158,11,.14); }
 .display-wavelength { padding: 14px 16px 0; text-align: center; }.display-wavelength b { @include ui.numeric; color: ui.$source-primary; font-size: 16px; }.display-wavelength small { margin-left: 5px; color: ui.$source-primary; font-size: 11px; }
 .display-reading { min-height: 86px; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; column-gap: 7px; padding: 0 16px; }.display-reading b { grid-column: 2; justify-self: center; @include ui.numeric; color: #1d4ed8; font-size: 46px; line-height: 1; text-align: center; }.display-reading small { grid-column: 3; justify-self: start; color: ui.$source-text; font-size: 18px; }
@@ -206,10 +247,10 @@ const confirmStart = async () => {
 .display-frequency strong { font-size: 12px; @include ui.numeric; }
 
 .parameter-section > header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 5px; }
-.parameter-section h2 { margin: 0; color: ui.$source-text; font-size: 13px; }.parameter-section header span { color: ui.$source-text-sub; font-size: 10px; }
+.parameter-section h2 { margin: 0; color: ui.$source-text; font-size: 13px; }.parameter-section header span { color: ui.$source-text-sub; font-size:12px; }
 .wavelength-control, .mode-control { display: grid; gap: 7px; padding: 4px; border: 1px solid ui.$source-border; border-radius: 12px; background: #e8eef6; }
 .wavelength-control { grid-template-columns: 1fr 1fr; }.mode-control { grid-template-columns: repeat(4, 1fr); }
-.wavelength-control button, .mode-control button { @include ui.button-reset; min-height: 44px; border-radius: 9px; color: ui.$source-text-sub; font-size: 10px; font-weight: 700; }
+.wavelength-control button, .mode-control button { @include ui.button-reset; min-height: 44px; border-radius: 9px; color: ui.$source-text-sub; font-size:12px; font-weight: 700; }
 .wavelength-control button.active, .mode-control button.active { background: #fff; color: ui.$source-primary; box-shadow: 0 2px 7px rgba(15,23,42,.1); }
 .wavelength-control button:focus-visible, .mode-control button:focus-visible { @include ui.focus-ring; }
 .wavelength-control strong { @include ui.numeric; font-size: 15px; }.wavelength-control span { margin-left: 3px; font-size: 11px; }
@@ -217,9 +258,12 @@ const confirmStart = async () => {
 .power-stepper { @include ui.surface; display: grid; grid-template-columns: 48px minmax(0,1fr) 48px; align-items: center; padding: 6px 8px; box-shadow: none; }
 .power-stepper button { @include ui.button-reset; width: 40px; height: 40px; border-radius: 10px; background: ui.$source-primary-soft; color: ui.$source-primary; font-size: 24px; font-weight: 500; }
 .power-stepper button:disabled { color: ui.$source-disabled; background: #f1f5f9; }.power-stepper button:focus-visible { @include ui.focus-ring; }
-.power-stepper div { text-align: center; }.power-stepper strong { @include ui.numeric; color: ui.$source-text; font-size: 22px; }.power-stepper span { margin-left: 4px; color: ui.$source-text-sub; font-size: 10px; }.power-stepper small { display: block; margin-top: 1px; color: ui.$source-text-sub; font-size: 9px; }
+.power-stepper div { text-align: center; }.power-stepper strong { @include ui.numeric; color: ui.$source-text; font-size: 22px; }.power-stepper span { margin-left: 4px; color: ui.$source-text-sub; font-size:12px; }.power-stepper small { display: block; margin-top: 1px; color: ui.$source-text-sub; font-size:12px; }
+.calibration-stepper { border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; }
+.calibration-reset { @include ui.button-reset; width: 100%; min-height: 30px; margin-top: 4px; border: 1px solid ui.$source-border; border-radius: 8px; background: #f8fafc; color: ui.$source-primary; font-size:12px; font-weight: 700; }
+.calibration-reset:disabled { color: ui.$source-disabled; background: #f8fafc; }.calibration-reset:focus-visible { @include ui.focus-ring; }
 .correction-strip { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid ui.$source-border; border-radius: 12px; background: #fff; }
-.correction-strip div { padding: 7px 10px; }.correction-strip div + div { border-left: 1px solid ui.$source-border; }.correction-strip span { display: block; color: ui.$source-text-sub; font-size: 9px; }.correction-strip strong { display: block; margin-top: 2px; color: ui.$source-text; font-size: 10px; @include ui.numeric; }
+.correction-strip div { padding: 7px 10px; }.correction-strip div + div { border-left: 1px solid ui.$source-border; }.correction-strip span { display: block; color: ui.$source-text-sub; font-size:12px; }.correction-strip strong { display: block; margin-top: 2px; color: ui.$source-text; font-size:12px; @include ui.numeric; }
 .output-action { @include ui.primary-button; width: 100%; }.output-action.stop { background: ui.$source-danger; box-shadow: 0 8px 18px rgba(220,38,38,.18); }
 
 .dialog-backdrop { position: absolute; inset: 0; z-index: 50; display: grid; place-items: center; padding: 20px; background: rgba(5,12,22,.62); }

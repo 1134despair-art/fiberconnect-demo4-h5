@@ -57,13 +57,13 @@ import { computed, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import type { Device } from '@/composables/useAuth'
 import { useAuth } from '@/composables/useAuth'
-import bluetoothIcon from '@/assets/icons/pon-meter/ui/bluetooth.png'
-import timerIcon from '@/assets/icons/pon-meter/ui/timer.png'
-import languageIcon from '@/assets/icons/pon-meter/ui/language.png'
-import infoIcon from '@/assets/icons/pon-meter/ui/info.png'
-import networkIcon from '@/assets/app/icons/device/cellular.png'
-import settingsIcon from '@/assets/icons/pon-meter/ui/settings.png'
-import powerIcon from '@/assets/icons/pon-meter/ui/power-off.png'
+import bluetoothIcon from '@/assets/icons/iconfont/device/bluetooth.svg'
+import timerIcon from '@/assets/icons/iconfont/device/timer.svg'
+import languageIcon from '@/assets/icons/iconfont/device/language.svg'
+import infoIcon from '@/assets/icons/iconfont/device/info.svg'
+import networkIcon from '@/assets/icons/iconfont/device/cellular.svg'
+import settingsIcon from '@/assets/icons/iconfont/device/settings.svg'
+import powerIcon from '@/assets/icons/iconfont/device/poweroff.svg'
 import DeviceSettingDialog from '../components/DeviceSettingDialog.vue'
 import DeviceSettingsList, { type DeviceSettingSection } from '../components/DeviceSettingsList.vue'
 import MultiOpmFunctionNav from './MultiOpmFunctionNav.vue'
@@ -167,7 +167,7 @@ onUnmounted(() => { if (feedbackTimer) window.clearTimeout(feedbackTimer) })
 .server-form { display: flex; flex-direction: column; gap: 12px; }
 .server-form label { display: flex; flex-direction: column; gap: 6px; color: ui.$text-sub; font-size: 11px; }
 .server-form input { min-height: 44px; box-sizing: border-box; padding: 0 12px; border: 1px solid ui.$border; border-radius: 8px; background: #fff; color: ui.$text; font: inherit; font-size: 13px; }
-.server-form span { color: ui.$danger; font-size: 10px; }
+.server-form span { color: ui.$danger; font-size:12px; }
 .danger-message { margin: 0; color: #991b1b; font-size: 12px; line-height: 1.6; }
 .settings-toast { bottom: 94px; }
 </style>

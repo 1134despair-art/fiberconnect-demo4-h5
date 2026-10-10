@@ -62,8 +62,8 @@ import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { Device } from '@/composables/useAuth'
 import DeviceSettingDialog from '../components/DeviceSettingDialog.vue'
-import settingsIcon from '@/assets/icons/pon-meter/ui/settings.png'
-import historyIcon from '@/assets/icons/pon-meter/ui/history.png'
+import settingsIcon from '@/assets/icons/iconfont/device/settings.svg'
+import historyIcon from '@/assets/icons/iconfont/device/timer.svg'
 import PortableOtdrFunctionNav from './PortableOtdrFunctionNav.vue'
 import PortableOtdrPageShell from './PortableOtdrPageShell.vue'
 import { usePortableOtdrState } from './usePortableOtdrState'
@@ -165,21 +165,21 @@ onUnmounted(() => { if (measureTimer) window.clearTimeout(measureTimer); resizeO
 .trace-card { @include ui.card; overflow: hidden; }
 .trace-card > header { min-height: 42px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px; border-bottom: 1px solid ui.$border; }
 .trace-card > header strong { color: ui.$primary-dark; font-size: 13px; }
-.trace-card > header span { display: flex; align-items: center; gap: 5px; color: ui.$text-sub; font-size: 10px; }
+.trace-card > header span { display: flex; align-items: center; gap: 5px; color: ui.$text-sub; font-size:12px; }
 .trace-card > header i { width: 6px; height: 6px; border-radius: 50%; background: #94a3b8; }
 .trace-card > header span.measuring { color: ui.$primary; }
 .trace-card > header span.measuring i { background: ui.$primary; box-shadow: 0 0 0 4px rgba(37,99,235,.12); }
 .trace-meta { min-height: 30px; display: flex; align-items: center; gap: 6px; padding: 0 10px; background: ui.$instrument; }
-.trace-meta b { padding: 3px 6px; border-radius: 5px; background: ui.$instrument-surface; color: #dbeafe; font-size: 9px; @include ui.metric-number; }
+.trace-meta b { padding: 3px 6px; border-radius: 5px; background: ui.$instrument-surface; color: #dbeafe; font-size:12px; @include ui.metric-number; }
 .canvas-wrap { position: relative; height: 182px; background: ui.$instrument; }
 .canvas-wrap canvas { width: 100%; height: 100%; display: block; }
-.cursor-label { position: absolute; top: 10px; left: 59%; padding: 4px 7px; border-radius: 6px; background: ui.$primary; color: #fff; font-size: 9px; font-weight: 700; }
-.trace-scale { height: 24px; display: flex; align-items: center; justify-content: space-between; padding: 0 10px; background: ui.$instrument; color: #93c5fd; font-size: 9px; @include ui.metric-number; }
+.cursor-label { position: absolute; top: 10px; left: 59%; padding: 4px 7px; border-radius: 6px; background: ui.$primary; color: #fff; font-size:12px; font-weight: 700; }
+.trace-scale { height: 24px; display: flex; align-items: center; justify-content: space-between; padding: 0 10px; background: ui.$instrument; color: #93c5fd; font-size:12px; @include ui.metric-number; }
 .result-strip { margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid ui.$border; }
 .result-strip div { min-width: 0; padding: 9px 3px; border-right: 1px solid ui.$border; text-align: center; }
 .result-strip div:last-child { border-right: 0; }
 .result-strip dt { color: ui.$text-sub; font-size: 8px; }
-.result-strip dd { margin: 4px 0 0; color: ui.$text; font-size: 10px; font-weight: 700; @include ui.metric-number; }
+.result-strip dd { margin: 4px 0 0; color: ui.$text; font-size:12px; font-weight: 700; @include ui.metric-number; }
 .measure-button { @include ui.primary-button; width: 100%; min-height: 48px; font-size: 14px; }
 .measure-button.stop { background: ui.$danger; box-shadow: 0 8px 18px rgba(220,38,38,.18); }
 .parameter-card { @include ui.card; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); overflow: hidden; }
@@ -187,12 +187,12 @@ onUnmounted(() => { if (measureTimer) window.clearTimeout(measureTimer); resizeO
 .parameter-card button:nth-child(2n) { border-right: 0; }
 .parameter-card button:nth-last-child(-n+2) { border-bottom: 0; }
 .parameter-card span, .parameter-card strong { display: block; }
-.parameter-card span { color: ui.$primary; font-size: 10px; }
+.parameter-card span { color: ui.$primary; font-size:12px; }
 .parameter-card strong { margin-top: 4px; color: ui.$text; font-size: 12px; @include ui.metric-number; }
 .records-card { @include ui.card; overflow: hidden; scroll-margin-top: 12px; }
 .records-card > header { min-height: 42px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px; border-bottom: 1px solid ui.$border; }
 .records-card > header strong { font-size: 13px; }
-.records-card > header span { color: ui.$primary; font-size: 10px; }
+.records-card > header span { color: ui.$primary; font-size:12px; }
 .records-card > button { @include ui.button-reset; width: 100%; min-height: 58px; display: grid; grid-template-columns: 32px minmax(0,1fr) 18px; align-items: center; gap: 9px; padding: 8px 10px; border-bottom: 1px solid ui.$border; background: #fff; color: ui.$text; text-align: left; }
 .records-card > button:last-child { border-bottom: 0; }
 .record-icon { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 8px; background: ui.$primary-soft; }
@@ -200,7 +200,7 @@ onUnmounted(() => { if (measureTimer) window.clearTimeout(measureTimer); resizeO
 .records-card button span:nth-child(2) { min-width: 0; }
 .records-card button strong, .records-card button small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .records-card button strong { font-size: 11px; }
-.records-card button small { margin-top: 3px; color: ui.$text-sub; font-size: 9px; }
+.records-card button small { margin-top: 3px; color: ui.$text-sub; font-size:12px; }
 .records-card button i { color: ui.$text-sub; font-size: 18px; font-style: normal; }
 .setting-groups { display: flex; flex-direction: column; gap: 16px; }
 .setting-groups section > strong { display: block; margin-bottom: 8px; color: ui.$text; font-size: 12px; }

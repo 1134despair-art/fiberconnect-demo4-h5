@@ -7,6 +7,7 @@
     </div>
 
     <DeviceSettingDialog
+      contained
       :open="activeDialog !== null"
       :title="dialogTitle"
       :description="dialogDescription"
@@ -30,18 +31,18 @@
       </div>
 
       <div v-else-if="activeDialog === 'buzzer'" class="setting-options">
-        <button class="setting-option" :class="{ active: draftBuzzer }" type="button" @click="draftBuzzer = true">{{ t('dualPon.on') }}</button>
-        <button class="setting-option" :class="{ active: !draftBuzzer }" type="button" @click="draftBuzzer = false">{{ t('dualPon.off') }}</button>
+        <button class="setting-option" :class="{ active: draftBuzzer }" :aria-pressed="draftBuzzer" type="button" @click="draftBuzzer = true">{{ t('dualPon.on') }}</button>
+        <button class="setting-option" :class="{ active: !draftBuzzer }" :aria-pressed="!draftBuzzer" type="button" @click="draftBuzzer = false">{{ t('dualPon.off') }}</button>
       </div>
 
       <div v-else-if="activeDialog === 'shutdown'" class="setting-options">
-        <button v-for="value in shutdownOptions" :key="value" class="setting-option" :class="{ active: draftShutdown === value }" type="button" @click="draftShutdown = value">
+        <button v-for="value in shutdownOptions" :key="value" class="setting-option" :class="{ active: draftShutdown === value }" :aria-pressed="draftShutdown === value" type="button" @click="draftShutdown = value">
           {{ value === 0 ? t('dualPon.never') : value === 60 ? t('dualPon.oneHour') : t('dualPon.minutes', { count: value }) }}
         </button>
       </div>
 
       <div v-else-if="activeDialog === 'language'" class="setting-options">
-        <button v-for="language in languages" :key="language.value" class="setting-option" :class="{ active: draftLanguage === language.value }" type="button" @click="draftLanguage = language.value">{{ language.label }}</button>
+        <button v-for="language in languages" :key="language.value" class="setting-option" :class="{ active: draftLanguage === language.value }" :aria-pressed="draftLanguage === language.value" type="button" @click="draftLanguage = language.value">{{ language.label }}</button>
       </div>
 
       <div v-else-if="activeDialog === 'datetime'" class="date-time-fields">
@@ -89,14 +90,6 @@ import DualPonPageShell from './DualPonPageShell.vue'
 import DualPonFunctionNav from './DualPonFunctionNav.vue'
 import { useDualPonState, type DualPonDeviceLanguage } from './useDualPonState'
 import { useDualPonDevice } from './useDualPonDevice'
-import bluetoothIcon from '@/assets/icons/pon-meter/ui/bluetooth.png'
-import brightnessIcon from '@/assets/icons/pon-meter/ui/screen-brightness.png'
-import buzzerIcon from '@/assets/icons/pon-meter/ui/buzzer.png'
-import timerIcon from '@/assets/icons/pon-meter/ui/timer.png'
-import languageIcon from '@/assets/icons/pon-meter/ui/language.png'
-import updateIcon from '@/assets/app/icons/device/upload.png'
-import infoIcon from '@/assets/icons/pon-meter/ui/info.png'
-import resetIcon from '@/assets/icons/pon-meter/ui/restore.png'
 
 type SettingDialog = 'bluetooth' | 'brightness' | 'buzzer' | 'shutdown' | 'language' | 'datetime' | 'update' | 'info' | 'reset'
 type ShutdownValue = 0 | 5 | 15 | 30 | 60
@@ -130,21 +123,21 @@ const updateAction = computed(() => state.runtime.upgradeStatus === 'ready' ? t(
 
 const settingSections = computed<DeviceSettingSection[]>(() => [
   { key: 'device', title: t('dualPon.hardwareMenu'), items: [
-    { key: 'shutdown', label: t('dualPon.autoShutdown'), description: t('dualPon.autoShutdownHint'), value: shutdownLabel.value, icon: timerIcon },
-    { key: 'brightness', label: t('dualPon.screenBrightness'), description: t('dualPon.brightnessHint'), value: `${state.persisted.brightness}%`, icon: brightnessIcon },
-    { key: 'buzzer', label: t('dualPon.buzzer'), description: t('dualPon.buzzerHint'), value: state.persisted.buzzerEnabled ? t('dualPon.on') : t('dualPon.off'), icon: buzzerIcon },
-    { key: 'language', label: t('dualPon.deviceLanguage'), description: t('dualPon.deviceLanguageHint'), value: languageLabel.value, icon: languageIcon }
+    { key: 'shutdown', label: t('dualPon.autoShutdown'), value: shutdownLabel.value, iconName: 'timer' },
+    { key: 'brightness', label: t('dualPon.screenBrightness'), value: `${state.persisted.brightness}%`, iconName: 'brightness' },
+    { key: 'buzzer', label: t('dualPon.buzzer'), value: state.persisted.buzzerEnabled ? t('dualPon.on') : t('dualPon.off'), iconName: 'buzzer' },
+    { key: 'language', label: t('dualPon.deviceLanguage'), description: t('dualPon.deviceLanguageHint'), value: languageLabel.value, iconName: 'translate' }
   ] },
   { key: 'connection', title: t('dualPon.bluetoothControl'), items: [
-    { key: 'bluetooth', label: t('dualPon.bluetooth'), description: device.value?.name || '', icon: bluetoothIcon, badge: connected.value ? t('dualPon.connectedShort') : t('dualPon.disconnected'), badgeTone: connected.value ? 'success' : 'warning' }
+    { key: 'bluetooth', label: t('dualPon.bluetooth'), description: device.value?.name || '', iconName: 'bluetooth', badge: connected.value ? t('dualPon.connectedShort') : t('dualPon.disconnected'), badgeTone: connected.value ? 'success' : 'warning' }
   ] },
   { key: 'information', title: t('dualPon.deviceInformation'), items: [
-    { key: 'datetime', label: t('dualPon.dateTime'), description: t('dualPon.dateTimeHint'), value: `${state.persisted.deviceDate} ${state.persisted.deviceTime}`, icon: timerIcon },
-    { key: 'info', label: t('dualPon.aboutDevice'), description: `${device.value?.model || 'DPON-300'} · ${device.value?.productBatch || 'DPON-202607-A01'}`, value: 'V1.0.0', icon: infoIcon }
+    { key: 'datetime', label: t('dualPon.dateTime'), description: t('dualPon.dateTimeHint'), value: `${state.persisted.deviceDate} ${state.persisted.deviceTime}`, iconName: 'calendar' },
+    { key: 'info', label: t('dualPon.aboutDevice'), description: `${device.value?.model || 'DPON-300'} · ${device.value?.productBatch || 'DPON-202607-A01'}`, value: 'V1.0.0', iconName: 'info' }
   ] },
   { key: 'maintenance', title: t('dualPon.deviceMaintenance'), items: [
-    { key: 'update', label: t('dualPon.deviceUpdate'), description: updateHint.value, value: 'V1.0.0', icon: updateIcon, badge: state.runtime.upgradeStatus === 'ready' ? t('dualPon.updateReady') : undefined, badgeTone: 'warning' },
-    { key: 'reset', label: t('dualPon.factoryReset'), description: t('dualPon.factoryResetHint'), icon: resetIcon, tone: 'danger' }
+    { key: 'update', label: t('dualPon.deviceUpdate'), description: updateHint.value, value: 'V1.0.0', iconName: 'upload', badge: state.runtime.upgradeStatus === 'ready' ? t('dualPon.updateReady') : undefined, badgeTone: 'warning' },
+    { key: 'reset', label: t('dualPon.factoryReset'), description: t('dualPon.factoryResetHint'), iconName: 'restore', tone: 'danger' }
   ] }
 ])
 

@@ -17,8 +17,8 @@ const { t } = useI18n()
 </script>
 
 <style scoped>
-.secondary-header { display: grid; grid-template-columns: 40px minmax(0, 1fr) 40px; gap: 8px; align-items: center; flex-shrink: 0; min-height: 64px; padding: 10px 14px; border-bottom: 1px solid #e9ebef; background: #fff; }
-.secondary-header > button { display: grid; place-items: center; width: 40px; height: 40px; background: transparent; border: 0; border-radius: 8px; cursor: pointer; }
+.secondary-header { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; gap: 8px; align-items: center; flex-shrink: 0; min-height: 64px; padding: 10px 14px; border-bottom: 1px solid #e9ebef; background: #fff; }
+.secondary-header > button { display: grid; place-items: center; width: 44px; height: 44px; background: transparent; border: 0; border-radius: 8px; cursor: pointer; }
 .secondary-header > button:hover { background: #f0f3f8; }
 .secondary-header img { width: 24px; height: 24px; }
 .secondary-header h1 { margin: 0; font-size: 17px; font-weight: 650; line-height: 1.5; text-align: center; overflow-wrap: anywhere; }

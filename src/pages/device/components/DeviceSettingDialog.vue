@@ -1,5 +1,5 @@
 <template>
-  <div v-if="open" class="dialog-layer" role="presentation" @keydown.esc="emit('close')">
+  <div v-if="open" v-smart-otdr-overlay="!!contained" class="dialog-layer" role="presentation" @keydown.esc="emit('close')">
     <button class="dialog-mask" type="button" :aria-label="t('common.close')" @click="emit('close')"></button>
     <section class="setting-dialog" role="dialog" aria-modal="true" :aria-labelledby="titleId">
       <header>
@@ -27,11 +27,13 @@
 </template>
 
 <script setup lang="ts">
+import { vSmartOtdrOverlay } from '@/directives/smartOtdrOverlay'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import closeIcon from '@/assets/app/icons/common/close.png'
+import closeIcon from '@/assets/icons/iconfont/device/close.svg'
 
 const props = withDefaults(defineProps<{
+  contained?: boolean
   open: boolean
   title: string
   description?: string

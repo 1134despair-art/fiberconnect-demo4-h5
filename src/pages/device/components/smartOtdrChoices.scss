@@ -1,0 +1,41 @@
+// Size option groups against their own available width, not the browser viewport.
+.smart-choice-grid.smart-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--choice-min-width, 80px)), 1fr));
+  gap: 8px;
+  min-width: 0;
+}
+.smart-choice-grid .smart-choice-button {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  margin: 0;
+  padding: 9px 6px;
+  border: 1px solid #d9e3f0;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #334e70;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  box-shadow: none;
+}
+.smart-choice-grid .smart-choice-button.active {
+  border-color: #2563eb;
+  background: #2563eb;
+  color: #fff;
+}
+.smart-choice-grid .smart-choice-button:disabled { opacity: .45; cursor: not-allowed; }
+.smart-choice-grid .smart-choice-button:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+.smart-choice-grid > :is(p, .rule-tip-list, .inline-input, .setting-choice-row--input, .threshold-option-row--input) { grid-column: 1 / -1; }
+.smart-choice-grid--compact.smart-choice-grid { --choice-min-width: 58px; }
+.smart-choice-grid .smart-choice-button.is-wide { grid-column: 1 / -1; }

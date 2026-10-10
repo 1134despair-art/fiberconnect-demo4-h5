@@ -12,8 +12,9 @@
           :disabled="item.disabled"
           @click="emit('select', item.key)"
         >
-          <span class="settings-icon" :class="item.tone">
-            <img v-if="item.icon" :src="item.icon" alt="" />
+          <span class="settings-icon" :class="item.tone" :style="{ backgroundColor: settingsIconBackground(item.iconName) }">
+            <SettingsGlyph v-if="item.iconName" :name="item.iconName" />
+            <img v-else-if="item.icon" :src="item.icon" alt="" />
           </span>
           <span class="settings-copy">
             <strong>{{ item.label }}</strong>
@@ -22,7 +23,8 @@
           <span class="settings-value">
             <b v-if="item.badge" :class="item.badgeTone">{{ item.badge }}</b>
             <span v-if="item.value">{{ item.value }}</span>
-            <img :src="chevronIcon" alt="" />
+            <SettingsGlyph v-if="item.iconName" class="settings-chevron" name="chevron" />
+            <img v-else :src="chevronIcon" alt="" />
           </span>
         </button>
       </div>
@@ -31,7 +33,9 @@
 </template>
 
 <script setup lang="ts">
-import chevronIcon from '@/assets/app/icons/common/chevron-right.png'
+import SettingsGlyph from '@/components/SettingsGlyph.vue'
+import { settingsIconBackground } from '@/components/settingsIconPalette'
+import chevronIcon from '@/assets/icons/iconfont/device/chevron.svg'
 
 export interface DeviceSettingItem {
   key: string
@@ -39,6 +43,7 @@ export interface DeviceSettingItem {
   description?: string
   value?: string
   icon?: string
+  iconName?: string
   disabled?: boolean
   tone?: 'default' | 'danger'
   badge?: string

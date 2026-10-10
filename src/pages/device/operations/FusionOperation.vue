@@ -1,11 +1,6 @@
 <template>
   <div class="app-container legacy-operation-page">
-    <header class="header">
-      <button @click="goBack" class="back-btn">
-        ← {{ t('common.back') }}
-      </button>
-      <div class="page-title">{{ t('device.fusionOperation.title') }}</div>
-    </header>
+    <WorkspaceHeader :title="t('device.fusionOperation.title')" @back="goBack" />
 
     <div class="content-flex hide-scrollbar">
       <div class="actions-wrap">
@@ -34,10 +29,13 @@
         </div>
       </div>
     </div>
+    <FusionFunctionNav />
   </div>
 </template>
 
 <script setup lang="ts">
+import FusionFunctionNav from '../components/FusionFunctionNav.vue'
+import WorkspaceHeader from '@/components/WorkspaceHeader.vue'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -201,4 +199,14 @@ const switchXYLarge = () => {
   grid-column: 1 / -1;
 }
 
+/* Shared mobile instrument rhythm, retaining each hardware operation. */
+.app-container.legacy-operation-page {background:#f7f9fc;}
+.legacy-operation-page :is(.settings-card,.stats-card,.records-card,.actions-panel,.status-card,.wavelength-card,.control-card,.maintenance-item) {border:1px solid #d8e2ef;border-radius:12px;background:#fff;box-shadow:none;}
+.legacy-operation-page :is(.p-4,.actions-wrap) {padding:14px;}
+.legacy-operation-page button {min-height:44px;min-width:44px;border-radius:8px;font-family:inherit;}
+.legacy-operation-page :is(.setting-label,.item-desc,.record-count) {font-size:13px;line-height:1.5;}
+.legacy-operation-page .setting-item {gap:12px;flex-wrap:wrap;}
+.legacy-operation-page .setting-control {min-width:0;max-width:100%;}
+.legacy-operation-page .section-title {font-size:15px;}
+.legacy-operation-page button:focus-visible {outline:2px solid #2563eb;outline-offset:2px;}
 </style>

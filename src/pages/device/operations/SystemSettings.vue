@@ -24,7 +24,7 @@
       <!-- 顶部标题栏 -->
       <header class="header">
         <button @click="goBack" class="back-btn">
-          ← {{ t('common.back') }}
+          <DeviceIcon name="back" style="font-size: 18px; vertical-align: middle" /> {{ t('common.back') }}
         </button>
         <div class="page-title">{{ t('settings.systemSettings') }}</div>
         <div class="header-placeholder"></div>
@@ -80,7 +80,7 @@
           <div v-if="isMultiOpm" class="setting-item clickable" @click="showNetworkInfoModal = true">
             <div class="setting-label">{{ t('settings.networkInfo') }}</div>
             <div class="setting-control">
-              <span class="iconify arrow-icon" data-icon="mdi:chevron-right"></span>
+              <DeviceIcon class="iconify arrow-icon" name="mdi:chevron-right" />
             </div>
           </div>
 
@@ -88,7 +88,7 @@
             <div class="setting-label">{{ t('settings.language') }}</div>
             <div class="setting-control">
               <span class="version-text">{{ languageLabels[locale] }}</span>
-              <span class="iconify arrow-icon" data-icon="mdi:chevron-right"></span>
+              <DeviceIcon class="iconify arrow-icon" name="mdi:chevron-right" />
             </div>
           </div>
 
@@ -130,7 +130,7 @@
           >
             <div class="setting-label">{{ btState.connected ? '断开蓝牙' : '连接蓝牙' }}</div>
             <div class="setting-control">
-              <span class="iconify arrow-icon" data-icon="mdi:chevron-right"></span>
+              <DeviceIcon class="iconify arrow-icon" name="mdi:chevron-right" />
             </div>
           </div>
 
@@ -142,7 +142,7 @@
           >
             <div class="setting-label">{{ t('device.otdr.removeBluetooth') }}</div>
             <div class="setting-control">
-              <span class="iconify arrow-icon" data-icon="mdi:chevron-right"></span>
+              <DeviceIcon class="iconify arrow-icon" name="mdi:chevron-right" />
             </div>
           </div>
 
@@ -200,7 +200,7 @@
             <div class="setting-label">{{ t('settings.language') }}</div>
             <div class="setting-control">
               <span class="version-text">{{ languageLabels[locale] }}</span>
-              <span class="iconify arrow-icon" data-icon="mdi:chevron-right"></span>
+              <DeviceIcon class="iconify arrow-icon" name="mdi:chevron-right" />
             </div>
           </div>
 
@@ -221,7 +221,7 @@
           <div class="setting-item clickable" @click="showSystemInfo = true">
             <div class="setting-label">{{ t('settings.systemInfo') }}</div>
             <div class="setting-control">
-              <span class="iconify arrow-icon" data-icon="mdi:chevron-right"></span>
+              <DeviceIcon class="iconify arrow-icon" name="mdi:chevron-right" />
             </div>
           </div>
           
@@ -230,7 +230,7 @@
             <div class="setting-control">
               <span v-if="hasFirmwareUpdate" class="update-badge">{{ t('settings.newVersion') }}</span>
               <span class="version-text">{{ hasFirmwareUpdate ? latestFirmwareVersion : systemInfo.firmwareVersion }}</span>
-              <span class="iconify arrow-icon" data-icon="mdi:chevron-right"></span>
+              <DeviceIcon class="iconify arrow-icon" name="mdi:chevron-right" />
             </div>
           </div>
           
@@ -241,7 +241,7 @@
               <span class="status-badge" :class="systemInfo.registrationStatus">
                 {{ systemInfo.registrationStatus === 'activated' ? t('settings.activated') : t('settings.notActivated') }}
               </span>
-              <span class="iconify arrow-icon" data-icon="mdi:chevron-right"></span>
+              <DeviceIcon class="iconify arrow-icon" name="mdi:chevron-right" />
             </div>
           </div>
           
@@ -249,7 +249,7 @@
           <div v-if="isFusionSplicer" class="setting-item clickable" @click="showPasswordInput = true">
             <div class="setting-label">{{ t('settings.deviceAuth') }}</div>
             <div class="setting-control">
-              <span class="iconify arrow-icon" data-icon="mdi:chevron-right"></span>
+              <DeviceIcon class="iconify arrow-icon" name="mdi:chevron-right" />
             </div>
           </div>
           
@@ -257,7 +257,7 @@
           <div class="setting-item clickable" @click="showFactoryReset = true">
             <div class="setting-label">{{ t('settings.factoryReset') }}</div>
             <div class="setting-control">
-              <span class="iconify arrow-icon" data-icon="mdi:chevron-right"></span>
+              <DeviceIcon class="iconify arrow-icon" name="mdi:chevron-right" />
             </div>
           </div>
           
@@ -265,7 +265,7 @@
           <div v-if="isFusionSplicer" class="setting-item clickable" @click="showFactoryMode = true">
             <div class="setting-label">{{ t('settings.factoryMode') }}</div>
             <div class="setting-control">
-              <span class="iconify arrow-icon" data-icon="mdi:chevron-right"></span>
+              <DeviceIcon class="iconify arrow-icon" name="mdi:chevron-right" />
             </div>
           </div>
         </div>
@@ -281,83 +281,57 @@
     </template>
 
     <!-- 语言设置弹窗 (Action Sheet) -->
-    <div v-if="showSmartSystemSettingModal" class="modal-overlay smart-modal-overlay" @click="showSmartSystemSettingModal = false">
+    <div v-if="showSmartSystemSettingModal" v-smart-otdr-overlay="isSmartOtdr" class="modal-overlay smart-modal-overlay" @click="showSmartSystemSettingModal = false">
       <div class="modal-content smart-mobile-modal smart-setting-modal" @click.stop>
         <div class="modal-header">
           <h3 class="modal-title">{{ activeSmartSystemSetting.label }}</h3>
           <button @click="showSmartSystemSettingModal = false" class="modal-close">
-            <span class="iconify" data-icon="mdi:close"></span>
+            <DeviceIcon class="iconify" name="mdi:close" />
           </button>
         </div>
         <div class="modal-body">
-          <div v-if="activeSmartSystemSettingKey === 'language'" class="editor-group">
-            <label class="radio-row">
-              <input v-model="smartSystemSettingsDraft.language" type="radio" value="zh-CN" />
-              简体中文
-            </label>
-            <label class="radio-row">
-              <input v-model="smartSystemSettingsDraft.language" type="radio" value="en" />
-              English
-            </label>
+          <section v-if="['date','time'].includes(activeSmartSystemSettingKey)" class="device-clock-setting">
+            <label><input type="checkbox" :checked="deviceRuntime.autoTime" @change="setAutoTime(($event.target as HTMLInputElement).checked)" /> 联网自动校时</label>
+            <p>{{ deviceRuntime.syncing ? '正在同步…' : deviceRuntime.error || (deviceRuntime.clock ? `最近同步：${new Date(deviceRuntime.clock.syncedAt).toLocaleString()} · ${deviceRuntime.clock.channel === 'bluetooth' ? '蓝牙' : '4G'}` : '等待设备连接') }}</p>
+            <button type="button" :disabled="deviceRuntime.syncing" @click="syncTime(true)">立即同步</button>
+            <small v-if="getSmartOtdrAdapter().mode === 'prototype'">原型演示：模拟设备校时回执</small>
+          </section>
+
+          <div v-if="activeSmartSystemSettingKey === 'language'" class="editor-group smart-choice-grid">
+            <button v-for="item in deviceRuntime.languages" :key="item.code" :disabled="languageSaving" type="button" class="smart-choice-button" :class="{ active: deviceRuntime.language === item.code }" :aria-pressed="deviceRuntime.language === item.code" @click="changeDeviceLanguage(item.code)">{{ item.label }}</button>
+            <p v-if="!deviceRuntime.languages.length">正在读取设备支持的语言…</p>
+            <p v-if="languageError" role="alert">{{ languageError }}</p>
           </div>
 
-          <div v-else-if="activeSmartSystemSettingKey === 'backlight'" class="editor-group">
-            <label class="radio-row">
-              <input v-model="smartSystemSettingsDraft.backlightMode" type="radio" value="normal" />
-              常规
-            </label>
-            <label class="radio-row">
-              <input v-model="smartSystemSettingsDraft.backlightMode" type="radio" value="strong" />
-              强光
-            </label>
-            <label class="radio-row">
-              <input v-model="smartSystemSettingsDraft.backlightMode" type="radio" value="power-save" />
-              省电
-            </label>
-            <label class="radio-row inline-input">
-              <span class="radio-inline-left">
-                <input v-model="smartSystemSettingsDraft.backlightMode" type="radio" value="custom" />
-                自定义
-              </span>
+          <div v-else-if="activeSmartSystemSettingKey === 'backlight'" class="editor-group smart-choice-grid">
+            <button  type="button" class="smart-choice-button" :class="{ active: smartSystemSettingsDraft.backlightMode === 'normal' }" :aria-pressed="smartSystemSettingsDraft.backlightMode === 'normal'" @click="smartSystemSettingsDraft.backlightMode = 'normal'">常规</button>
+            <button  type="button" class="smart-choice-button" :class="{ active: smartSystemSettingsDraft.backlightMode === 'strong' }" :aria-pressed="smartSystemSettingsDraft.backlightMode === 'strong'" @click="smartSystemSettingsDraft.backlightMode = 'strong'">强光</button>
+            <button  type="button" class="smart-choice-button" :class="{ active: smartSystemSettingsDraft.backlightMode === 'power-save' }" :aria-pressed="smartSystemSettingsDraft.backlightMode === 'power-save'" @click="smartSystemSettingsDraft.backlightMode = 'power-save'">省电</button>
+            <button type="button" class="smart-choice-button"
+              :class="{ active: smartSystemSettingsDraft.backlightMode === 'custom' }"
+              :aria-pressed="smartSystemSettingsDraft.backlightMode === 'custom'"
+              @click="smartSystemSettingsDraft.backlightMode = 'custom'">自定义</button>
+            <label v-if="smartSystemSettingsDraft.backlightMode === 'custom'" class="radio-row inline-input smart-backlight-custom">
+              <span>亮度</span>
               <span class="radio-inline-right">
-                <input
-                  v-model="smartSystemSettingsDraft.backlightCustomPercent"
-                  class="editor-inline-input"
-                  type="text"
-                  maxlength="3"
-                />
+                <input v-model="smartSystemSettingsDraft.backlightCustomPercent" class="editor-inline-input" type="text" inputmode="numeric" maxlength="3" aria-label="自定义背光百分比" />
                 <span>%</span>
               </span>
             </label>
           </div>
 
-          <div v-else-if="activeSmartSystemSettingKey === 'autoShutdown'" class="editor-group">
-            <label v-for="item in autoShutdownOptions" :key="item.value" class="radio-row">
-              <input v-model="smartSystemSettingsDraft.autoShutdownMode" type="radio" :value="item.value" />
-              {{ item.label }}
-            </label>
+          <div v-else-if="activeSmartSystemSettingKey === 'autoShutdown'" class="editor-group smart-choice-grid">
+            <button v-for="item in autoShutdownOptions" :key="item.value" type="button" class="smart-choice-button" :class="{ active: smartSystemSettingsDraft.autoShutdownMode === item.value }" :aria-pressed="smartSystemSettingsDraft.autoShutdownMode === item.value" @click="smartSystemSettingsDraft.autoShutdownMode = item.value">{{ item.label }}</button>
           </div>
 
-          <div v-else-if="activeSmartSystemSettingKey === 'beeper'" class="editor-group">
-            <label class="radio-row">
-              <input v-model="smartSystemSettingsDraft.beeperMode" type="radio" value="on" />
-              开启
-            </label>
-            <label class="radio-row">
-              <input v-model="smartSystemSettingsDraft.beeperMode" type="radio" value="off" />
-              关闭
-            </label>
+          <div v-else-if="activeSmartSystemSettingKey === 'beeper'" class="editor-group smart-choice-grid">
+            <button  type="button" class="smart-choice-button" :class="{ active: smartSystemSettingsDraft.beeperMode === 'on' }" :aria-pressed="smartSystemSettingsDraft.beeperMode === 'on'" @click="smartSystemSettingsDraft.beeperMode = 'on'">开启</button>
+            <button  type="button" class="smart-choice-button" :class="{ active: smartSystemSettingsDraft.beeperMode === 'off' }" :aria-pressed="smartSystemSettingsDraft.beeperMode === 'off'" @click="smartSystemSettingsDraft.beeperMode = 'off'">关闭</button>
           </div>
 
-          <div v-else-if="activeSmartSystemSettingKey === 'usb'" class="editor-group">
-            <label class="radio-row">
-              <input v-model="smartSystemSettingsDraft.usbMode" type="radio" value="pc" />
-              连接电脑
-            </label>
-            <label class="radio-row">
-              <input v-model="smartSystemSettingsDraft.usbMode" type="radio" value="disk" />
-              U盘
-            </label>
+          <div v-else-if="activeSmartSystemSettingKey === 'usb'" class="editor-group smart-choice-grid">
+            <button  type="button" class="smart-choice-button" :class="{ active: smartSystemSettingsDraft.usbMode === 'pc' }" :aria-pressed="smartSystemSettingsDraft.usbMode === 'pc'" @click="smartSystemSettingsDraft.usbMode = 'pc'">连接电脑</button>
+            <button  type="button" class="smart-choice-button" :class="{ active: smartSystemSettingsDraft.usbMode === 'disk' }" :aria-pressed="smartSystemSettingsDraft.usbMode === 'disk'" @click="smartSystemSettingsDraft.usbMode = 'disk'">U盘</button>
           </div>
 
           <div v-else-if="activeSmartSystemSettingKey === 'date'" class="editor-group">
@@ -366,7 +340,7 @@
                 <button
                   v-for="year in smartDateYearOptions"
                   :key="year"
-                  class="picker-option"
+                  class="picker-option" :disabled="isSmartOtdr && deviceRuntime.autoTime"
                   :class="{ active: smartSystemSettingsDraft.dateYear === year }"
                   type="button"
                   @click="smartSystemSettingsDraft.dateYear = year"
@@ -378,7 +352,7 @@
                 <button
                   v-for="month in smartDateMonthOptions"
                   :key="month"
-                  class="picker-option"
+                  class="picker-option" :disabled="isSmartOtdr && deviceRuntime.autoTime"
                   :class="{ active: smartSystemSettingsDraft.dateMonth === month }"
                   type="button"
                   @click="smartSystemSettingsDraft.dateMonth = month"
@@ -390,7 +364,7 @@
                 <button
                   v-for="day in smartDateDayOptions"
                   :key="day"
-                  class="picker-option"
+                  class="picker-option" :disabled="isSmartOtdr && deviceRuntime.autoTime"
                   :class="{ active: smartSystemSettingsDraft.dateDay === day }"
                   type="button"
                   @click="smartSystemSettingsDraft.dateDay = day"
@@ -407,7 +381,7 @@
                 <button
                   v-for="hour in smartTimeHourOptions"
                   :key="hour"
-                  class="picker-option"
+                  class="picker-option" :disabled="isSmartOtdr && deviceRuntime.autoTime"
                   :class="{ active: smartSystemSettingsDraft.timeHour === hour }"
                   type="button"
                   @click="smartSystemSettingsDraft.timeHour = hour"
@@ -419,7 +393,7 @@
                 <button
                   v-for="minute in smartTimeMinuteOptions"
                   :key="minute"
-                  class="picker-option"
+                  class="picker-option" :disabled="isSmartOtdr && deviceRuntime.autoTime"
                   :class="{ active: smartSystemSettingsDraft.timeMinute === minute }"
                   type="button"
                   @click="smartSystemSettingsDraft.timeMinute = minute"
@@ -434,37 +408,25 @@
       </div>
     </div>
 
-    <div v-if="showSmartConnectionModal" class="modal-overlay smart-modal-overlay" @click="showSmartConnectionModal = false">
+    <div v-if="showSmartConnectionModal" v-smart-otdr-overlay="isSmartOtdr" class="modal-overlay smart-modal-overlay" @click="showSmartConnectionModal = false">
       <div class="modal-content smart-mobile-modal smart-setting-modal" @click.stop>
         <div class="modal-header">
           <h3 class="modal-title">连接</h3>
           <button @click="showSmartConnectionModal = false" class="modal-close">
-            <span class="iconify" data-icon="mdi:close"></span>
+            <DeviceIcon class="iconify" name="mdi:close" />
           </button>
         </div>
         <div class="modal-body">
-          <div class="editor-group">
+          <div class="editor-group smart-choice-grid">
             <div class="subview-title">蓝牙</div>
-            <label class="radio-row">
-              <input v-model="smartSystemSettingsDraft.bluetoothEnabled" :value="true" type="radio" />
-              开启
-            </label>
-            <label class="radio-row">
-              <input v-model="smartSystemSettingsDraft.bluetoothEnabled" :value="false" type="radio" />
-              关闭
-            </label>
+            <button  type="button" class="smart-choice-button" :class="{ active: smartSystemSettingsDraft.bluetoothEnabled === true }" :aria-pressed="smartSystemSettingsDraft.bluetoothEnabled === true" @click="smartSystemSettingsDraft.bluetoothEnabled = true">开启</button>
+            <button  type="button" class="smart-choice-button" :class="{ active: smartSystemSettingsDraft.bluetoothEnabled === false }" :aria-pressed="smartSystemSettingsDraft.bluetoothEnabled === false" @click="smartSystemSettingsDraft.bluetoothEnabled = false">关闭</button>
           </div>
 
-          <div class="editor-group smart-connection-group">
+          <div class="editor-group smart-connection-group smart-choice-grid">
             <div class="subview-title">4G</div>
-            <label class="radio-row">
-              <input v-model="smartSystemSettingsDraft.network4gEnabled" :value="true" type="radio" />
-              开启
-            </label>
-            <label class="radio-row">
-              <input v-model="smartSystemSettingsDraft.network4gEnabled" :value="false" type="radio" />
-              关闭
-            </label>
+            <button  type="button" class="smart-choice-button" :class="{ active: smartSystemSettingsDraft.network4gEnabled === true }" :aria-pressed="smartSystemSettingsDraft.network4gEnabled === true" @click="smartSystemSettingsDraft.network4gEnabled = true">开启</button>
+            <button  type="button" class="smart-choice-button" :class="{ active: smartSystemSettingsDraft.network4gEnabled === false }" :aria-pressed="smartSystemSettingsDraft.network4gEnabled === false" @click="smartSystemSettingsDraft.network4gEnabled = false">关闭</button>
             <button
               class="smart-remote-entry"
               type="button"
@@ -479,12 +441,12 @@
       </div>
     </div>
 
-    <div v-if="showSmartRemoteCenter" class="modal-overlay smart-modal-overlay" @click="showSmartRemoteCenter = false">
+    <div v-if="showSmartRemoteCenter" v-smart-otdr-overlay="isSmartOtdr" class="modal-overlay smart-modal-overlay" @click="showSmartRemoteCenter = false">
       <div class="modal-content smart-mobile-modal smart-remote-modal" @click.stop>
         <div class="modal-header">
           <h3 class="modal-title">4G远程管理</h3>
           <button class="modal-close" type="button" @click="showSmartRemoteCenter = false">
-            <span class="iconify" data-icon="mdi:close"></span>
+            <DeviceIcon class="iconify" name="mdi:close" />
           </button>
         </div>
         <div class="modal-body">
@@ -533,7 +495,7 @@
         <div class="action-sheet-header">
           <div class="action-sheet-title">{{ t('settings.selectLanguage') }}</div>
           <button @click="showLanguageModal = false" class="action-sheet-close">
-            <span class="iconify" data-icon="mdi:close" style="font-size: 20px;"></span>
+            <DeviceIcon class="iconify" name="mdi:close" style="font-size: 20px;" />
           </button>
         </div>
         <div class="language-list">
@@ -545,18 +507,18 @@
             @click="selectLanguage(key)"
           >
             <span class="language-name">{{ label }}</span>
-            <span v-if="locale === key" class="iconify check-icon" data-icon="mdi:check"></span>
+            <DeviceIcon v-if="locale === key" class="iconify check-icon" name="mdi:check" />
           </div>
         </div>
       </div>
     </div>
 
-    <div v-if="btModal.visible" class="modal-overlay" @click="closeBtModal">
+    <div v-if="btModal.visible" v-smart-otdr-overlay="isSmartOtdr" class="modal-overlay" @click="closeBtModal">
       <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3 class="modal-title">{{ btModal.title }}</h3>
           <button class="modal-close" @click="closeBtModal">
-            <span class="iconify" data-icon="mdi:close" style="font-size: 20px;"></span>
+            <DeviceIcon class="iconify" name="mdi:close" style="font-size: 20px;" />
           </button>
         </div>
         <div class="modal-body">
@@ -569,12 +531,12 @@
       </div>
     </div>
 
-    <div v-if="showNetworkInfoModal" class="modal-overlay" @click="showNetworkInfoModal = false">
+    <div v-if="showNetworkInfoModal" v-smart-otdr-overlay="isSmartOtdr" class="modal-overlay" @click="showNetworkInfoModal = false">
       <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3 class="modal-title">{{ t('settings.networkInfo') }}</h3>
           <button class="modal-close" @click="showNetworkInfoModal = false">
-            <span class="iconify" data-icon="mdi:close" style="font-size: 20px;"></span>
+            <DeviceIcon class="iconify" name="mdi:close" style="font-size: 20px;" />
           </button>
         </div>
         <div class="modal-body">
@@ -596,12 +558,12 @@
     </div>
 
     <!-- 系统信息弹窗 -->
-    <div v-if="showSystemInfo" class="modal-overlay" :class="{ 'smart-modal-overlay': isSmartOtdr }" @click="showSystemInfo = false">
+    <div v-if="showSystemInfo" v-smart-otdr-overlay="isSmartOtdr" class="modal-overlay" :class="{ 'smart-modal-overlay': isSmartOtdr }" @click="showSystemInfo = false">
       <div class="modal-content" :class="isSmartOtdr ? ['smart-mobile-modal', 'smart-large-modal'] : []" @click.stop>
         <div class="modal-header">
           <h3 class="modal-title">{{ t('settings.systemInfo') }}</h3>
           <button @click="showSystemInfo = false" class="modal-close">
-            <span class="iconify" data-icon="mdi:close"></span>
+            <DeviceIcon class="iconify" name="mdi:close" />
           </button>
         </div>
         <div class="modal-body">
@@ -678,12 +640,12 @@
       </div>
     </div>
 
-    <div v-if="showFirmwareUpgrade" class="modal-overlay" :class="{ 'smart-modal-overlay': isSmartOtdr }" @click="handleFirmwareOverlayClick">
+    <div v-if="showFirmwareUpgrade" v-smart-otdr-overlay="isSmartOtdr" class="modal-overlay" :class="{ 'smart-modal-overlay': isSmartOtdr }" @click="handleFirmwareOverlayClick">
       <div class="modal-content" :class="isSmartOtdr ? ['smart-mobile-modal', 'smart-confirm-modal'] : []" @click.stop>
         <div class="modal-header">
           <h3 class="modal-title">{{ t('settings.firmwareUpgrade') }}</h3>
           <button @click="closeFirmwareUpgrade" class="modal-close">
-            <span class="iconify" data-icon="mdi:close"></span>
+            <DeviceIcon class="iconify" name="mdi:close" />
           </button>
         </div>
         <div v-if="isSmartOtdr" class="modal-body smart-confirm-body">
@@ -712,7 +674,7 @@
         <div v-else class="modal-body">
           <div class="firmware-panel">
             <div v-if="isCheckingFirmware" class="firmware-loading">
-              <span class="iconify loading-icon" data-icon="mdi:loading"></span>
+              <DeviceIcon class="iconify loading-icon" name="mdi:loading" />
               <span class="loading-text">{{ t('settings.checkingUpdate') }}</span>
             </div>
 
@@ -800,12 +762,12 @@
     </div>
 
     <!-- 注册信息弹窗 -->
-    <div v-if="showRegistrationInfo" class="modal-overlay" @click="showRegistrationInfo = false">
+    <div v-if="showRegistrationInfo" v-smart-otdr-overlay="isSmartOtdr" class="modal-overlay" @click="showRegistrationInfo = false">
       <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3 class="modal-title">{{ t('settings.registrationInfo') }}</h3>
           <button @click="showRegistrationInfo = false" class="modal-close">
-            <span class="iconify" data-icon="mdi:close"></span>
+            <DeviceIcon class="iconify" name="mdi:close" />
           </button>
         </div>
         <div class="modal-body">
@@ -845,12 +807,12 @@
     </div>
 
     <!-- 开机密码输入弹窗 -->
-    <div v-if="showPasswordInput" class="modal-overlay" @click="showPasswordInput = false">
+    <div v-if="showPasswordInput" v-smart-otdr-overlay="isSmartOtdr" class="modal-overlay" @click="showPasswordInput = false">
       <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3 class="modal-title">{{ t('settings.deviceAuth') }}</h3>
           <button @click="showPasswordInput = false" class="modal-close">
-            <span class="iconify" data-icon="mdi:close"></span>
+            <DeviceIcon class="iconify" name="mdi:close" />
           </button>
         </div>
         <div class="modal-body">
@@ -881,12 +843,12 @@
     </div>
 
     <!-- 设备授权设置弹窗 -->
-    <div v-if="showDeviceAuth" class="modal-overlay" @click="showDeviceAuth = false">
+    <div v-if="showDeviceAuth" v-smart-otdr-overlay="isSmartOtdr" class="modal-overlay" @click="showDeviceAuth = false">
       <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3 class="modal-title">{{ t('settings.deviceAuthSettings') }}</h3>
           <button @click="showDeviceAuth = false" class="modal-close">
-            <span class="iconify" data-icon="mdi:close"></span>
+            <DeviceIcon class="iconify" name="mdi:close" />
           </button>
         </div>
         <div class="modal-body">
@@ -936,12 +898,12 @@
     </div>
 
     <!-- 更改密码弹窗 -->
-    <div v-if="showPasswordChangeModal" class="modal-overlay" @click="showPasswordChangeModal = false">
+    <div v-if="showPasswordChangeModal" v-smart-otdr-overlay="isSmartOtdr" class="modal-overlay" @click="showPasswordChangeModal = false">
       <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3 class="modal-title">{{ t('settings.changeBootPassword') }}</h3>
           <button @click="showPasswordChangeModal = false" class="modal-close">
-            <span class="iconify" data-icon="mdi:close"></span>
+            <DeviceIcon class="iconify" name="mdi:close" />
           </button>
         </div>
         <div class="modal-body">
@@ -967,12 +929,12 @@
     </div>
 
     <!-- 恢复出厂弹窗 -->
-    <div v-if="showFactoryReset" class="modal-overlay" :class="{ 'smart-modal-overlay': isSmartOtdr }" @click="showFactoryReset = false">
+    <div v-if="showFactoryReset" v-smart-otdr-overlay="isSmartOtdr" class="modal-overlay" :class="{ 'smart-modal-overlay': isSmartOtdr }" @click="showFactoryReset = false">
       <div class="modal-content" :class="isSmartOtdr ? ['smart-mobile-modal', 'smart-confirm-modal'] : []" @click.stop>
         <div class="modal-header">
           <h3 class="modal-title">{{ t('settings.factoryReset') }}</h3>
           <button @click="showFactoryReset = false" class="modal-close">
-            <span class="iconify" data-icon="mdi:close"></span>
+            <DeviceIcon class="iconify" name="mdi:close" />
           </button>
         </div>
         <div v-if="isSmartOtdr" class="modal-body smart-confirm-body">
@@ -986,7 +948,7 @@
         <div v-else class="modal-body">
           <div class="warning-section">
             <div class="warning-icon">
-              <span class="iconify" data-icon="mdi:alert-circle"></span>
+              <DeviceIcon class="iconify" name="mdi:alert-circle" />
             </div>
             <div class="warning-text">
               <p>{{ t('settings.factoryResetWarning') }}</p>
@@ -1014,12 +976,12 @@
     </div>
 
     <!-- 工厂模式弹窗 -->
-    <div v-if="showSmartFactoryPasswordModal" class="modal-overlay smart-modal-overlay" @click="closeSmartFactoryPasswordModal">
+    <div v-if="showSmartFactoryPasswordModal && !isSmartOtdr" v-smart-otdr-overlay="isSmartOtdr" class="modal-overlay smart-modal-overlay" @click="closeSmartFactoryPasswordModal">
       <div class="modal-content smart-mobile-modal smart-setting-modal" @click.stop>
         <div class="modal-header">
           <h3 class="modal-title">工厂模式</h3>
           <button @click="closeSmartFactoryPasswordModal" class="modal-close">
-            <span class="iconify" data-icon="mdi:close"></span>
+            <DeviceIcon class="iconify" name="mdi:close" />
           </button>
         </div>
         <div class="modal-body">
@@ -1045,12 +1007,12 @@
       </div>
     </div>
 
-    <div v-if="showFactoryMode" class="modal-overlay" :class="{ 'smart-modal-overlay': isSmartOtdr }" @click="showFactoryMode = false">
+    <div v-if="showFactoryMode && !isSmartOtdr" v-smart-otdr-overlay="isSmartOtdr" class="modal-overlay" :class="{ 'smart-modal-overlay': isSmartOtdr }" @click="showFactoryMode = false">
       <div class="modal-content factory-mode-modal" :class="isSmartOtdr ? ['smart-mobile-modal', 'smart-large-modal', 'smart-factory-modal'] : []" @click.stop>
         <div class="modal-header">
           <h3 class="modal-title">{{ t('settings.factoryMode') }}</h3>
           <button @click="showFactoryMode = false" class="modal-close">
-            <span class="iconify" data-icon="mdi:close"></span>
+            <DeviceIcon class="iconify" name="mdi:close" />
           </button>
         </div>
         <div v-if="isSmartOtdr" class="modal-body">
@@ -1164,12 +1126,12 @@
 
     <div v-if="smartToastMessage" class="smart-toast">{{ smartToastMessage }}</div>
 
-    <div v-if="showSmartDeviceAuthModal" class="modal-overlay smart-modal-overlay" @click="showSmartDeviceAuthModal = false">
+    <div v-if="showSmartDeviceAuthModal && !isSmartOtdr" v-smart-otdr-overlay="isSmartOtdr" class="modal-overlay smart-modal-overlay" @click="showSmartDeviceAuthModal = false">
       <div class="modal-content smart-mobile-modal smart-large-modal" @click.stop>
         <div class="modal-header">
           <h3 class="modal-title">设备授权</h3>
           <button @click="showSmartDeviceAuthModal = false" class="modal-close">
-            <span class="iconify" data-icon="mdi:close"></span>
+            <DeviceIcon class="iconify" name="mdi:close" />
           </button>
         </div>
         <div class="modal-body">
@@ -1198,12 +1160,12 @@
       </div>
     </div>
 
-    <div v-if="showSmartUiUpdateModal" class="modal-overlay smart-modal-overlay" @click="showSmartUiUpdateModal = false">
+    <div v-if="showSmartUiUpdateModal && !isSmartOtdr" v-smart-otdr-overlay="isSmartOtdr" class="modal-overlay smart-modal-overlay" @click="showSmartUiUpdateModal = false">
       <div class="modal-content smart-mobile-modal smart-large-modal" @click.stop>
         <div class="modal-header">
           <h3 class="modal-title">UI更新</h3>
           <button @click="showSmartUiUpdateModal = false" class="modal-close">
-            <span class="iconify" data-icon="mdi:close"></span>
+            <DeviceIcon class="iconify" name="mdi:close" />
           </button>
         </div>
         <div class="modal-body">
@@ -1230,6 +1192,11 @@
 </template>
 
 <script setup lang="ts">
+import { smartOtdrIcons } from '@/assets/icons/iconfont/smart-otdr'
+import { vSmartOtdrOverlay } from '@/directives/smartOtdrOverlay'
+import { useSmartOtdrDevice } from '@/composables/useSmartOtdrDevice'
+import { getSmartOtdrAdapter } from '@/services/smartOtdr'
+import DeviceIcon from '@/components/DeviceIcon.vue'
 import { ref, reactive, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -1238,16 +1205,7 @@ import { useSmartOtdrConnectionState } from '@/composables/useSmartOtdrConnectio
 import SmartOtdrPageShell from '../components/SmartOtdrPageShell.vue'
 import SmartOtdrFunctionNav from '../components/SmartOtdrFunctionNav.vue'
 import DeviceSettingsList, { type DeviceSettingSection } from '../components/DeviceSettingsList.vue'
-import languageIcon from '@/assets/app/icons/profile/language.png'
-import backlightIcon from '@/assets/app/icons/device/flashlight.png'
-import timerIcon from '@/assets/app/icons/device/timer.png'
-import settingsIcon from '@/assets/app/icons/common/settings.png'
-import fileIcon from '@/assets/app/icons/device/file-manager.png'
-import calendarIcon from '@/assets/app/icons/common/calendar.png'
-import bluetoothIcon from '@/assets/app/icons/connection/bluetooth.png'
-import infoIcon from '@/assets/app/icons/profile/info.png'
-import uploadIcon from '@/assets/app/icons/device/upload.png'
-import warningIcon from '@/assets/app/icons/status/warning.png'
+
 
 const router = useRouter()
 const route = useRoute()
@@ -1308,7 +1266,7 @@ type UsbMode = 'pc' | 'disk'
 type SmartRemoteTab = 'status' | 'parameters' | 'files'
 
 interface SmartSystemSettingsState {
-  language: 'zh-CN' | 'en'
+  language: string
   backlightMode: BacklightMode
   backlightCustomPercent: string
   autoShutdownMode: AutoShutdownMode
@@ -1375,21 +1333,21 @@ const smartSystemEntrances = [
 ] as const satisfies ReadonlyArray<{ key: SmartSystemEntranceKey; label: string }>
 
 const smartSettingIconMap: Record<SmartSystemSettingKey, string> = {
-  language: languageIcon,
-  backlight: backlightIcon,
-  autoShutdown: timerIcon,
-  beeper: settingsIcon,
-  usb: fileIcon,
-  date: calendarIcon,
-  time: timerIcon,
-  connection: bluetoothIcon
+  language: smartOtdrIcons['language'],
+  backlight: smartOtdrIcons['brightness'],
+  autoShutdown: smartOtdrIcons['timer'],
+  beeper: smartOtdrIcons['buzzer'],
+  usb: smartOtdrIcons['usb'],
+  date: smartOtdrIcons['calendar'],
+  time: smartOtdrIcons['timer'],
+  connection: smartOtdrIcons['bluetooth']
 }
 
 const smartEntranceIconMap: Record<Exclude<SmartSystemEntranceKey, 'settings'>, string> = {
-  info: infoIcon,
-  upgrade: uploadIcon,
-  reset: warningIcon,
-  factory: settingsIcon
+  info: smartOtdrIcons['info'],
+  upgrade: smartOtdrIcons['upload'],
+  reset: smartOtdrIcons['restore'],
+  factory: smartOtdrIcons['settings']
 }
 
 const smartSystemInfoTabs = [
@@ -1537,7 +1495,7 @@ const sanitizeSmartSystemSettings = (
   const payload = input ?? {}
 
   return {
-    language: payload.language === 'en' ? 'en' : 'zh-CN',
+    language: payload.language || 'zh-CN',
     backlightMode: backlightModeOptions.includes(payload.backlightMode as BacklightMode)
       ? (payload.backlightMode as BacklightMode)
       : defaults.backlightMode,
@@ -1793,14 +1751,32 @@ const selectLanguage = (lang: string) => {
   showLanguageModal.value = false
 }
 
-watch(
-  () => smartSystemSettingsDraft.language,
-  value => {
-    locale.value = value
-    localStorage.setItem('locale_device', value)
-    basicSettings.language = value
-  }
-)
+const { runtime: deviceRuntime, authorization: deviceAuthorization, locked: deviceLocked, setLanguage: writeDeviceLanguage, syncTime, setAutoTime } = useSmartOtdrDevice(currentDevice)
+const languageSaving = ref(false)
+const languageError = ref('')
+async function changeDeviceLanguage(code: string) {
+  languageSaving.value = true; languageError.value = ''
+  try { await writeDeviceLanguage(code) } catch (error) { languageError.value = error instanceof Error ? error.message : '语言设置失败' }
+  finally { languageSaving.value = false }
+}
+watch(() => deviceRuntime.value.language, value => {
+  if (!isSmartOtdr.value || !value) return
+  smartSystemSettingsDraft.language = value
+  if (['zh-CN', 'zh-TW', 'en'].includes(value)) { locale.value = value; basicSettings.language = value; localStorage.setItem('locale_device', value) }
+})
+watch(() => deviceRuntime.value.clock, receipt => {
+  if (!receipt || !isSmartOtdr.value) return
+  const time = new Date(receipt.deviceTime); const pad = (n: number) => String(n).padStart(2,'0')
+  Object.assign(smartSystemSettingsDraft, {dateYear:String(time.getFullYear()),dateMonth:pad(time.getMonth()+1),dateDay:pad(time.getDate()),timeHour:pad(time.getHours()),timeMinute:pad(time.getMinutes())})
+})
+watch([deviceAuthorization, currentDevice, deviceLocked], ([auth, device, locked]) => {
+  if (!device || !isSmartOtdr.value) return
+  smartSystemInfoState.deviceSerial = device.serialNumber || '--'; smartSystemInfoState.activationSerial = device.serialNumber || '--'; smartSystemInfoState.model = device.model
+  smartSystemInfoState.activationStatus = locked ? '未激活 / 授权受限' : '已激活'
+  smartSystemInfoState.activationTime = auth?.activatedAt ? new Date(auth.activatedAt).toLocaleString() : '--'
+  smartSystemInfoState.authorizedDuration = auth?.expiresAt ? `有效至 ${new Date(auth.expiresAt).toLocaleDateString()}` : '未设置到期时间'
+  smartSystemInfoState.remainingDuration = locked ? '设备已锁定' : auth?.expiresAt ? `${Math.max(0,Math.ceil((new Date(auth.expiresAt).getTime()-Date.now())/86400000))} 天` : '--'
+}, { immediate: true })
 
 watch(
   () => connectionState.bluetoothEnabled,
@@ -1910,7 +1886,7 @@ const smartConnectionSummary = computed(() => {
 
 const getSmartSystemSettingValue = (key: SmartSystemSettingKey) => {
   if (key === 'language') {
-    return smartSystemSettingsDraft.language === 'en' ? 'English' : '简体中文'
+    return deviceRuntime.value.languages.find(item => item.code === deviceRuntime.value.language)?.label || '读取中'
   }
   if (key === 'backlight') {
     if (smartSystemSettingsDraft.backlightMode === 'strong') return '强光'
@@ -1976,11 +1952,6 @@ const smartSettingSections = computed<DeviceSettingSection[]>(() => {
           label: entranceLabel('reset'),
           icon: smartEntranceIconMap.reset,
           tone: 'danger' as const
-        },
-        {
-          key: 'factory',
-          label: entranceLabel('factory'),
-          icon: smartEntranceIconMap.factory
         }
       ]
     }
@@ -1996,6 +1967,7 @@ const openSmartUnifiedSetting = (key: string) => {
 }
 
 const handleSmartSystemEntrance = (key: SmartSystemEntranceKey) => {
+  if (key === 'factory' && isSmartOtdr.value) return
   if (key === 'settings') {
     return
   }
@@ -2702,7 +2674,8 @@ const saveSettings = async () => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@use '../components/smartOtdrChoices.scss';
 .app-container {
   display: flex;
   flex-direction: column;
@@ -4707,14 +4680,14 @@ const saveSettings = async () => {
 }
 .smart-remote-entry span { display: grid; gap: 3px; }
 .smart-remote-entry strong { font-size: 12px; }
-.smart-remote-entry small { color: #64748b; font-size: 10px; }
+.smart-remote-entry small { color: #64748b; font-size:12px; }
 .smart-remote-entry b { color: #2563eb; font-size: 11px; }
 .smart-remote-entry:disabled { border-color: #e2e8f0; background: #f8fafc; opacity: .55; }
 .smart-remote-status { display: grid; gap: 4px; padding: 12px; border: 1px solid #fde68a; border-radius: 8px; background: #fffbeb; }
 .smart-remote-status > span { display: flex; align-items: center; gap: 7px; }
 .smart-remote-status i { width: 8px; height: 8px; border-radius: 50%; background: #d97706; }
 .smart-remote-status strong { font-size: 12px; }
-.smart-remote-status small { color: #64748b; font-size: 10px; line-height: 1.5; }
+.smart-remote-status small { color: #64748b; font-size:12px; line-height: 1.5; }
 .smart-remote-status.online { border-color: #bbf7d0; background: #f0fdf4; }
 .smart-remote-status.online i { background: #16a34a; }
 .smart-remote-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 12px 0; padding: 4px; border-radius: 8px; background: #eef2f7; }
@@ -4734,19 +4707,24 @@ const saveSettings = async () => {
 .smart-remote-files button { min-height: 52px; display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border: 1px solid #d8e2ef; border-radius: 8px; background: #fff; text-align: left; }
 .smart-remote-files span { display: grid; gap: 3px; }
 .smart-remote-files strong { font-size: 11px; }
-.smart-remote-files small, .smart-remote-files b { color: #64748b; font-size: 10px; }
+.smart-remote-files small, .smart-remote-files b { color: #64748b; font-size:12px; }
 .smart-remote-primary { width: 100%; min-height: 46px; margin-top: 12px; border: 0; border-radius: 8px; background: #2563eb; color: #fff; font-size: 13px; font-weight: 700; }
-.smart-remote-note { margin: 8px 0 0; color: #64748b; font-size: 9px; line-height: 1.5; text-align: center; }
+.smart-remote-note { margin: 8px 0 0; color: #64748b; font-size:12px; line-height: 1.5; text-align: center; }
 
 .smart-upgrade-methods { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 14px 0 18px; }
 .smart-upgrade-methods label { min-height: 70px; display: grid; place-items: center; align-content: center; gap: 4px; padding: 8px; border: 1px solid #d8e2ef; border-radius: 8px; background: #fff; color: #334155; font-size: 11px; font-weight: 700; }
 .smart-upgrade-methods label.active { border-color: #60a5fa; background: #eff6ff; color: #2563eb; }
 .smart-upgrade-methods input { position: absolute; opacity: 0; pointer-events: none; }
-.smart-upgrade-methods small { color: #64748b; font-size: 9px; font-weight: 500; }
+.smart-upgrade-methods small { color: #64748b; font-size:12px; font-weight: 500; }
 .smart-upgrade-progress { height: 8px; margin: 14px 0 18px; overflow: hidden; border-radius: 999px; background: #e2e8f0; }
 .smart-upgrade-progress i { display: block; height: 100%; border-radius: inherit; background: #2563eb; transition: width .2s ease; }
 
 .smart-ui-file-picker { min-height: 50px; display: flex; align-items: center; padding: 9px 12px; margin-bottom: 12px; border: 1px dashed #93c5fd; border-radius: 8px; background: #eff6ff; color: #2563eb; font-size: 11px; font-weight: 700; }
 .smart-ui-file-picker input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 .smart-ui-file-picker span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.device-clock-setting { padding:12px;background:#f1f6ff;border-radius:12px;margin-bottom:12px; }.device-clock-setting p,.device-clock-setting small { display:block;font-size:12px;line-height:1.6;color:#53657b; }.device-clock-setting button { padding:8px 14px;border:1px solid #bfdbfe;border-radius:8px;background:white;color:#2563eb; }.picker-option:disabled { opacity:.4; }
+
+.smart-choice-grid > .subview-title, .smart-choice-grid > .smart-remote-entry { grid-column:1 / -1; }
+
+.smart-backlight-custom > span:first-child { flex-shrink:0; }.smart-backlight-custom .radio-inline-right { min-width:0; }.smart-backlight-custom .editor-inline-input { width:80px;min-height:44px; }
 </style>

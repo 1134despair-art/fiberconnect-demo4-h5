@@ -14,6 +14,7 @@
       </div>
 
       <DeviceSettingDialog
+      contained
         :open="activeDialog !== null"
         :title="dialogTitle"
         :description="dialogDescription"
@@ -25,13 +26,13 @@
         @confirm="confirmSetting"
       >
         <div v-if="activeDialog === 'language'" class="setting-options">
-          <button v-for="option in languageOptions" :key="option.value" class="setting-option" :class="{ active: draftLanguage === option.value }" type="button" @click="draftLanguage = option.value">
+          <button v-for="option in languageOptions" :key="option.value" class="setting-option" :class="{ active: draftLanguage === option.value }" :aria-pressed="draftLanguage === option.value" type="button" @click="draftLanguage = option.value">
             {{ option.label }}
           </button>
         </div>
 
         <div v-else-if="activeDialog === 'shutdown'" class="setting-options">
-          <button v-for="option in shutdownOptions" :key="option.value" class="setting-option" :class="{ active: draftShutdown === option.value }" type="button" @click="draftShutdown = option.value">
+          <button v-for="option in shutdownOptions" :key="option.value" class="setting-option" :class="{ active: draftShutdown === option.value }" :aria-pressed="draftShutdown === option.value" type="button" @click="draftShutdown = option.value">
             {{ option.label }}
           </button>
         </div>
@@ -72,10 +73,6 @@ import PonFunctionNav from './PonFunctionNav.vue'
 import PonPageShell from './PonPageShell.vue'
 import { usePonDevice } from './usePonDevice'
 import { usePonPowerMeterState, type PonAutoShutdownMinutes, type PonDeviceLanguage } from './usePonPowerMeterState'
-import bluetoothIcon from '@/assets/icons/pon-meter/ui/bluetooth.png'
-import languageIcon from '@/assets/icons/pon-meter/ui/language.png'
-import timerIcon from '@/assets/icons/pon-meter/ui/timer.png'
-import infoIcon from '@/assets/icons/pon-meter/ui/info.png'
 
 type SettingDialog = 'bluetooth' | 'language' | 'shutdown' | 'info'
 
@@ -119,18 +116,18 @@ const vflModeLabel = computed(() => state.persisted.vflMode === 'off' ? t('pon.o
 const settingSections = computed<DeviceSettingSection[]>(() => [
   {
     key: 'device', title: t('pon.hardwareMenu'), items: [
-      { key: 'shutdown', label: t('pon.autoShutdown'), description: t('pon.autoShutdownHint'), value: shutdownLabel.value, icon: timerIcon },
-      { key: 'language', label: t('pon.deviceLanguage'), description: t('pon.deviceLanguageHint'), value: languageLabel.value, icon: languageIcon }
+      { key: 'shutdown', label: t('pon.autoShutdown'), value: shutdownLabel.value, iconName: 'timer' },
+      { key: 'language', label: t('pon.deviceLanguage'), value: languageLabel.value, iconName: 'translate' }
     ]
   },
   {
     key: 'connection', title: t('pon.bluetoothControl'), items: [
-      { key: 'bluetooth', label: t('pon.bluetoothControl'), description: device.value?.name || '', icon: bluetoothIcon, badge: isOnline.value ? t('pon.online') : t('pon.offline'), badgeTone: isOnline.value ? 'success' : 'warning' }
+      { key: 'bluetooth', label: t('pon.bluetoothControl'), description: device.value?.name || '', iconName: 'bluetooth', badge: isOnline.value ? t('pon.online') : t('pon.offline'), badgeTone: isOnline.value ? 'success' : 'warning' }
     ]
   },
   {
     key: 'information', title: t('pon.deviceInformation'), items: [
-      { key: 'info', label: t('pon.aboutDevice'), description: `${device.value?.model || 'PON-OPM'} · ${device.value?.productBatch || 'PON-202607-A01'}`, value: 'V1.0.0', icon: infoIcon }
+      { key: 'info', label: t('pon.aboutDevice'), description: `${device.value?.model || 'PON-OPM'} · ${device.value?.productBatch || 'PON-202607-A01'}`, value: 'V1.0.0', iconName: 'info' }
     ]
   }
 ])

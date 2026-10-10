@@ -11,10 +11,10 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import homeIcon from '@/assets/icons/dual-pon/home.svg'
-import networkIcon from '@/assets/icons/dual-pon/network-test.svg'
-import powerIcon from '@/assets/icons/dual-pon/power.svg'
-import settingsIcon from '@/assets/icons/dual-pon/settings.svg'
+import homeIcon from '@/assets/icons/iconfont/smart-otdr/navigation/home.svg'
+import networkIcon from '@/assets/icons/iconfont/instrument/network.svg'
+import powerIcon from '@/assets/icons/iconfont/smart-otdr/power.svg'
+import settingsIcon from '@/assets/icons/iconfont/smart-otdr/navigation/settings.svg'
 
 export type DualPonFunctionKey = 'home' | 'network' | 'power' | 'settings'
 const props = defineProps<{ deviceId: string; active: DualPonFunctionKey }>()
@@ -39,7 +39,7 @@ const open = (key: DualPonFunctionKey) => {
 .dual-function-nav button { @include ui.reset-button; min-width: 0; min-height: 58px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 5px 2px; border-radius: 8px; background: transparent; color: ui.$sub; }
 .dual-function-nav button span { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 8px; background: #f5f8fc; }
 .dual-function-nav img { width: 19px; height: 19px; object-fit: contain; opacity: .72; }
-.dual-function-nav strong { max-width: 100%; overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.dual-function-nav strong { max-width: 100%; overflow: hidden; font-size:12px; text-overflow: ellipsis; white-space: nowrap; }
 .dual-function-nav button.active { background: ui.$primary; color: #fff; box-shadow: 0 6px 14px rgba(37,99,235,.22); }
 .dual-function-nav button.active span { background: rgba(255,255,255,.18); }
 .dual-function-nav button.active img { filter: brightness(0) invert(1); opacity: 1; }

@@ -17,10 +17,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import homeIcon from '@/assets/app/icons/navigation/home-default.png'
-import measureIcon from '@/assets/app/icons/device/measurement.png'
-import eventMapIcon from '@/assets/app/icons/device/event-map.png'
-import settingsIcon from '@/assets/app/icons/common/settings.png'
+import homeIcon from '@/assets/icons/iconfont/smart-otdr/navigation/home.svg'
+import measureIcon from '@/assets/icons/iconfont/smart-otdr/navigation/measure.svg'
+import eventMapIcon from '@/assets/icons/iconfont/smart-otdr/navigation/event-map.svg'
+import settingsIcon from '@/assets/icons/iconfont/smart-otdr/navigation/settings.svg'
 
 export type SmartOtdrFunctionKey = 'home' | 'measure' | 'event-map' | 'settings'
 
@@ -90,20 +90,17 @@ const open = (key: SmartOtdrFunctionKey) => {
 }
 
 .smart-function-nav img {
-  width: 19px;
-  height: 19px;
+  width: 24px;
+  height: 24px;
   object-fit: contain;
-  opacity: 0.72;
+  opacity: 1;
 }
 
-.smart-function-nav button:not(.active) img {
-  filter: brightness(0) saturate(100%) invert(43%) sepia(14%) saturate(732%) hue-rotate(176deg) brightness(91%) contrast(88%);
-}
 
 .smart-function-nav strong {
   max-width: 100%;
   overflow: hidden;
-  font-size: 10px;
+  font-size: 11px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }

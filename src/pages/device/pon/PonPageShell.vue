@@ -1,5 +1,5 @@
 <template>
-  <div class="pon-shell">
+  <div class="pon-shell instrument-ui">
     <div class="pon-shell__status" aria-hidden="true">
       <strong>{{ currentTime }}</strong>
       <span>
@@ -32,11 +32,12 @@
 </template>
 
 <script setup lang="ts">
+import '../components/instrumentUi.scss'
 import { onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import backIcon from '@/assets/icons/pon-meter/ui/back.png'
-import bluetoothIcon from '@/assets/icons/pon-meter/ui/bluetooth.png'
-import batteryIcon from '@/assets/icons/pon-meter/ui/battery.png'
+import backIcon from '@/assets/icons/iconfont/smart-otdr/back.svg'
+import bluetoothIcon from '@/assets/icons/iconfont/smart-otdr/bluetooth.svg'
+import batteryIcon from '@/assets/icons/iconfont/smart-otdr/battery.svg'
 
 defineProps<{
   title: string
@@ -82,7 +83,7 @@ onUnmounted(() => {
   padding: 0 14px;
   background: #ffffff;
   color: ui.$pon-text;
-  font-size: 10px;
+  font-size:12px;
 }
 
 .pon-shell__status > span { display: flex; align-items: flex-end; gap: 3px; }

@@ -1,13 +1,8 @@
 <template>
   <div class="app-container legacy-operation-page">
     <!-- 顶部标题栏 -->
-    <header class="header">
-      <button @click="goBack" class="back-btn">
-        ← {{ t('common.back') }}
-      </button>
-      <div class="page-title">{{ t('device.fusionRecords.title') }}</div>
-    </header>
-    
+    <WorkspaceHeader :title="t('device.fusionRecords.title')" @back="goBack" />
+
     <!-- 主内容区域 -->
     <div class="content-flex hide-scrollbar">
       <div class="p-4">
@@ -47,21 +42,21 @@
               </button>
             </div>
           </div>
-          
+
           <div v-if="fusionRecords.length === 0" class="empty-records">
             <div class="empty-icon">
-              <span class="iconify" data-icon="mdi:history"></span>
+              <DeviceIcon class="iconify" name="mdi:history" />
             </div>
             <div class="empty-text">{{ t('device.fusionRecords.empty') }}</div>
           </div>
-          
+
           <div v-else class="records-list-container">
             <!-- 批量操作栏 -->
             <div class="batch-operations">
               <div class="select-all">
                 <label class="checkbox-label">
-                  <input 
-                    type="checkbox" 
+                  <input
+                    type="checkbox"
                     :checked="isAllSelected"
                     @change="toggleSelectAll"
                     class="checkbox-input"
@@ -71,8 +66,8 @@
                 </label>
               </div>
               <div class="batch-actions">
-                <button 
-                  @click="batchDelete" 
+                <button
+                  @click="batchDelete"
                   class="batch-delete-btn"
                   :disabled="selectedRecords.length === 0"
                 >
@@ -80,7 +75,7 @@
                 </button>
               </div>
             </div>
-            
+
             <!-- 列表卡片 -->
             <div class="records-list">
               <div
@@ -93,8 +88,8 @@
                 <div class="card-top-row">
                   <div class="checkbox-wrapper">
                     <label class="checkbox-label">
-                      <input 
-                        type="checkbox" 
+                      <input
+                        type="checkbox"
                         :checked="selectedRecords.includes(record.id)"
                         @change="toggleSelectRecord(record.id)"
                         class="checkbox-input"
@@ -127,7 +122,7 @@
               </div>
             </div>
           </div>
-          
+
           <!-- 分页和操作 -->
           <div v-if="fusionRecords.length > 0" class="records-footer">
             <div class="pagination">
@@ -135,7 +130,7 @@
               <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
               <button @click="nextPage" :disabled="currentPage === totalPages" class="page-btn">下一页</button>
             </div>
-            
+
             <div class="bulk-actions">
               <button @click="clearAllRecords" class="clear-btn">{{ t('device.fusionRecords.clear') }}</button>
             </div>
@@ -183,14 +178,14 @@
                 <span class="detail-value">{{ selectedRecord.time }}</span>
               </div>
             </div>
-            
+
             <!-- 查看图像按钮 -->
             <div class="image-section">
               <button @click="viewFusionImage" class="view-image-btn" :disabled="isLoadingImage">
                 {{ isLoadingImage ? t('common.loading') : t('device.fusionRecords.viewImage') }}
               </button>
               <div class="image-note">
-                <span class="iconify" data-icon="mdi:information"></span>
+                <DeviceIcon class="iconify" name="mdi:information" />
                 <span>{{ t('device.fusionRecords.imageLoading') }}</span>
               </div>
             </div>
@@ -199,6 +194,7 @@
       </div>
     </div>
 
+    <p v-if="exportFeedback" class="export-feedback" role="status">{{ exportFeedback }}</p>
     <!-- 导出弹窗 -->
     <div v-if="showExportModal" class="modal-overlay" @click="showExportModal = false">
       <div class="modal-content" @click.stop>
@@ -208,11 +204,11 @@
         </div>
         <div class="modal-body">
           <div class="export-options">
-            <div class="export-info">
-              <p>导出时硬件不会导出图片，单条记录约0.22kb。</p>
-              <p>{{ fusionRecords.length }}条记录预计传输时间：{{ exportTime }}秒</p>
+            <div class="export-info"><p>本次导出 {{ exportRecords.length }} 条{{ selectedRecords.length ? '已选' : '全部' }}记录</p>
+
+
             </div>
-            
+
             <div class="export-format">
               <h4 class="format-title">{{ t('device.fusionRecords.exportFormat') }}</h4>
               <div class="format-options">
@@ -224,13 +220,13 @@
                 <label class="radio-label">
                   <input type="radio" v-model="exportFormat" value="excel" class="radio-input" />
                   <span class="radio-custom"></span>
-                  <span class="radio-text">Excel格式</span>
+                  <span class="radio-text">Excel（XML）</span>
                 </label>
               </div>
             </div>
-            
+
             <div class="export-actions">
-              <button @click="performExport" class="export-confirm-btn" :disabled="isExporting">
+              <button @click="performExport" class="export-confirm-btn" :disabled="isExporting || !exportRecords.length">
                 {{ isExporting ? t('device.fusionRecords.exporting') : t('device.fusionRecords.startExport') }}
               </button>
             </div>
@@ -248,18 +244,18 @@
         </div>
         <div class="modal-body">
           <div class="image-container">
-            <div class="image-placeholder">
-              <span class="iconify image-icon" data-icon="mdi:image"></span>
-              <div class="image-text">熔接过程图像</div>
+            <img v-if="imageUrl" :src="imageUrl" alt="熔接图像" class="fusion-image" @error="imageUrl = ''" /><div v-else class="image-placeholder">
+              <DeviceIcon class="iconify image-icon" name="mdi:image" />
+              <div class="image-text">设备尚未提供此记录的图像</div>
               <div class="image-info">
-                <div>分辨率: 1024x768</div>
+
                 <div>拍摄时间: {{ selectedRecord?.time }}</div>
               </div>
             </div>
-            
+
             <div class="download-section">
-              <button @click="downloadImage" class="download-btn">
-                <span class="iconify" data-icon="mdi:download"></span>
+              <button @click="downloadImage" class="download-btn" :disabled="!imageUrl || isLoadingImage">
+                <DeviceIcon class="iconify" name="mdi:download" />
                 {{ t('device.fusionRecords.downloadImage') }}
               </button>
             </div>
@@ -267,16 +263,26 @@
         </div>
       </div>
     </div>
+    <FusionFunctionNav />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import FusionFunctionNav from '../components/FusionFunctionNav.vue'
+import WorkspaceHeader from '@/components/WorkspaceHeader.vue'
+import DeviceIcon from '@/components/DeviceIcon.vue'
+import { ref, computed, watch } from 'vue'
+import { downloadBlob, recordsCsv, recordsExcelXml } from '@/services/downloads'
+import { scopedKey, readStored } from '@/services/scopedStorage'
+import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 const router = useRouter()
+const route = useRoute()
+const exportFeedback = ref('')
+const imageUrl = ref('')
+const recordsKey = scopedKey('fusion-records', String(route.params.id))
 
 // 响应式数据
 const showRecordDetail = ref(false)
@@ -291,7 +297,7 @@ const selectedRecords = ref<number[]>([])
 const selectedRecord = ref<any>(null)
 
 // 熔接记录数据
-const fusionRecords = ref([
+const initialRecords = [
   {
     id: 1,
     program: 'SM-01',
@@ -347,7 +353,10 @@ const fusionRecords = ref([
     rightAngle: 1.3,
     duration: '00:02:30'
   }
-])
+]
+const fusionRecords = ref(readStored<typeof initialRecords>(recordsKey, initialRecords))
+watch(fusionRecords, value => { try { localStorage.setItem(recordsKey, JSON.stringify(value)) } catch { exportFeedback.value = '记录未保存，存储空间不足' } }, { deep: true })
+const exportRecords = computed(() => selectedRecords.value.length ? fusionRecords.value.filter(r => selectedRecords.value.includes(r.id)) : fusionRecords.value)
 
 // 分页相关
 const currentPage = ref(1)
@@ -363,13 +372,13 @@ const paginatedRecords = computed(() => {
 })
 
 const isAllSelected = computed(() => {
-  return paginatedRecords.value.length > 0 && 
+  return paginatedRecords.value.length > 0 &&
          paginatedRecords.value.every(record => selectedRecords.value.includes(record.id))
 })
 
 const todayCount = computed(() => {
   const today = new Date().toDateString()
-  return fusionRecords.value.filter(record => 
+  return fusionRecords.value.filter(record =>
     new Date(record.time).toDateString() === today
   ).length
 })
@@ -394,11 +403,6 @@ const totalTime = computed(() => {
   return `${hours}h${minutes}m`
 })
 
-const exportTime = computed(() => {
-  // 100条记录约22kb，传输速度10kb/s，计算传输时间
-  const totalKb = fusionRecords.value.length * 0.22
-  return Math.ceil(totalKb / 10)
-})
 
 /**
  * 格式化时间显示
@@ -458,7 +462,7 @@ const toggleSelectRecord = (recordId: number) => {
  */
 const batchDelete = () => {
   if (selectedRecords.value.length === 0) return
-  
+
   if (confirm(t('device.fusionRecords.confirmBatchDelete', { count: selectedRecords.value.length }))) {
     // 删除选中的记录
     selectedRecords.value.forEach(recordId => {
@@ -467,10 +471,10 @@ const batchDelete = () => {
         fusionRecords.value.splice(index, 1)
       }
     })
-    
+
     // 清空选择
     selectedRecords.value = []
-    
+
     // 检查当前页是否还有数据，如果没有则跳转到前一页
     if (paginatedRecords.value.length === 0 && currentPage.value > 1) {
       currentPage.value--
@@ -490,45 +494,34 @@ const viewRecordDetail = (record: any) => {
  * 查看熔接图像
  */
 const viewFusionImage = async () => {
-  isLoadingImage.value = true
-  
-  try {
-    // 模拟图像加载时间（20秒）
-    await new Promise(resolve => setTimeout(resolve, 20000))
-    
-    showImageModal.value = true
-  } catch (error) {
-    alert('图像加载失败')
-  } finally {
-    isLoadingImage.value = false
-  }
+  imageUrl.value = selectedRecord.value?.imageUrl || ''
+  showImageModal.value = true
 }
-
-/**
- * 下载图像
- */
-const downloadImage = () => {
-  // 这里可以实现实际的下载逻辑
-  alert('开始下载熔接图像...')
+const downloadImage = async () => {
+ if (!imageUrl.value || isLoadingImage.value) return
+ isLoadingImage.value = true
+ try {
+  const response = await fetch(imageUrl.value)
+  if (!response.ok) throw new Error('download failed')
+  const blob = await response.blob()
+  if (!blob.type.startsWith('image/')) throw new Error('invalid image')
+  downloadBlob(blob, `熔接图像_${selectedRecord.value?.id}.${blob.type === 'image/png' ? 'png' : 'jpg'}`)
+ } catch { exportFeedback.value = '图像下载失败，请重试' }
+ finally { isLoadingImage.value = false }
 }
-
-/**
- * 执行导出
- */
 const performExport = async () => {
-  isExporting.value = true
-  
-  try {
-    // 模拟导出过程
-    await new Promise(resolve => setTimeout(resolve, exportTime.value * 1000))
-    
-    showExportModal.value = false
-    alert(`记录已导出为${exportFormat.value.toUpperCase()}格式`)
-  } catch (error) {
-    alert('导出失败，请重试')
-  } finally {
-    isExporting.value = false
-  }
+ if (isExporting.value) return
+ if (!exportRecords.value.length) { exportFeedback.value = '暂无可导出的记录'; return }
+ isExporting.value = true
+ try {
+  const rows: unknown[][] = [['记录编号','程序','光纤类型','熔接模式','损耗(dB)','左角度(°)','右角度(°)','时长','时间'], ...exportRecords.value.map(r => [r.id,r.program,r.fiberType,r.fusionMode,r.loss,r.leftAngle,r.rightAngle,r.duration,r.time])]
+  const excel = exportFormat.value === 'excel'
+  const content = excel ? recordsExcelXml(rows) : recordsCsv(rows)
+  downloadBlob(new Blob([content], {type: excel ? 'application/xml;charset=utf-8' : 'text/csv;charset=utf-8'}), `熔接记录_${Date.now()}.${excel ? 'xml' : 'csv'}`)
+  exportFeedback.value = `已发起下载，共 ${exportRecords.value.length} 条记录`
+  showExportModal.value = false
+ } catch { exportFeedback.value = '导出失败，请重试' }
+ finally { isExporting.value = false }
 }
 
 /**
@@ -539,13 +532,13 @@ const deleteRecord = (recordId: number) => {
     const index = fusionRecords.value.findIndex(r => r.id === recordId)
     if (index !== -1) {
       fusionRecords.value.splice(index, 1)
-      
+
       // 从选中列表中移除
       const selectedIndex = selectedRecords.value.indexOf(recordId)
       if (selectedIndex > -1) {
         selectedRecords.value.splice(selectedIndex, 1)
       }
-      
+
       // 检查当前页是否还有数据，如果没有则跳转到前一页
       if (paginatedRecords.value.length === 0 && currentPage.value > 1) {
         currentPage.value--
@@ -584,6 +577,7 @@ const nextPage = () => {
 }
 </script>
 <style scoped>
+.export-feedback {position:absolute;bottom:92px;left:16px;right:16px;padding:12px;background:#eff6ff;color:#1d4ed8;border-radius:10px;font-size:14px;z-index:60;pointer-events:none}.fusion-image{width:100%;height:auto}.download-btn:disabled{opacity:.45;}
 .app-container {
   display: flex;
   flex-direction: column;
@@ -1244,4 +1238,14 @@ const nextPage = () => {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+/* Shared mobile instrument rhythm, retaining each hardware operation. */
+.app-container.legacy-operation-page {background:#f7f9fc;}
+.legacy-operation-page :is(.settings-card,.stats-card,.records-card,.actions-panel,.status-card,.wavelength-card,.control-card,.maintenance-item) {border:1px solid #d8e2ef;border-radius:12px;background:#fff;box-shadow:none;}
+.legacy-operation-page :is(.p-4,.actions-wrap) {padding:14px;}
+.legacy-operation-page button {min-height:44px;min-width:44px;border-radius:8px;font-family:inherit;}
+.legacy-operation-page :is(.setting-label,.item-desc,.record-count) {font-size:13px;line-height:1.5;}
+.legacy-operation-page .setting-item {gap:12px;flex-wrap:wrap;}
+.legacy-operation-page .setting-control {min-width:0;max-width:100%;}
+.legacy-operation-page .section-title {font-size:15px;}
+.legacy-operation-page button:focus-visible {outline:2px solid #2563eb;outline-offset:2px;}
 </style>

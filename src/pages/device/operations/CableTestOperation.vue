@@ -3,67 +3,14 @@
     <div class="content-flex hide-scrollbar">
       <SmartOtdrPageShell :title="t('deviceDetail.cableTest')" @back="goBack">
         <div class="cable-test-main">
-          <section v-if="activeView === 'menu'" class="cable-menu-view">
-            <section class="cable-hero-card">
-              <div class="cable-hero-card__top">
-                <div class="cable-hero-card__icon">
-                  <span class="iconify" data-icon="mdi:lan-connect"></span>
-                </div>
-                <div class="cable-hero-card__main">
-                  <h3 class="cable-hero-card__title">{{ t('deviceDetail.cableTest') }}</h3>
-                  <div class="cable-hero-card__meta">线序、线长、寻线</div>
-                </div>
-              </div>
-
-              <div class="cable-hero-card__status-row">
-                <div class="cable-status-pill">设备能力</div>
-                <div class="cable-hero-card__status-text">支持线序、线长、寻线检测</div>
-              </div>
-
-              <div class="cable-summary-grid">
-                <div v-for="item in menuSummaryItems" :key="item.key" class="cable-summary-item">
-                  <div class="cable-summary-item__label">{{ item.label }}</div>
-                  <div class="cable-summary-item__value">{{ item.value }}</div>
-                </div>
-              </div>
-            </section>
-
-            <section class="cable-entry-section cable-entry-group">
-              <div class="smart-section-head">
-                <h3 class="section-title">检测入口</h3>
-              </div>
-
-              <div class="cable-entry-grid">
-                <button
-                  v-for="item in toolCards"
-                  :key="item.key"
-                  class="cable-entry-card"
-                  type="button"
-                  @click="openTool(item.key)"
-                >
-                  <div class="cable-entry-card__icon">
-                    <span class="iconify" :data-icon="item.icon"></span>
-                  </div>
-                  <div class="cable-entry-card__title">{{ item.label }}</div>
-                </button>
-              </div>
-            </section>
-
-            <section class="cable-footer-card">
-              <div class="cable-footer-card__label">最近操作</div>
-              <div class="cable-footer-card__value">上次模式 {{ lastToolLabel }}</div>
-            </section>
-          </section>
-
-          <section v-else class="cable-detail-view">
+          <nav class="cable-mode-tabs" aria-label="检测模式">
+            <button v-for="item in toolCards" :key="item.key" type="button" :disabled="running" :aria-pressed="activeView === item.key" @click="openTool(item.key)">{{ item.label }}</button>
+          </nav>
+          <section class="cable-detail-view">
             <section class="cable-detail-hero-card">
               <div class="cable-detail-hero-card__top">
                 <div class="cable-detail-hero-card__title-group">
                   <h3 class="section-title">{{ currentTool.label }}</h3>
-                  <div class="cable-detail-hero-card__meta">{{ boardStatusText }}</div>
-                </div>
-                <div class="cable-status-chip">
-                  {{ boardStatusText }}
                 </div>
               </div>
 
@@ -73,7 +20,7 @@
                     class="seg-btn"
                     :class="{ active: standard === 'T568B' }"
                     type="button"
-                    @click="changeStandard('T568B')"
+                    :disabled="running" @click="changeStandard('T568B')"
                   >
                     T568B
                   </button>
@@ -81,7 +28,7 @@
                     class="seg-btn"
                     :class="{ active: standard === 'T568A' }"
                     type="button"
-                    @click="changeStandard('T568A')"
+                    :disabled="running" @click="changeStandard('T568A')"
                   >
                     T568A
                   </button>
@@ -135,7 +82,7 @@
 
                     <template v-else>
                       <div class="port-cell">
-                        <span class="iconify seek-icon" :class="{ active: seekEnabled }" data-icon="mdi:access-point"></span>
+                        <DeviceIcon class="iconify seek-icon" :class="{ active: seekEnabled }" name="mdi:access-point" />
                       </div>
                     </template>
                   </div>
@@ -145,9 +92,7 @@
               <div class="cable-result-note">{{ resultText }}</div>
             </section>
 
-            <section class="cable-actions-card">
-              <button class="action-secondary" type="button" @click="activeView = 'menu'">返回菜单</button>
-            </section>
+
           </section>
         </div>
       </SmartOtdrPageShell>
@@ -156,6 +101,7 @@
 </template>
 
 <script setup lang="ts">
+import DeviceIcon from '@/components/DeviceIcon.vue'
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -171,17 +117,12 @@ interface ToolCard {
   icon: string
 }
 
-interface MenuSummaryItem {
-  key: string
-  label: string
-  value: string
-}
 
 const router = useRouter()
 const route = useRoute()
 const { t } = useI18n()
 
-const activeView = ref<ToolView>('menu')
+const activeView = ref<ToolView>('wire-order')
 const lastSelectedView = ref<Exclude<ToolView, 'menu'>>('wire-order')
 const standard = ref<StandardType>('T568B')
 const running = ref(false)
@@ -217,30 +158,12 @@ const toolCards = computed<ToolCard[]>(() => [
   }
 ])
 
-const menuSummaryItems = computed<MenuSummaryItem[]>(() => [
-  {
-    key: 'wire-order',
-    label: '线序检测',
-    value: '8 芯状态'
-  },
-  {
-    key: 'length',
-    label: '线长检测',
-    value: '逐芯长度'
-  },
-  {
-    key: 'seek',
-    label: '寻线模式',
-    value: '信号输出'
-  }
-])
 
 const currentTool = computed(() => {
   const activeKey = activeView.value === 'menu' ? lastSelectedView.value : activeView.value
   return toolCards.value.find(item => item.key === activeKey) ?? toolCards.value[0]
 })
 
-const lastToolLabel = computed(() => currentTool.value.label)
 
 const warningText = computed(() => {
   if (activeView.value === 'seek') return '请用寻线模块进行寻线，开启后显示全部端口信号。'
@@ -893,7 +816,7 @@ const runCurrentTest = async () => {
 .cable-summary-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; overflow: hidden; border: 1px solid #d8e2ef; border-radius: 10px; }
 .cable-summary-item { min-height: 54px; padding: 8px 4px; border: 0; border-right: 1px solid #d8e2ef; border-radius: 0; background: #ffffff; text-align: center; box-shadow: none; }
 .cable-summary-item:last-child { border-right: 0; }
-.cable-summary-item__label { font-size: 9px; }
+.cable-summary-item__label { font-size:12px; }
 .cable-summary-item__value { margin-top: 4px; font-size: 11px; }
 .cable-entry-section { padding: 0; border: 0; background: transparent; box-shadow: none; }
 .cable-entry-section .smart-section-head { margin: 0 0 8px; }
@@ -909,4 +832,36 @@ const runCurrentTest = async () => {
   .cable-summary-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .cable-entry-grid { grid-template-columns: 1fr; }
 }
+.cable-mode-tabs { display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;background:#eaf0f8;border-radius:12px;margin-bottom:10px; }
+.cable-mode-tabs button { min-height:42px;border:0;border-radius:9px;background:transparent;color:#52627a;font-weight:650; }
+.cable-mode-tabs button[aria-pressed="true"] { background:#fff;color:#2563eb;box-shadow:0 2px 6px #152d4a12; }
+.cable-test-main { padding:10px 12px 14px; }
+.cable-detail-view { gap:10px; }
+.cable-detail-hero-card,.cable-board-card { padding:12px; }
+.cable-detail-hero-card__metrics { display:none; }
+.cable-detail-hero-card__controls,.cable-warning-tip,.cable-detail-hero-card .action-primary { margin-top:8px; }
+.cable-warning-tip { padding:6px 8px;font-size:11px; }
+.port-list { gap:4px; }.port-row { min-height:22px;height:22px; }.port-wire { height:10px; }
+.test-board { margin-top:8px;padding:8px; }.cable-result-note { margin-top:8px; }
+
+.cable-test-page :deep(.smart-otdr-shell__body) { padding:8px 10px; }
+.cable-test-page :deep(.smart-otdr-shell__header) { padding:4px 12px; }
+.cable-test-main { padding:0;gap:8px; }
+.cable-mode-tabs { margin-bottom:0; }.cable-mode-tabs button { min-height:40px;font-size:13px; }
+.cable-detail-view { gap:8px; }
+.cable-detail-hero-card { display:grid;grid-template-columns:1fr auto;gap:8px;padding:10px;border-radius:12px;background:#fff;box-shadow:none; }
+.cable-detail-hero-card__top { grid-column:1 / -1;flex-direction:row;align-items:center; }
+.cable-detail-hero-card__meta { display:none; }
+.cable-detail-hero-card__controls { margin:0;flex-direction:row;align-items:center; }
+.cable-detail-hero-card .action-primary { grid-column:2;grid-row:2;min-height:42px;margin:0;padding:0 16px;border-radius:10px; }
+.cable-warning-tip { grid-column:1 / -1;grid-row:3;margin:0;padding:0;font-size:12px;line-height:1.5; }
+.board-card__head { flex-direction:row;align-items:center;margin:0;gap:8px; }
+.board-card__meta { display:none; }.cable-status-chip { padding:3px 8px;font-size:11px; }
+.cable-board-card { border-radius:12px;padding:10px;box-shadow:none; }
+.test-board { padding:6px 8px;margin-top:8px;border-radius:8px; }
+.port-row { grid-template-columns:50px 1fr 58px;gap:8px;min-height:23px;height:23px; }
+.port-label,.status-tag,.length-badge { min-width:0;padding:3px 6px;border-radius:5px;font-size:11px;line-height:17px; }
+.port-cell { min-width:0; }.status-tag,.length-badge { width:100%; }
+.cable-result-note { margin:8px 0 0;padding:5px 8px;border-radius:6px;font-size:11px; }
+.cable-test-page .content-flex { padding:0; }
 </style>

@@ -103,20 +103,21 @@
 
             <section class="smart-home-tools">
               <button type="button" :class="{ active: flashlightOn }" @click="toggleSmartFlashlight">
-                <span class="smart-tool-icon"><img :src="smartFlashlightIcon" alt="" /></span>
+                <span class="smart-tool-icon is-light"><img :src="smartFlashlightIcon" alt="" /></span>
                 <span><strong>照明</strong><small>{{ flashlightOn ? '已开启' : '已关闭' }}</small></span>
                 <i class="smart-mini-switch" :class="{ active: flashlightOn }"><b></b></i>
               </button>
               <button type="button" :disabled="!canShowOperations" @click="navigateToOperation('files')">
-                <span class="smart-tool-icon"><img :src="fileManagerIcon" alt="" /></span>
+                <span class="smart-tool-icon is-file"><img :src="fileManagerIcon" alt="" /></span>
                 <span><strong>文件管理</strong><small>测试文件与记录</small></span>
                 <i class="smart-tool-chevron">›</i>
               </button>
               <button class="smart-screenshot-tool" type="button" :disabled="!canShowOperations" @click="captureSmartScreenshot">
-                <span class="smart-tool-icon"><img :src="screenshotIcon" alt="" /></span>
+                <span class="smart-tool-icon is-capture"><img :src="screenshotIcon" alt="" /></span>
                 <span><strong>屏幕截取</strong><small>{{ smartScreenshots.length ? `${smartScreenshots.length}张本地截图` : '保存当前设备画面' }}</small></span>
                 <i class="smart-tool-chevron">›</i>
               </button>
+              <button type="button" :disabled="!canShowOperations" @click="navigateToOperation('event-map')"><span class="smart-tool-icon"><img :src="eventMapIcon" alt="" /></span><span><strong>事件地图</strong><small>链路分析</small></span></button>
             </section>
 
             <section v-if="canShowOperations" class="smart-capability-section">
@@ -131,7 +132,7 @@
                   type="button"
                   @click="navigateToOperation(item.key)"
                 >
-                  <span><img :src="item.image" alt="" /></span>
+                  <span :data-tool="item.key"><img :src="item.image" alt="" /></span>
                   <span class="smart-capability-copy">
                     <strong>{{ item.title }}</strong>
                     <small>{{ item.description }}</small>
@@ -141,23 +142,13 @@
               </div>
             </section>
 
-            <SmartOtdrActivationCard
-              v-if="device?.status === 'connected' && !canShowOperations"
-              class="smart-home-activation-block"
-              :bluetooth-connected="device?.status === 'connected'"
-              :activation-status="device?.activationStatus"
-              :authorization-expiry="device?.authorizationExpiry || ''"
-              :initial-state="smartOtdrActivationViewState"
-              @activated="handleSmartOtdrActivated"
-            />
-
             <div v-if="smartUtilityFeedback" class="smart-utility-feedback" role="status">
               {{ smartUtilityFeedback }}
             </div>
 
           </main>
 
-          <div v-if="showSmartScreenshotModal" class="smart-shot-layer" role="presentation">
+          <div v-if="showSmartScreenshotModal" v-smart-otdr-overlay class="smart-shot-layer" role="presentation">
             <button class="smart-shot-mask" type="button" aria-label="关闭截图记录" @click="showSmartScreenshotModal = false"></button>
             <section role="dialog" aria-modal="true" aria-label="屏幕截图">
               <header><h2>屏幕截图</h2><button type="button" @click="showSmartScreenshotModal = false">关闭</button></header>
@@ -181,7 +172,7 @@
       <!-- 顶部标题栏 -->
       <header class="header">
         <button @click="goBack" class="back-btn">
-          ← {{ $t('common.back') }}
+          <DeviceIcon name="back" style="font-size: 18px; vertical-align: middle" /> {{ $t('common.back') }}
         </button>
         <div class="page-title">{{ device?.name || $t('deviceDetail.title') }}</div>
         <div class="header-placeholder"></div>
@@ -194,7 +185,7 @@
         <div class="device-status-card mb-4">
           <div class="status-header">
             <div class="device-icon legacy-device-icon">
-              <img :src="legacyDeviceImage" alt="" />
+              <img :src="legacyDeviceImage" :alt="device?.name || '设备实物图'" />
             </div>
             <div class="device-info">
               <div class="device-header-row">
@@ -286,29 +277,19 @@
           </div>
         </div>
 
-        <SmartOtdrActivationCard
-          v-if="device?.status === 'connected' && isSmartOtdr"
-          class="mb-4"
-          :bluetooth-connected="device?.status === 'connected'"
-          :activation-status="device?.activationStatus"
-          :authorization-expiry="device?.authorizationExpiry || ''"
-          :initial-state="smartOtdrActivationViewState"
-          @activated="handleSmartOtdrActivated"
-        />
-
         <!-- 设备激活 -->
         <div v-if="device?.activationStatus === 'not_activated' && !isSmartOtdr" class="activation-card mb-4">
           <h3 class="section-title">{{ $t('deviceDetail.activation') }}</h3>
           <div class="activation-methods">
             <div class="method-item" @click="showActivationModal = true">
               <div class="method-icon">
-                <span class="iconify" data-icon="mdi:key"></span>
+                <DeviceIcon class="iconify" name="mdi:key" />
               </div>
               <div class="method-info">
                 <div class="method-title">{{ $t('deviceDetail.codeActivation') }}</div>
                 <div class="method-desc">{{ $t('deviceDetail.codeActivationDesc') }}</div>
               </div>
-              <span class="iconify arrow-icon" data-icon="mdi:chevron-right"></span>
+              <DeviceIcon class="iconify arrow-icon" name="mdi:chevron-right" />
             </div>
           </div>
         </div>
@@ -319,7 +300,7 @@
           <div class="password-actions">
             <button @click="showPasswordModal = true" class="action-btn secondary edit-password-btn">
               <span>{{ device?.hasPassword ? $t('deviceDetail.changeBootPassword') : $t('deviceDetail.setBootPassword') }}</span>
-              <span class="iconify" data-icon="mdi:pencil" style="font-size: 16px; color: #9CA3AF;"></span>
+              <DeviceIcon class="iconify" name="mdi:pencil" style="font-size: 16px; color: #9CA3AF;" />
             </button>
             <button v-if="device?.hasPassword" @click="sendPasswordToDevice" class="action-btn primary">
               {{ $t('deviceDetail.sendPassword') }}
@@ -333,60 +314,60 @@
           <div v-if="isFusionSplicer" class="operations-grid">
             <div class="operation-item" @click="navigateToOperation('fusion-operation')">
               <div class="operation-icon fusion">
-                <img src="@/assets/img/fusion.png" alt="Fusion operation" class="icon-img" />
+                <img src="@/assets/icons/iconfont/device/fusion.svg" alt="Fusion operation" class="icon-img" />
               </div>
               <div class="operation-title">熔接操作</div>
             </div>
             <div class="operation-item" @click="navigateToOperation('omp')">
               <div class="operation-icon omp">
-                <img src="@/assets/img/OPM.png" alt="OPM" class="icon-img" />
+                <img src="@/assets/icons/iconfont/device/power.svg" alt="OPM" class="icon-img" />
               </div>
               <div class="operation-title">{{ $t('device.opm.title') }}</div>
             </div>
             
             <div class="operation-item" @click="navigateToOperation('vfl')">
               <div class="operation-icon vfl">
-                <img src="@/assets/img/VFL.png" alt="VFL" class="icon-img" />
+                <img src="@/assets/icons/iconfont/device/vfl.svg" alt="VFL" class="icon-img" />
               </div>
               <div class="operation-title">{{ $t('device.vfl.title') }}</div>
             </div>
             
             <div class="operation-item" @click="navigateToOperation('otdr')">
               <div class="operation-icon otdr">
-                <img src="@/assets/img/OTDR.png" alt="OTDR" class="icon-img" />
+                <img src="@/assets/icons/iconfont/device/measure.svg" alt="OTDR" class="icon-img" />
               </div>
               <div class="operation-title">{{ $t('device.otdr.title') }}</div>
             </div>
             
             <div class="operation-item" @click="navigateToOperation('fusion')">
               <div class="operation-icon fusion">
-                <img src="@/assets/img/fusion.png" alt="Fusion" class="icon-img" />
+                <img src="@/assets/icons/iconfont/device/settings.svg" alt="Fusion" class="icon-img" />
               </div>
               <div class="operation-title">{{ $t('device.fusionSettings.settings') }}</div>
             </div>
             
             <div class="operation-item" @click="navigateToOperation('maintenance')">
               <div class="operation-icon maintenance">
-                <img src="@/assets/img/maintenance.png" alt="Maintenance" class="icon-img" />
+                <img src="@/assets/icons/iconfont/device/maintenance.svg" alt="Maintenance" class="icon-img" />
               </div>
               <div class="operation-title">{{ $t('device.maintenance.title') }}</div>
             </div>
             
             <div class="operation-item" @click="navigateToOperation('records')">
               <div class="operation-icon records">
-                <img src="@/assets/img/records.png" alt="Records" class="icon-img" />
+                <img src="@/assets/icons/iconfont/device/records.svg" alt="Records" class="icon-img" />
               </div>
               <div class="operation-title">{{ $t('device.fusionRecords.title') }}</div>
             </div>
             <div class="operation-item" @click="toggleHeater">
               <div class="operation-icon heater" :class="{ 'is-on': heaterOn }">
-                <img src="@/assets/icons/pon-meter/temperature.svg" alt="Heater" class="icon-img" />
+                <img src="@/assets/icons/iconfont/device/temperature.svg" alt="Heater" class="icon-img" />
               </div>
               <div class="operation-title">{{ heaterOn ? '停止加热' : '加热器' }}</div>
             </div>
             <div class="operation-item" @click="navigateToOperation('legacy-settings')">
               <div class="operation-icon system">
-                <img src="@/assets/img/settings.png" alt="Settings" class="icon-img" />
+                <img src="@/assets/icons/iconfont/device/settings.svg" alt="Settings" class="icon-img" />
               </div>
               <div class="operation-title">{{ $t('settings.systemSettings') }}</div>
             </div>
@@ -395,25 +376,25 @@
           <div v-else-if="isPortableOtdr" class="operations-grid otdr-grid">
             <div class="operation-item" @click="navigateToOperation('otdr')">
               <div class="operation-icon otdr">
-                <img src="@/assets/img/OTDR.png" alt="OTDR" class="icon-img" />
+                <img src="@/assets/icons/iconfont/device/measure.svg" alt="OTDR" class="icon-img" />
               </div>
               <div class="operation-title">{{ $t('device.otdr.title') }}</div>
             </div>
             <div class="operation-item" @click="toggleFlashlight">
               <div class="operation-icon flashlight" :class="{ 'is-on': flashlightOn }">
-                <span class="iconify" data-icon="mdi:flashlight" style="font-size: 30px;"></span>
+                <DeviceIcon class="iconify" name="mdi:flashlight" style="font-size: 30px;" />
               </div>
               <div class="operation-title">{{ $t('deviceDetail.flashlight') }}</div>
             </div>
             <div class="operation-item" @click="navigateToOperation('legacy-settings')">
               <div class="operation-icon system">
-                <img src="@/assets/img/settings.png" alt="Settings" class="icon-img" />
+                <img src="@/assets/icons/iconfont/device/settings.svg" alt="Settings" class="icon-img" />
               </div>
               <div class="operation-title">{{ $t('settings.systemSettings') }}</div>
             </div>
             <div class="operation-item" @click="toggleRedLight">
               <div class="operation-icon red-light" :class="{ 'is-on': redLightOn }">
-                <img src="@/assets/img/VFL.png" alt="VFL" class="icon-img" />
+                <img src="@/assets/icons/iconfont/device/vfl.svg" alt="VFL" class="icon-img" />
               </div>
               <div class="operation-title">{{ $t('deviceDetail.redLight') }}</div>
             </div>
@@ -436,43 +417,43 @@
           <div v-else-if="isMultiOpm" class="operations-grid opm-grid">
             <div class="operation-item" @click="navigateToOperation('mopm')">
               <div class="operation-icon power-meter">
-                <span class="iconify" data-icon="mdi:chart-line" style="font-size: 30px;"></span>
+                <DeviceIcon class="iconify" name="mdi:chart-line" style="font-size: 30px;" />
               </div>
               <div class="operation-title">{{ $t('deviceDetail.powerMeter') }}</div>
             </div>
             <div class="operation-item" @click="navigateToOpmHistory">
               <div class="operation-icon power-records">
-                <span class="iconify" data-icon="mdi:clipboard-text-outline" style="font-size: 30px;"></span>
+                <DeviceIcon class="iconify" name="mdi:clipboard-text-outline" style="font-size: 30px;" />
               </div>
               <div class="operation-title">{{ $t('deviceDetail.powerRecords') }}</div>
             </div>
             <div class="operation-item" @click="navigateToOperation('wiremap')">
               <div class="operation-icon cable-test">
-                <span class="iconify" data-icon="mdi:lan-connect" style="font-size: 30px;"></span>
+                <DeviceIcon class="iconify" name="mdi:lan-connect" style="font-size: 30px;" />
               </div>
               <div class="operation-title">{{ $t('deviceDetail.cableWiremap') }}</div>
             </div>
             <div class="operation-item" @click="navigateToOperation('seek')">
               <div class="operation-icon cable-seek">
-                <span class="iconify" data-icon="mdi:radar" style="font-size: 30px;"></span>
+                <DeviceIcon class="iconify" name="mdi:radar" style="font-size: 30px;" />
               </div>
               <div class="operation-title">{{ $t('deviceDetail.cableSeek') }}</div>
             </div>
             <div class="operation-item" @click="toggleFlashlight">
               <div class="operation-icon flashlight" :class="{ 'is-on': flashlightOn }">
-                <img src="@/assets/app/icons/device/flashlight.png" alt="Flashlight" class="icon-img" />
+                <img src="@/assets/icons/iconfont/device/flashlight.svg" alt="Flashlight" class="icon-img" />
               </div>
               <div class="operation-title">{{ $t('deviceDetail.flashlight') }}</div>
             </div>
             <div class="operation-item" @click="navigateToOperation('mopm-vfl')">
               <div class="operation-icon red-light" :class="{ 'is-on': redLightOn }">
-                <img src="@/assets/img/VFL.png" alt="VFL" class="icon-img" />
+                <img src="@/assets/icons/iconfont/device/vfl.svg" alt="VFL" class="icon-img" />
               </div>
               <div class="operation-title">红/绿光源</div>
             </div>
             <div class="operation-item" @click="navigateToOperation('legacy-settings')">
               <div class="operation-icon system">
-                <img src="@/assets/img/settings.png" alt="Settings" class="icon-img" />
+                <img src="@/assets/icons/iconfont/device/settings.svg" alt="Settings" class="icon-img" />
               </div>
               <div class="operation-title">{{ $t('settings.systemSettings') }}</div>
             </div>
@@ -481,7 +462,7 @@
           <div v-else class="operations-grid opm-grid">
             <div class="operation-item" @click="navigateToOperation('system')">
               <div class="operation-icon system">
-                <img src="@/assets/img/settings.png" alt="Settings" class="icon-img" />
+                <img src="@/assets/icons/iconfont/device/settings.svg" alt="Settings" class="icon-img" />
               </div>
               <div class="operation-title">{{ $t('settings.systemSettings') }}</div>
             </div>
@@ -493,12 +474,12 @@
     </template>
 
     <!-- 激活码弹窗 -->
-    <div v-if="showActivationModal" class="modal-overlay" @click="showActivationModal = false">
+    <div v-if="showActivationModal" v-smart-otdr-overlay="isSmartOtdr" class="modal-overlay" @click="showActivationModal = false">
       <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3 class="modal-title">{{ $t('deviceDetail.activation') }}</h3>
           <button @click="showActivationModal = false" class="modal-close">
-            <span class="iconify" data-icon="mdi:close" style="font-size: 20px;"></span>
+            <DeviceIcon class="iconify" name="mdi:close" style="font-size: 20px;" />
           </button>
         </div>
         
@@ -525,12 +506,12 @@
     </div>
 
     <!-- 开机密码弹窗 -->
-    <div v-if="showPasswordModal" class="modal-overlay" @click="showPasswordModal = false">
+    <div v-if="showPasswordModal" v-smart-otdr-overlay="isSmartOtdr" class="modal-overlay" @click="showPasswordModal = false">
       <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3 class="modal-title">{{ device?.hasPassword ? $t('deviceDetail.changeBootPassword') : $t('deviceDetail.setBootPassword') }}</h3>
           <button @click="showPasswordModal = false" class="modal-close">
-            <span class="iconify" data-icon="mdi:close" style="font-size: 20px;"></span>
+            <DeviceIcon class="iconify" name="mdi:close" style="font-size: 20px;" />
           </button>
         </div>
         
@@ -576,7 +557,7 @@
       </div>
     </div>
 
-    <div v-if="showModal" class="modal-overlay" @click.self="handleCancel">
+    <div v-if="showModal" v-smart-otdr-overlay="isSmartOtdr" class="modal-overlay" @click.self="handleCancel">
       <section class="modal-content device-alert-modal" role="dialog" aria-modal="true" :aria-label="modalOptions.title">
         <div class="device-alert-body">
           <strong>{{ modalOptions.title }}</strong>
@@ -595,11 +576,13 @@
 </template>
 
 <script setup lang="ts">
+import { vSmartOtdrOverlay } from '@/directives/smartOtdrOverlay'
+import { useSmartOtdrDevice } from '@/composables/useSmartOtdrDevice'
+import DeviceIcon from '@/components/DeviceIcon.vue'
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuth, type Device } from '@/composables/useAuth'
 import { useModal } from '@/composables/useModal'
-import SmartOtdrActivationCard from './components/SmartOtdrActivationCard.vue'
 import SmartOtdrFunctionNav from './components/SmartOtdrFunctionNav.vue'
 import SmartOtdrPageShell from './components/SmartOtdrPageShell.vue'
 import PonDeviceHome from './pon/PonDeviceHome.vue'
@@ -608,21 +591,21 @@ import MultiOpmHome from './multi-opm/MultiOpmHome.vue'
 import StableSourceHome from './stable-source/StableSourceHome.vue'
 import PortAuditHome from './port-audit/PortAuditHome.vue'
 import DualPonHome from './dual-pon/DualPonHome.vue'
-import smartOtdrMeasureIcon from '@/assets/app/icons/device/measurement.png'
-import eventMapIcon from '@/assets/app/icons/device/event-map.png'
-import powerMeterIcon from '@/assets/app/icons/device/power-meter.png'
-import lossTestIcon from '@/assets/app/icons/device/loss-test.png'
-import endfaceIcon from '@/assets/app/icons/device/endface.png'
-import fileManagerIcon from '@/assets/app/icons/device/file-manager.png'
-import lightSourceIcon from '@/assets/app/icons/device/light-source.png'
-import cableTestIcon from '@/assets/app/icons/device/cable-test.png'
-import smartSettingsIcon from '@/assets/app/icons/common/settings.png'
-import smartVflIcon from '@/assets/app/icons/device/vfl.png'
-import smartFlashlightIcon from '@/assets/app/icons/device/flashlight.png'
-import screenshotIcon from '@/assets/app/icons/device/screenshot.png'
-import fusionSplicerImage from '@/assets/app/products/fusion-splicer.png'
-import portableOtdrImage from '@/assets/app/products/portable-otdr.png'
-import multiOpmImage from '@/assets/app/products/multi-opm.png'
+import smartOtdrMeasureIcon from '@/assets/icons/iconfont/smart-otdr/measure.svg'
+import eventMapIcon from '@/assets/icons/iconfont/smart-otdr/event.svg'
+import powerMeterIcon from '@/assets/icons/iconfont/smart-otdr/power.svg'
+import lossTestIcon from '@/assets/icons/iconfont/smart-otdr/loss.svg'
+import endfaceIcon from '@/assets/icons/iconfont/smart-otdr/endface.svg'
+import fileManagerIcon from '@/assets/icons/iconfont/smart-otdr/folder.svg'
+import lightSourceIcon from '@/assets/icons/iconfont/smart-otdr/output.svg'
+import cableTestIcon from '@/assets/icons/iconfont/smart-otdr/cable.svg'
+import smartSettingsIcon from '@/assets/icons/iconfont/smart-otdr/settings.svg'
+import smartVflIcon from '@/assets/icons/iconfont/smart-otdr/vfl.svg'
+import smartFlashlightIcon from '@/assets/icons/iconfont/smart-otdr/flashlight.svg'
+import screenshotIcon from '@/assets/icons/iconfont/smart-otdr/screenshot.svg'
+import fusionSplicerImage from '@/assets/app/products/fusion-splicer-realistic.jpg'
+import portableOtdrImage from '@/assets/app/products/portable-otdr-realistic.jpg'
+import multiOpmImage from '@/assets/app/products/multi-opm-realistic.jpg'
 
 import { useI18n } from 'vue-i18n'
 
@@ -634,6 +617,7 @@ const { showModal, modalOptions, alert, handleConfirm, handleCancel } = useModal
 
 // 响应式数据
 const device = ref<Device | null>(null)
+const { authorization, locked } = useSmartOtdrDevice(device)
 const isConnecting = ref(false)
 const showActivationModal = ref(false)
 const showPasswordModal = ref(false)
@@ -722,7 +706,7 @@ const smartOtdrOperations = computed(() => [
   { key: 'event-map', title: t('deviceDetail.eventMap'), description: '链路事件图形化分析', iconClass: 'records', image: eventMapIcon },
   { key: 'smart-opm', title: t('deviceDetail.smartPowerMeter'), description: '波长、频率与功率读数', iconClass: 'power-meter', image: powerMeterIcon },
   { key: 'loss-test', title: t('deviceDetail.smartLossTest'), description: '参考值与相对损耗', iconClass: 'records', image: lossTestIcon },
-  { key: 'endface', title: t('deviceDetail.smartEndfaceInspect'), description: 'Type-C端面镜头预览', iconClass: 'endface', image: endfaceIcon },
+  { key: 'endface', title: t('deviceDetail.smartEndfaceInspect'), description: '端面图像检测', iconClass: 'endface', image: endfaceIcon },
   { key: 'files', title: t('deviceDetail.smartFileManager'), description: '测试文件与记录', iconClass: 'maintenance', image: fileManagerIcon },
   { key: 'light-source', title: t('deviceDetail.lightSource'), description: '双波长稳定光输出', iconClass: 'light-source', image: lightSourceIcon },
   { key: 'vfl', title: t('deviceDetail.vflSource'), description: '红光故障定位', iconClass: 'light-source', image: smartVflIcon },
@@ -781,21 +765,13 @@ const legacyDeviceImage = computed(() => {
   return fusionSplicerImage
 })
 
-const hasExpiredAuthorization = (authorizationExpiry?: string) => {
-  if (!authorizationExpiry) return false
-  return new Date(authorizationExpiry).getTime() < Date.now()
-}
 
 const smartOtdrActivationViewState = computed<'inactive' | 'pending_lock' | 'activated' | 'expired'>(() => {
-  const override = String(route.query.activationState || '')
-  if (['inactive', 'pending_lock', 'activated', 'expired'].includes(override)) {
-    return override as 'inactive' | 'pending_lock' | 'activated' | 'expired'
-  }
 
   if (!isSmartOtdr.value || !device.value) return 'inactive'
 
-  if (device.value.activationStatus === 'activated') {
-    return hasExpiredAuthorization(device.value.authorizationExpiry) ? 'expired' : 'activated'
+  if (authorization.value ? authorization.value.activated : device.value.activationStatus === 'activated') {
+    return locked.value ? 'expired' : 'activated'
   }
 
   return 'inactive'
@@ -942,18 +918,6 @@ const activateDevice = async () => {
   }
 }
 
-const handleSmartOtdrActivated = (payload: { authorizationExpiry: string; activatedAt: string }) => {
-  if (!device.value) return
-
-  updateDevice(device.value.id, {
-    activationStatus: 'activated',
-    authorizationExpiry: payload.authorizationExpiry
-  })
-
-  device.value.activationStatus = 'activated'
-  device.value.authorizationExpiry = payload.authorizationExpiry
-  alert(t('deviceDetail.smartActivationSuccess'))
-}
 
 /**
  * 设置开机密码
@@ -1233,7 +1197,7 @@ onUnmounted(() => {
 .smart-offline-band strong,
 .smart-offline-band span { display: block; }
 .smart-offline-band strong { color: #9a3412; font-size: 12px; }
-.smart-offline-band span { margin-top: 2px; color: #c2410c; font-size: 10px; }
+.smart-offline-band span { margin-top: 2px; color: #c2410c; font-size:12px; }
 .smart-offline-band button {
   min-height: 38px;
   padding: 0 10px;
@@ -1263,7 +1227,7 @@ onUnmounted(() => {
 }
 
 .smart-home-meter > header > strong { color: #1d4ed8; font-size: 13px; }
-.smart-ready-state { display: inline-flex; align-items: center; gap: 5px; color: #64748b; font-size: 10px; }
+.smart-ready-state { display: inline-flex; align-items: center; gap: 5px; color: #64748b; font-size:12px; }
 .smart-ready-state i { width: 6px; height: 6px; border-radius: 50%; background: #94a3b8; }
 .smart-ready-state.online { color: #15803d; }
 .smart-ready-state.online i { background: #16a34a; }
@@ -1328,7 +1292,7 @@ onUnmounted(() => {
   text-align: center;
 }
 
-.smart-parameter-grid span { color: #2563eb; font-size: 10px; }
+.smart-parameter-grid span { color: #2563eb; font-size:12px; }
 .smart-parameter-grid strong { margin-top: 5px; font-size: 11px; font-variant-numeric: tabular-nums; }
 
 .smart-spec-strip {
@@ -1342,8 +1306,8 @@ onUnmounted(() => {
 .smart-spec-strip > div:last-child { border-right: 0; }
 .smart-spec-strip span,
 .smart-spec-strip strong { display: block; }
-.smart-spec-strip span { color: #64748b; font-size: 9px; }
-.smart-spec-strip strong { margin-top: 4px; overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.smart-spec-strip span { color: #64748b; font-size:12px; }
+.smart-spec-strip strong { margin-top: 4px; overflow: hidden; font-size:12px; text-overflow: ellipsis; white-space: nowrap; }
 
 .smart-home-tools { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .smart-home-tools button {
@@ -1372,7 +1336,7 @@ onUnmounted(() => {
 .smart-home-tools strong,
 .smart-home-tools small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .smart-home-tools strong { font-size: 11px; }
-.smart-home-tools small { margin-top: 3px; color: #64748b; font-size: 9px; }
+.smart-home-tools small { margin-top: 3px; color: #64748b; font-size:12px; }
 .smart-mini-switch { position: absolute; right: 9px; width: 30px; height: 18px; padding: 2px; box-sizing: border-box; border-radius: 9px; background: #cbd5e1; }
 .smart-mini-switch b { display: block; width: 14px; height: 14px; border-radius: 50%; background: #ffffff; transition: transform 0.18s ease; }
 .smart-mini-switch.active { background: #2563eb; }
@@ -1389,7 +1353,7 @@ onUnmounted(() => {
 .smart-shot-preview span { color: #67e8f9; font-size: 11px; font-weight: 700; }
 .smart-shot-preview strong { margin-top: 16px; font-size: 30px; font-variant-numeric: tabular-nums; }
 .smart-shot-preview small { font-size: 12px; }
-.smart-shot-preview p { margin: 12px 0 0; color: #94a3b8; font-size: 10px; }
+.smart-shot-preview p { margin: 12px 0 0; color: #94a3b8; font-size:12px; }
 .smart-shot-summary { display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 14px 2px; font-size: 11px; }
 .smart-shot-summary span { color: #64748b; }
 .smart-shot-summary strong { color: #0f172a; }
@@ -1398,7 +1362,7 @@ onUnmounted(() => {
 .smart-capability-section { padding-top: 2px; }
 .smart-capability-head { min-height: 28px; display: flex; align-items: center; justify-content: space-between; }
 .smart-capability-head h2 { margin: 0; color: #0f172a; font-size: 14px; }
-.smart-capability-head span { color: #64748b; font-size: 10px; }
+.smart-capability-head span { color: #64748b; font-size:12px; }
 .smart-capability-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
 .smart-capability-grid button {
   position: relative;
@@ -1424,7 +1388,7 @@ onUnmounted(() => {
 .smart-capability-grid button strong,
 .smart-capability-grid button small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .smart-capability-grid button strong { font-size: 12px; }
-.smart-capability-grid button small { margin-top: 4px; color: #64748b; font-size: 10px; }
+.smart-capability-grid button small { margin-top: 4px; color: #64748b; font-size:12px; }
 .smart-capability-grid button > i { color: #64748b; font-size: 17px; font-style: normal; }
 .smart-capability-grid button:active { border-color: #93c5fd; background: #eff6ff; }
 
@@ -2367,12 +2331,14 @@ onUnmounted(() => {
 }
 
 .legacy-device-app .legacy-device-icon {
-  width: 56px;
-  height: 56px;
-  padding: 5px;
+  width: 76px;
+  height: 76px;
+  flex: 0 0 76px;
+  padding: 4px;
+  border: 1px solid #e2e8f0;
   border-radius: 12px;
-  background: #2563EB;
-  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.14);
+  background: #ffffff;
+  box-shadow: none;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -2448,10 +2414,29 @@ onUnmounted(() => {
 }
 
 .legacy-device-app .operation-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 16px;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
   margin-bottom: 8px;
+  color: #2563eb;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  box-shadow: none;
+}
+
+.legacy-device-app .operation-icon .icon-img { width: 27px; height: 27px; filter: brightness(0) saturate(100%) invert(35%) sepia(98%) saturate(2566%) hue-rotate(212deg) brightness(93%) contrast(98%); }
+.legacy-device-app .operation-icon.vfl, .legacy-device-app .operation-icon.red-light.is-on { background: #fff1f2; border-color: #ffe4e6; }
+.legacy-device-app .operation-icon.vfl .icon-img, .legacy-device-app .operation-icon.red-light.is-on .icon-img { filter: brightness(0) saturate(100%) invert(22%) sepia(87%) saturate(2939%) hue-rotate(343deg) brightness(94%) contrast(90%); }
+.legacy-device-app .operation-icon.heater.is-on, .legacy-device-app .operation-icon.flashlight.is-on { background: #fff7ed; border-color: #fed7aa; }
+.legacy-device-app .operation-icon.heater.is-on .icon-img, .legacy-device-app .operation-icon.flashlight.is-on .icon-img { filter: brightness(0) saturate(100%) invert(49%) sepia(95%) saturate(2325%) hue-rotate(7deg) brightness(89%) contrast(99%); }
+
+.legacy-device-app .password-actions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+.legacy-device-app .password-actions .action-btn { min-width: 0; padding: 0 8px; font-size: 13px; white-space: nowrap; }
+.legacy-device-app .password-actions .action-btn.secondary { gap: 4px; }
+.legacy-device-app .device-name { text-decoration: none; }
+@media (max-width: 350px) {
+  .legacy-device-app .password-actions { grid-template-columns: 1fr; }
+  .legacy-device-app .legacy-device-icon { width: 64px; height: 64px; flex-basis: 64px; }
 }
 
 .legacy-device-app .operation-title {
@@ -2478,4 +2463,26 @@ onUnmounted(() => {
     align-items: flex-start;
   }
 }
+
+.smart-home-tools { grid-template-columns:repeat(4,minmax(0,1fr)); gap:0; padding:8px 0; background:#fff; border:1px solid #e2e8f0; border-radius:12px; }
+.smart-home-tools button { position:relative; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:7px; min-height:88px; padding:8px 3px; border:0; border-radius:8px; text-align:center; background:transparent; }
+.smart-home-tools .smart-screenshot-tool { grid-column:auto; }
+.smart-home-tools small { font-size:12px; }
+.smart-home-tools .smart-mini-switch,.smart-home-tools .smart-tool-chevron { display:none; }
+.smart-home-tools .smart-tool-icon { width:38px; height:38px; }
+.smart-home-tools .smart-tool-icon img { width:24px; height:24px; }
+.smart-capability-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; overflow:hidden; border:1px solid #e2e8f0; border-radius:12px; background:#e8edf3; }
+.smart-capability-grid button { display:flex; flex-direction:column; justify-content:center; align-items:center; gap:10px; min-height:106px; padding:14px 4px; border:0; border-radius:0; background:#fff; text-align:center; }
+.smart-capability-grid button > span:first-child { width:42px; height:42px; }
+.smart-capability-grid button img { width:26px; height:26px; }
+.smart-capability-grid button small,.smart-capability-grid button > i { display:none; }
+.smart-capability-grid button strong { white-space:normal; line-height:1.4; }
+
+/* Smart OTDR functional colors; shared device assets remain unchanged. */
+.smart-tool-icon.is-light, .smart-tool-icon.is-file { background:#fff7e6; }
+.smart-tool-icon.is-capture { background:#f3efff; }
+.smart-capability-grid button > span[data-tool="smart-opm"], .smart-capability-grid button > span[data-tool="cable-test"] { background:#e9f8f5; }
+.smart-capability-grid button > span[data-tool="endface"], .smart-capability-grid button > span[data-tool="loss-test"] { background:#f3efff; }
+.smart-capability-grid button > span[data-tool="vfl"] { background:#fff0f0; }
+.smart-header-tool.active { background:#fff7e6; }
 </style>

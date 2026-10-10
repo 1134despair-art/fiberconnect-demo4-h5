@@ -38,11 +38,11 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import type { Device } from '@/composables/useAuth'
 import DeviceSettingDialog from '../components/DeviceSettingDialog.vue'
-import vflIcon from '@/assets/icons/pon-meter/ui/vfl.png'
-import steadyIcon from '@/assets/icons/pon-meter/ui/continuous-wave.png'
-import pulse1Icon from '@/assets/icons/pon-meter/ui/pulse-1hz.png'
-import pulse2Icon from '@/assets/icons/pon-meter/ui/pulse-2hz.png'
-import powerOffIcon from '@/assets/icons/pon-meter/ui/power-off.png'
+import vflIcon from '@/assets/icons/iconfont/device/vfl.svg'
+import steadyIcon from '@/assets/icons/iconfont/device/output.svg'
+import pulse1Icon from '@/assets/icons/iconfont/device/pulse.svg'
+import pulse2Icon from '@/assets/icons/iconfont/device/pulse.svg'
+import powerOffIcon from '@/assets/icons/iconfont/device/poweroff.svg'
 import PortableOtdrFunctionNav from './PortableOtdrFunctionNav.vue'
 import PortableOtdrPageShell from './PortableOtdrPageShell.vue'
 import { usePortableOtdrState, type PortableOtdrVflMode } from './usePortableOtdrState'
@@ -81,12 +81,12 @@ const confirmMode = () => {
 .source-state img { width: 58px; height: 58px; opacity: .28; filter: grayscale(1); }
 .source-state > strong { color: ui.$text; font-size: 28px; @include ui.metric-number; }
 .source-state small { font-size: 12px; }
-.source-state > span { padding: 6px 16px; border-radius: 999px; background: #edf2f7; color: ui.$text-sub; font-size: 10px; }
+.source-state > span { padding: 6px 16px; border-radius: 999px; background: #edf2f7; color: ui.$text-sub; font-size:12px; }
 .source-state.active img { opacity: 1; filter: none; }
 .source-state.active > span { background: #fee2e2; color: ui.$danger; }
 .mode-panel > div:first-child strong, .mode-panel > div:first-child span { display: block; }
 .mode-panel > div:first-child strong { color: ui.$text; font-size: 13px; }
-.mode-panel > div:first-child span { margin-top: 4px; color: ui.$text-sub; font-size: 10px; }
+.mode-panel > div:first-child span { margin-top: 4px; color: ui.$text-sub; font-size:12px; }
 .mode-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
 .mode-grid button { @include ui.secondary-button; min-width: 0; min-height: 86px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
 .mode-grid button img { width: 27px; height: 27px; }
@@ -94,7 +94,7 @@ const confirmMode = () => {
 .mode-grid button.active { border-color: #93c5fd; background: ui.$primary-soft; color: ui.$primary; }
 .close-output { @include ui.secondary-button; width: 100%; margin-top: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; color: ui.$danger; }
 .close-output img { width: 20px; height: 20px; }
-.mode-panel p { margin: 12px 8px 0; color: ui.$text-sub; font-size: 10px; line-height: 1.5; text-align: center; }
+.mode-panel p { margin: 12px 8px 0; color: ui.$text-sub; font-size:12px; line-height: 1.5; text-align: center; }
 .laser-mark { width: fit-content; margin: 0 auto; padding: 6px 10px; border: 2px solid ui.$danger; border-radius: 999px; color: ui.$danger; font-size: 11px; font-weight: 800; }
 </style>
 

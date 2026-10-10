@@ -1,4 +1,6 @@
 import { ref, computed } from 'vue'
+import { getPasswordRecoveryAdapter } from '@/services/passwordRecovery'
+import { registeredUser, verifyRegisteredPassword, createRegisteredUser, saveRegisteredUser, removeRegisteredUser } from '@/services/prototypeAccounts'
 
 // 用户接口定义
 export interface User {
@@ -81,6 +83,22 @@ export interface LoginResult {
   isNewUser?: boolean
 }
 
+// The prototype stores profile edits per login account on this browser.
+type EditableProfile = Pick<User, 'name' | 'email' | 'avatar'>
+const profileKey = (account: User) => 'user_profile:v1:' + (account.phone ? 'phone:' + account.phone : 'email:' + (account.email || account.id).toLowerCase())
+const restoreProfile = (account: User): User => {
+  try {
+    const raw = localStorage.getItem(profileKey(account)) || sessionStorage.getItem(profileKey(account))
+    if (!raw) return account
+    const stored = JSON.parse(raw)
+    const profile: Partial<EditableProfile> = {}
+    for (const key of ['name', 'email', 'avatar'] as const) {
+      if (typeof stored?.[key] === 'string') profile[key] = stored[key]
+    }
+    return { ...account, ...profile }
+  } catch { return account }
+}
+
 // 认证状态管理
 const currentUser = ref<User | null>(null)
 const isAuthenticated = ref<boolean>(false)
@@ -98,7 +116,7 @@ const initTestUsers = () => {
       password: 'password123',
       name: '张三',
       role: 'user',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=13800138000',
+      avatar: '',
       devices: [
         {
           id: 'device_001',
@@ -202,7 +220,7 @@ const initTestUsers = () => {
       password: 'password123',
       name: '李四',
       role: 'user',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=13900139000',
+      avatar: '',
       devices: [],
       createdAt: '2024-02-01 12:00:00'
     }
@@ -218,7 +236,7 @@ const initTestUsers = () => {
 
 // 获取用户的辅助函数
 const findUser = (account: string): User | undefined => {
-  return userDatabase.get(account)
+  return registeredUser(account) || userDatabase.get(account)
 }
 
 // 初始化测试数据
@@ -266,7 +284,7 @@ export function useAuth() {
           // email: `${phone}@example.com`, 
           name: `用户${phone.slice(-4)}`,
           role: 'user',
-          avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${phone}`,
+          avatar: '',
           devices: [
             // 新用户默认显示一些已添加的设备
             {
@@ -347,6 +365,8 @@ export function useAuth() {
         userDatabase.set(phone, userData)
       }
       
+      // Restore saved profile without changing credentials or device data.
+      userData = restoreProfile(userData)
       // 设置当前用户
       currentUser.value = userData
       isAuthenticated.value = true
@@ -382,6 +402,7 @@ export function useAuth() {
       await new Promise(resolve => setTimeout(resolve, 1500))
       
       // 检查用户是否存在
+      if (!await verifyRegisteredPassword(email, password)) return { success: false, message: '密码错误，请重新输入' }
       let userData = findUser(email)
       let isNewUser = false
       
@@ -395,7 +416,7 @@ export function useAuth() {
           password,
           name: `用户${email.split('@')[0]}`,
           role: 'user',
-          avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${email}`,
+          avatar: '',
           devices: [
             {
               id: `device_${Date.now()}_1`,
@@ -449,6 +470,8 @@ export function useAuth() {
         }
       }
       
+      // Restore saved profile without changing credentials or device data.
+      userData = restoreProfile(userData)
       // 设置当前用户
       currentUser.value = userData
       isAuthenticated.value = true
@@ -529,11 +552,12 @@ export function useAuth() {
    */
   const updateUser = (userData: Partial<User>) => {
     if (currentUser.value) {
-      currentUser.value = { ...currentUser.value, ...userData }
-      
-      // 更新存储中的用户信息
+      const nextUser = { ...currentUser.value, ...userData }
+      // Persist first: a failed write must not report an unsaved avatar as saved.
       const storage = localStorage.getItem('auth_user') ? localStorage : sessionStorage
-      storage.setItem('auth_user', JSON.stringify(currentUser.value))
+      storage.setItem('auth_user', JSON.stringify(nextUser))
+      saveRegisteredUser(nextUser)
+      currentUser.value = nextUser
       
       // 更新数据库中的用户信息
       if (currentUser.value.phone) {
@@ -542,6 +566,20 @@ export function useAuth() {
       if (currentUser.value.email) {
         userDatabase.set(currentUser.value.email, currentUser.value)
       }
+    }
+  }
+
+  const updateProfile = (profile: Partial<EditableProfile>) => {
+    if (!currentUser.value) throw new Error('Not signed in')
+    const storage = localStorage.getItem('auth_user') ? localStorage : sessionStorage
+    const key = profileKey(currentUser.value)
+    const previous = storage.getItem(key)
+    const next = { name: currentUser.value.name, email: currentUser.value.email || '', avatar: currentUser.value.avatar || '', ...profile }
+    storage.setItem(key, JSON.stringify(next))
+    try { updateUser(next) } catch (error) {
+      if (previous === null) storage.removeItem(key)
+      else storage.setItem(key, previous)
+      throw error
     }
   }
 
@@ -620,6 +658,44 @@ export function useAuth() {
     }
   }
 
+  const registerAccount = async (mode: 'phone' | 'email', account: string, code: string, password: string): Promise<LoginResult> => {
+    if (mode === 'phone' ? !/^1[3-9]\d{9}$/.test(account) : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(account)) return { success: false, message: mode === 'phone' ? 'login.invalidPhone' : 'login.invalidEmail' }
+    if (code !== '123456') return { success: false, message: 'register.codeInvalid' }
+    if (password.length < 6 || password.length > 20) return { success: false, message: 'login.passwordTooShort' }
+    if (findUser(account)) return { success: false, message: 'register.accountExists' }
+    try {
+      const accountUser = await createRegisteredUser(mode, account, password)
+      localStorage.setItem('auth_user', JSON.stringify(accountUser))
+      localStorage.setItem('auth_token', `token_${accountUser.id}_${Date.now()}`)
+      currentUser.value = accountUser; isAuthenticated.value = true
+      return { success: true, isNewUser: true }
+    } catch (error) { return { success: false, message: error instanceof Error ? error.message : 'register.registerFailed' } }
+  }
+
+  const requestPasswordReset = async (account: string) => {
+    if (!findUser(account.trim().toLowerCase())) throw new Error('该账号尚未注册')
+    await getPasswordRecoveryAdapter().request(account)
+  }
+  const resetPassword = async (account: string, code: string, password: string) => {
+    const normalized = account.trim().toLowerCase(), existing = findUser(normalized)
+    if (!existing) throw new Error('该账号尚未注册')
+    const updated = await getPasswordRecoveryAdapter().reset(normalized, code, password, existing)
+    for (const [key, value] of userDatabase) if (value.id === updated.id) userDatabase.set(key, updated)
+    if (currentUser.value?.id === updated.id) {
+      const { password: removed, ...profile } = currentUser.value
+      currentUser.value = profile; localStorage.setItem('auth_user', JSON.stringify(profile))
+    }
+  }
+
+  const deleteAccount = async () => {
+    const account = currentUser.value
+    if (!account) return
+    removeRegisteredUser(account)
+    for (const [key, value] of userDatabase) if (value.id === account.id) userDatabase.delete(key)
+    localStorage.removeItem(profileKey(account)); sessionStorage.removeItem(profileKey(account))
+    await logout()
+  }
+
   // 初始化时检查认证状态
   checkAuth()
 
@@ -629,10 +705,15 @@ export function useAuth() {
     isLoggedIn,
     
     // 方法
+    requestPasswordReset,
+    resetPassword,
+    registerAccount,
+    deleteAccount,
     loginWithPhone,
     logout,
     checkAuth,
     updateUser,
+    updateProfile,
     addDevice,
     updateDevice,
     hasPermission,

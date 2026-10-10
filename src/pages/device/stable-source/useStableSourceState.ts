@@ -27,7 +27,7 @@ const DEFAULT_CAPABILITIES: StableSourceCapabilities = {
   wavelengths: [...STABLE_SOURCE_WAVELENGTHS],
   outputModes: [...STABLE_SOURCE_OUTPUT_MODES],
   powerRange: { min: -4, max: 10, step: 0.1 },
-  calibrationRange: { min: -3, max: 3, step: 0.1 },
+  calibrationRange: { min: -3, max: 3, step: 0.05 },
   gainRange: { min: 80, max: 120, step: 1 },
   autoShutdownOptions: [0, 1, 5, 10, 30, 60],
   languages: ['zh-CN', 'en'],
@@ -45,12 +45,14 @@ export const resolveStableSourceCapabilities = (device?: Device | null): StableS
   const shutdownOptions = device?.stableSourceAutoShutdownOptions?.length
     ? [...new Set(device.stableSourceAutoShutdownOptions.filter(value => Number.isFinite(value) && value >= 0))].sort((a, b) => a - b)
     : []
+  const calibrationRange = validRange(device?.stableSourceCalibrationRange, DEFAULT_CAPABILITIES.calibrationRange)
+  calibrationRange.step = Math.min(calibrationRange.step, DEFAULT_CAPABILITIES.calibrationRange.step)
 
   return {
     wavelengths: device?.stableSourceWavelengths?.length ? [...device.stableSourceWavelengths] : [...DEFAULT_CAPABILITIES.wavelengths],
     outputModes: device?.stableSourceFrequencies?.length ? [...device.stableSourceFrequencies] : [...DEFAULT_CAPABILITIES.outputModes],
     powerRange: validRange(device?.stableSourcePowerRange, DEFAULT_CAPABILITIES.powerRange),
-    calibrationRange: validRange(device?.stableSourceCalibrationRange, DEFAULT_CAPABILITIES.calibrationRange),
+    calibrationRange,
     gainRange: validRange(device?.stableSourceGainRange, DEFAULT_CAPABILITIES.gainRange),
     autoShutdownOptions: shutdownOptions.length ? shutdownOptions : [...DEFAULT_CAPABILITIES.autoShutdownOptions],
     languages: device?.stableSourceLanguages?.length ? [...device.stableSourceLanguages] : [...DEFAULT_CAPABILITIES.languages],
@@ -106,7 +108,11 @@ const storageKey = (deviceId: string) => `stable-light-source:v1:${deviceId}`
 const clampStep = (value: number, min: number, max: number, step: number) => {
   if (!Number.isFinite(value)) return 0
   const clamped = Math.min(max, Math.max(min, value))
-  return Number((Math.round(clamped / step) * step).toFixed(1))
+  const precision = Math.max(
+    String(step).split('.')[1]?.length ?? 0,
+    String(min).split('.')[1]?.length ?? 0
+  )
+  return Number((min + Math.round((clamped - min) / step) * step).toFixed(precision))
 }
 
 const readState = (deviceId: string, capabilities: StableSourceCapabilities): StableSourcePersistedState => {

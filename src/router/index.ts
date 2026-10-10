@@ -1,11 +1,17 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Home from '../pages/home/Home.vue'
 import Login from '../pages/login/Login.vue'
+// 主导航页面随应用一起加载，避免服务重启后首次切换 Tab 时异步资源失效。
+import ProductCatalog from '../pages/product/ProductCatalog.vue'
+import Settings from '../pages/settings/Settings.vue'
 import { useAuth } from '../composables/useAuth'
 import i18n from '../locales'
+import { authorizationExpired, getSmartOtdrAdapter } from '@/services/smartOtdr'
 
 // 路由配置
 const routes = [
+  { path: '/reset-password', name: 'ResetPassword', component: () => import('../pages/login/ResetPassword.vue'), meta: {requiresAuth:false,title:'找回密码'} },
+  { path: '/register', name: 'Register', component: () => import('../pages/login/Register.vue'), meta: { requiresAuth: false, title: '注册账号' } },
   {
     path: '/login',
     name: 'Login',
@@ -23,6 +29,12 @@ const routes = [
       requiresAuth: true,
       title: '首页'
     }
+  },
+  {
+    path: '/device/:id/activate',
+    name: 'SmartOtdrConnect',
+    component: () => import('../pages/device/SmartOtdrConnect.vue'),
+    meta: { requiresAuth: true, title: '连接与激活' }
   },
   {
     path: '/device/:id',
@@ -387,7 +399,7 @@ const routes = [
   {
     path: '/settings',
     name: 'Settings',
-    component: () => import('../pages/settings/Settings.vue'),
+    component: Settings,
     meta: { 
       requiresAuth: true,
       title: '设置'
@@ -405,7 +417,7 @@ const routes = [
   {
     path: '/catalog',
     name: 'ProductCatalog',
-    component: () => import('../pages/product/ProductCatalog.vue'),
+    component: ProductCatalog,
     meta: { 
       requiresAuth: true,
       title: '产品分类'
@@ -423,7 +435,7 @@ const routes = [
   {
     path: '/profile',
     name: 'Profile',
-    component: () => import('../pages/profile/Profile.vue'),
+    redirect: { path: '/settings', query: { panel: 'profile' } },
     meta: { 
       requiresAuth: true,
       title: '个人中心'
@@ -452,9 +464,20 @@ const router = createRouter({
 })
 
 // 全局路由守卫
-router.beforeEach((to, _from, next) => {
-  const { checkAuth } = useAuth()
+router.beforeEach(async (to, _from, next) => {
+  const { checkAuth, user } = useAuth()
   const isAuthenticated = checkAuth()
+
+  // Smart OTDR entry is allowed only after connection and an authoritative authorization check.
+  const targetDevice = user.value?.devices.find(device => device.id === to.params.id)
+  if (isAuthenticated && targetDevice?.deviceType === 'smart_otdr' && to.name !== 'SmartOtdrConnect') {
+    const activatePath = `/device/${targetDevice.id}/activate`
+    if (targetDevice.status !== 'connected') { next({ path: activatePath, replace: true }); return }
+    try {
+      const auth = await getSmartOtdrAdapter().getAuthorization(targetDevice)
+      if (!auth.activated || auth.locked || authorizationExpired(auth.expiresAt)) { next({ path: activatePath, replace: true }); return }
+    } catch { next({ path: activatePath, replace: true }); return }
+  }
 
   // 语言上下文切换逻辑
   const isDeviceContext = to.path.startsWith('/device/')

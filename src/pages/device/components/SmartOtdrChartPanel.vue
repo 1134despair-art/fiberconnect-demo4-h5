@@ -175,7 +175,8 @@ const polylinePoints = computed(() => {
 .trace-line {
   fill: none;
   stroke: #f59e0b;
-  stroke-width: 1.2;
+  stroke-width: 1.15;
+  vector-effect: non-scaling-stroke;
   stroke-linecap: round;
   stroke-linejoin: round;
 }

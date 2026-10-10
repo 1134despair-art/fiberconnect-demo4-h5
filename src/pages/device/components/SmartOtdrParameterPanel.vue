@@ -1,137 +1,75 @@
 ﻿<template>
   <section class="parameter-panel">
-    <section class="setting-group-card">
+    <SmartOtdrSettingLayout :items="settingItems" v-slot="{ activeKey }">
+    <section v-show="activeKey === 'wavelength'" class="setting-group-card">
       <header class="setting-group-card__head">
         <h3>波长</h3>
       </header>
       <div class="setting-group-card__body">
-        <div class="setting-choice-list">
-          <label v-for="option in wavelengthOptions" :key="option" class="setting-choice-row">
-            <div class="setting-choice-main">
-              <input
-                :checked="form.wavelength === option"
-                :disabled="disabled"
-                type="radio"
-                name="wavelength"
-                @change="updateField('wavelength', option)"
-              />
-              <span>{{ option }}</span>
-            </div>
-          </label>
+        <div class="smart-choice-grid smart-choice-grid--compact setting-choice-list">
+          <button v-for="option in wavelengthOptions" :key="option" :disabled="disabled" type="button" class="smart-choice-button" :class="{ active: form.wavelength === option, 'is-wide': option.length > 8 }" :aria-pressed="form.wavelength === option" @click="updateField('wavelength', option)">{{ option }}</button>
         </div>
       </div>
     </section>
-
-    <section class="setting-group-card">
+    <section v-show="activeKey === 'range'" class="setting-group-card">
       <header class="setting-group-card__head">
         <h3>测量范围</h3>
       </header>
       <div class="setting-group-card__body">
-        <div class="setting-choice-list scrollable-list">
-          <label v-for="option in rangeOptions" :key="option" class="setting-choice-row">
-            <div class="setting-choice-main">
-              <input
-                :checked="form.range === option"
-                :disabled="disabled"
-                type="radio"
-                name="range"
-                @change="updateField('range', option)"
-              />
-              <span>{{ option }}</span>
-            </div>
-          </label>
+        <div class="smart-choice-grid smart-choice-grid--compact setting-choice-list scrollable-list">
+          <button v-for="option in rangeOptions" :key="option" :disabled="disabled" type="button" class="smart-choice-button" :class="{ active: form.range === option }" :aria-pressed="form.range === option" @click="updateField('range', option)">{{ option }}</button>
         </div>
       </div>
     </section>
-
-    <section class="setting-group-card">
+    <section v-show="activeKey === 'pulseWidth'" class="setting-group-card">
       <header class="setting-group-card__head">
         <h3>测量脉宽</h3>
       </header>
       <div class="setting-group-card__body">
-        <div class="setting-choice-list scrollable-list">
-          <label v-for="option in pulseOptions" :key="option" class="setting-choice-row">
-            <div class="setting-choice-main">
-              <input
-                :checked="form.pulseWidth === option"
-                :disabled="disabled"
-                type="radio"
-                name="pulseWidth"
-                @change="updateField('pulseWidth', option)"
-              />
-              <span>{{ option }}</span>
-            </div>
-          </label>
+        <div class="smart-choice-grid smart-choice-grid--compact setting-choice-list scrollable-list">
+          <button v-for="option in pulseOptions" :key="option" :disabled="disabled" type="button" class="smart-choice-button" :class="{ active: form.pulseWidth === option }" :aria-pressed="form.pulseWidth === option" @click="updateField('pulseWidth', option)">{{ option }}</button>
         </div>
       </div>
     </section>
-
-    <section class="setting-group-card">
+    <section v-show="activeKey === 'measurementMode'" class="setting-group-card">
       <header class="setting-group-card__head">
         <h3>测量模式</h3>
       </header>
       <div class="setting-group-card__body">
-        <div class="setting-choice-list">
-          <label v-for="option in measurementModeOptions" :key="option.value" class="setting-choice-row">
-            <div class="setting-choice-main">
-              <input
-                :checked="form.measurementMode === option.value"
-                :disabled="disabled"
-                type="radio"
-                name="measurementMode"
-                @change="updateField('measurementMode', option.value)"
-              />
-              <span>{{ option.label }}</span>
-            </div>
-          </label>
+        <div class="smart-choice-grid smart-choice-grid--compact setting-choice-list">
+          <button v-for="option in measurementModeOptions" :key="option.value" :disabled="disabled" type="button" class="smart-choice-button" :class="{ active: form.measurementMode === option.value }" :aria-pressed="form.measurementMode === option.value" @click="updateField('measurementMode', option.value)">{{ option.label }}</button>
         </div>
         <p class="setting-group-hint">
           {{ form.measurementMode === 'real-time' ? '持续采集，需手动结束测量' : '按设定时间完成平均测量' }}
         </p>
       </div>
     </section>
-
-    <section class="setting-group-card">
+    <section v-show="activeKey === 'measureTimeMode'" class="setting-group-card">
       <header class="setting-group-card__head">
         <h3>测量时间</h3>
       </header>
       <div class="setting-group-card__body">
-        <div class="setting-choice-list">
-          <label
-            v-for="option in measureTimeOptions"
-            :key="option.value"
-            class="setting-choice-row"
-            :class="{ 'setting-choice-row--input': option.value === 'custom' }"
-          >
-            <div class="setting-choice-main">
-              <input
-                :checked="form.measureTimeMode === option.value"
+        <div class="smart-choice-grid smart-choice-grid--compact setting-choice-list">
+          <button v-for="option in measureTimeOptions" :key="option.value"
+            class="smart-choice-button" type="button"
+            :disabled="disabled || form.measurementMode === 'real-time'"
+            :class="{ active: form.measureTimeMode === option.value }"
+            :aria-pressed="form.measureTimeMode === option.value"
+            @click="updateField('measureTimeMode', option.value)">{{ option.label }}</button>
+          <label v-if="form.measureTimeMode === 'custom'" class="setting-choice-row setting-choice-row--input">
+            <span>自定义时长</span>
+            <div class="setting-inline-field">
+              <input :value="form.customMeasureSeconds" class="setting-input"
                 :disabled="disabled || form.measurementMode === 'real-time'"
-                type="radio"
-                name="measureTime"
-                @change="updateField('measureTimeMode', option.value)"
-              />
-              <span>{{ option.label }}</span>
-            </div>
-            <div v-if="option.value === 'custom'" class="setting-inline-field">
-              <input
-                :value="form.customMeasureSeconds"
-                class="setting-input"
-                :disabled="disabled || form.measurementMode === 'real-time' || form.measureTimeMode !== 'custom'"
-                min="1"
-                max="3600"
-                inputmode="numeric"
-                type="number"
-                @input="updateField('customMeasureSeconds', ($event.target as HTMLInputElement).value)"
-              />
+                min="1" max="3600" inputmode="numeric" type="number"
+                @input="updateField('customMeasureSeconds', ($event.target as HTMLInputElement).value)" />
               <span class="setting-unit">S</span>
             </div>
           </label>
         </div>
       </div>
     </section>
-
-    <section class="setting-group-card">
+    <section v-show="activeKey === 'refractiveIndex1310'" class="setting-group-card">
       <header class="setting-group-card__head">
         <h3>折射率</h3>
       </header>
@@ -168,25 +106,13 @@
         </div>
       </div>
     </section>
-
-    <section class="setting-group-card">
+    <section v-show="activeKey === 'launchFiberValue'" class="setting-group-card">
       <header class="setting-group-card__head">
         <h3>引导光纤</h3>
       </header>
       <div class="setting-group-card__body">
-        <div class="setting-choice-list">
-          <label class="setting-choice-row">
-            <div class="setting-choice-main">
-              <input
-                :checked="form.launchFiberMode === 'none'"
-                :disabled="disabled"
-                type="radio"
-                name="launchFiber"
-                @change="updateField('launchFiberMode', 'none')"
-              />
-              <span>无</span>
-            </div>
-          </label>
+        <div class="smart-choice-grid smart-choice-grid--compact setting-choice-list">
+          <button :disabled="disabled" type="button" class="smart-choice-button" :class="{ active: form.launchFiberMode === 'none' }" :aria-pressed="form.launchFiberMode === 'none'" @click="updateField('launchFiberMode', 'none')">无</button>
 
           <label class="setting-choice-row setting-choice-row--input">
             <div class="setting-choice-main">
@@ -235,8 +161,7 @@
         </div>
       </div>
     </section>
-
-    <section class="setting-group-card capability-card">
+    <section v-show="activeKey === 'capability'" class="setting-group-card capability-card">
       <header class="setting-group-card__head">
         <h3>探头与分辨率</h3>
       </header>
@@ -248,25 +173,13 @@
       </div>
       <p class="setting-group-hint">高压偏置随探头批次与温度自动校正。</p>
     </section>
-
-    <section class="setting-group-card">
+    <section v-show="activeKey === 'receiveFiberValue'" class="setting-group-card">
       <header class="setting-group-card__head">
         <h3>接收光纤</h3>
       </header>
       <div class="setting-group-card__body">
-        <div class="setting-choice-list">
-          <label class="setting-choice-row">
-            <div class="setting-choice-main">
-              <input
-                :checked="form.receiveFiberMode === 'none'"
-                :disabled="disabled"
-                type="radio"
-                name="receiveFiber"
-                @change="updateField('receiveFiberMode', 'none')"
-              />
-              <span>无</span>
-            </div>
-          </label>
+        <div class="smart-choice-grid smart-choice-grid--compact setting-choice-list">
+          <button :disabled="disabled" type="button" class="smart-choice-button" :class="{ active: form.receiveFiberMode === 'none' }" :aria-pressed="form.receiveFiberMode === 'none'" @click="updateField('receiveFiberMode', 'none')">无</button>
 
           <label class="setting-choice-row setting-choice-row--input">
             <div class="setting-choice-main">
@@ -315,28 +228,17 @@
         </div>
       </div>
     </section>
-
-    <section class="setting-group-card">
+    <section v-show="activeKey === 'unit'" class="setting-group-card">
       <header class="setting-group-card__head">
         <h3>单位</h3>
       </header>
       <div class="setting-group-card__body">
-        <div class="setting-choice-list">
-          <label v-for="option in unitOptions" :key="option" class="setting-choice-row">
-            <div class="setting-choice-main">
-              <input
-                :checked="form.unit === option"
-                :disabled="disabled"
-                type="radio"
-                name="unit"
-                @change="updateField('unit', option)"
-              />
-              <span>{{ option }}</span>
-            </div>
-          </label>
+        <div class="smart-choice-grid smart-choice-grid--compact setting-choice-list">
+          <button v-for="option in unitOptions" :key="option" :disabled="disabled" type="button" class="smart-choice-button" :class="{ active: form.unit === option }" :aria-pressed="form.unit === option" @click="updateField('unit', option)">{{ option }}</button>
         </div>
       </div>
     </section>
+    </SmartOtdrSettingLayout>
 
     <div class="parameter-action-stack">
       <section class="calibration-panel">
@@ -365,6 +267,7 @@
 </template>
 
 <script setup lang="ts">
+import SmartOtdrSettingLayout from './SmartOtdrSettingLayout.vue'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type {
@@ -425,9 +328,22 @@ const updateField = <K extends keyof ParameterForm>(field: K, value: ParameterFo
     [field]: value
   } as Partial<ParameterForm>)
 }
+const settingItems = computed(() => [
+  { key: 'wavelength', label: '波长', value: String(props.form.wavelength) },
+  { key: 'range', label: '测量范围', value: String(props.form.range) },
+  { key: 'pulseWidth', label: '测量脉宽', value: String(props.form.pulseWidth) },
+  { key: 'measurementMode', label: '测量模式', value: String(props.form.measurementMode === 'real-time' ? '实时' : '平均') },
+  { key: 'measureTimeMode', label: '测量时间', value: String(props.form.measureTimeMode === 'custom' ? props.form.customMeasureSeconds + 's' : props.form.measureTimeMode) },
+  { key: 'refractiveIndex1310', label: '折射率', value: String(props.form.refractiveIndex1310) },
+  { key: 'launchFiberValue', label: '引导光纤', value: String(props.form.launchFiberValue) },
+  { key: 'capability', label: '探头与分辨率', value: String('自动补偿') },
+  { key: 'receiveFiberValue', label: '接收光纤', value: String(props.form.receiveFiberValue) },
+  { key: 'unit', label: '单位', value: String(props.form.unit) }
+])
 </script>
 
 <style scoped lang="scss">
+@use './smartOtdrChoices.scss';
 @use './smartOtdrUi.scss' as ui;
 
 .parameter-panel {
@@ -760,4 +676,13 @@ const updateField = <K extends keyof ParameterForm>(field: K, value: ParameterFo
     width: 100%;
   }
 }
+
+.parameter-panel.parameter-panel { display:block; }
+.parameter-action-stack { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px; }
+.parameter-action-stack .calibration-panel,.parameter-action-stack .save-bar { position:static; min-height:44px; padding:8px; margin:0; }
+.parameter-action-stack .action-desc { display:none; }
+.threshold-panel > .save-bar { position:static; margin-top:8px; padding:8px 10px; }
+.threshold-panel > .save-bar .save-desc { display:none; }
+
+.parameter-action-stack .calibration-panel,.parameter-action-stack .save-bar { display:flex;flex-direction:column;align-items:stretch;gap:8px;min-width:0; }.parameter-action-stack button { width:100%;min-width:0;min-height:44px; }.parameter-action-stack .action-copy { min-width:0; }.parameter-action-stack .action-state { overflow-wrap:anywhere; }
 </style>

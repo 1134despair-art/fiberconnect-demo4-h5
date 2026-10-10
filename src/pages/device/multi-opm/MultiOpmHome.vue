@@ -71,10 +71,10 @@ import { computed, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import type { Device } from '@/composables/useAuth'
 import { useAuth } from '@/composables/useAuth'
-import flashlightIcon from '@/assets/icons/pon-meter/ui/flashlight.png'
-import historyIcon from '@/assets/icons/pon-meter/ui/history.png'
-import wiremapIcon from '@/assets/app/icons/device/wiremap.png'
-import seekIcon from '@/assets/app/icons/device/network-test.png'
+import flashlightIcon from '@/assets/icons/iconfont/device/flashlight.svg'
+import historyIcon from '@/assets/icons/iconfont/device/timer.svg'
+import wiremapIcon from '@/assets/icons/iconfont/device/cable.svg'
+import seekIcon from '@/assets/icons/iconfont/device/radar.svg'
 import MultiOpmFunctionNav from './MultiOpmFunctionNav.vue'
 import MultiOpmPageShell from './MultiOpmPageShell.vue'
 import { formatMultiOpmFrequency, formatMultiOpmReading, multiOpmDbmToMw, useMultiOpmState } from './useMultiOpmState'
@@ -134,13 +134,13 @@ onUnmounted(() => { if (feedbackTimer) window.clearTimeout(feedbackTimer) })
 .offline-band { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border: 1px solid #fed7aa; border-radius: 10px; background: #fff7ed; }
 .offline-band strong, .offline-band span { display: block; }
 .offline-band strong { color: #9a3412; font-size: 12px; }
-.offline-band span { margin-top: 2px; color: #c2410c; font-size: 10px; }
+.offline-band span { margin-top: 2px; color: #c2410c; font-size:12px; }
 .offline-band button { @include ui.secondary-button; min-height: 38px; padding: 0 10px; color: #9a3412; font-size: 11px; }
 .home-meter { overflow: hidden; border: 1px solid #dbe7f5; border-radius: 12px; background: #fff; box-shadow: 0 8px 22px rgba(37, 99, 235, .08); }
 .home-meter > header { min-height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; border-bottom: 1px solid #e7eef8; }
 .home-meter > header strong { color: ui.$primary-dark; font-size: 13px; }
 .home-meter > header button { @include ui.button-reset; min-height: 36px; padding: 0 4px; background: transparent; color: ui.$primary; font-size: 14px; font-weight: 700; }
-.home-meter > header small { font-size: 10px; }
+.home-meter > header small { font-size:12px; }
 .meter-action { @include ui.button-reset; width: 100%; min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #fff; color: ui.$primary; }
 .meter-action > span { font-size: 13px; }
 .meter-action > div { min-height: 70px; display: flex; align-items: baseline; gap: 7px; }
@@ -159,7 +159,7 @@ onUnmounted(() => { if (feedbackTimer) window.clearTimeout(feedbackTimer) })
 .spec-strip div { min-width: 0; padding: 9px 4px; border-right: 1px solid ui.$border; text-align: center; }
 .spec-strip div:last-child { border-right: 0; }
 .spec-strip span, .spec-strip strong { display: block; }
-.spec-strip span { color: ui.$text-sub; font-size: 9px; }
+.spec-strip span { color: ui.$text-sub; font-size:12px; }
 .spec-strip strong { margin-top: 4px; color: ui.$text; font-size: 11px; @include ui.metric-number; }
 .home-tools { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .home-tools button { @include ui.button-reset; position: relative; min-width: 0; min-height: 64px; display: grid; grid-template-columns: 34px minmax(0, 1fr); align-items: center; gap: 9px; padding: 8px 38px 8px 10px; border: 1px solid ui.$border; border-radius: 10px; background: #fff; color: ui.$text; text-align: left; }
@@ -168,7 +168,7 @@ onUnmounted(() => { if (feedbackTimer) window.clearTimeout(feedbackTimer) })
 .tool-icon img { width: 20px; height: 20px; object-fit: contain; }
 .home-tools strong, .home-tools small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .home-tools strong { font-size: 11px; }
-.home-tools small { margin-top: 3px; color: ui.$text-sub; font-size: 9px; }
+.home-tools small { margin-top: 3px; color: ui.$text-sub; font-size:12px; }
 .mini-switch { position: absolute; right: 9px; width: 30px; height: 18px; padding: 2px; box-sizing: border-box; border-radius: 9px; background: #cbd5e1; }
 .mini-switch b { display: block; width: 14px; height: 14px; border-radius: 50%; background: #fff; transition: transform .18s ease; }
 .mini-switch.active { background: ui.$primary; }

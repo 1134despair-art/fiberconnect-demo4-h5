@@ -9,42 +9,43 @@
     <div class="content-flex hide-scrollbar">
       <div class="settings-workspace">
         <button class="settings-account" @click="showProfile" :aria-label="t('settings.profile')">
-          <span class="account-avatar" aria-hidden="true">{{ user?.name?.slice(0, 1) || 'L' }}</span>
+          <UserAvatar class="account-avatar" :src="user?.avatar" :name="user?.name" />
           <span class="account-copy"><strong>{{ user?.name }}</strong><small>{{ user?.phone || user?.email }}</small></span>
-          <span class="iconify row-chevron" data-icon="mdi:chevron-right" aria-hidden="true"></span>
+          <SettingsGlyph class="setting-glyph row-chevron" name="chevron" aria-hidden="true" />
         </button>
         <!-- 个人资料 -->
         <div class="settings-section mb-4">
           <div class="settings-group">
             <button class="setting-item" @click="showProfile">
               <div class="setting-info">
-                <div class="setting-icon">
-                  <span class="iconify" data-icon="mdi:account-circle" style="color: #2563EB;"></span>
+                <div class="setting-icon" :style="{ backgroundColor: settingsIconBackground('account') }">
+                  <SettingsGlyph class="setting-glyph" name="account" />
                 </div>
                 <div class="setting-content">
                   <div class="setting-title">{{ t('settings.profile') }}</div>
                   <div class="setting-desc">{{ t('settings.profileDesc') }}</div>
                 </div>
               </div>
-              <span class="iconify setting-arrow" data-icon="mdi:chevron-right"></span>
+              <SettingsGlyph class="setting-glyph setting-arrow" name="chevron" />
             </button>
           </div>
         </div>
 
+        <div class="settings-section mb-4"><div class="settings-group"><button class="setting-item" type="button" @click="router.push('/reset-password')"><div class="setting-info"><div class="setting-icon" :style="{backgroundColor:settingsIconBackground('privacy')}"><SettingsGlyph name="privacy" /></div><div class="setting-content"><div class="setting-title">账户安全</div><div class="setting-desc">验证账号并重置登录密码</div></div></div><SettingsGlyph class="setting-arrow" name="chevron" /></button></div></div>
         <!-- 语言设置 -->
         <div class="settings-section mb-4">
           <div class="settings-group">
             <button class="setting-item" @click="showLanguageModal = true">
               <div class="setting-info">
-                <div class="setting-icon">
-                  <span class="iconify" data-icon="mdi:translate" style="color: #10B981;"></span>
+                <div class="setting-icon" :style="{ backgroundColor: settingsIconBackground('translate') }">
+                  <SettingsGlyph class="setting-glyph" name="translate" />
                 </div>
                 <div class="setting-content">
                   <div class="setting-title">{{ t('settings.language') }}</div>
                   <div class="setting-desc">{{ languageLabels[settings.language as keyof typeof languageLabels] }}</div>
                 </div>
               </div>
-              <span class="iconify setting-arrow" data-icon="mdi:chevron-right"></span>
+              <SettingsGlyph class="setting-glyph setting-arrow" name="chevron" />
             </button>
           </div>
         </div>
@@ -56,15 +57,15 @@
           <div class="settings-group">
             <button class="setting-item" @click="navigateToAfterSales">
               <div class="setting-info">
-                <div class="setting-icon">
-                  <span class="iconify" data-icon="mdi:headset" style="color: #F59E0B;"></span>
+                <div class="setting-icon" :style="{ backgroundColor: settingsIconBackground('support') }">
+                  <SettingsGlyph class="setting-glyph" name="support" />
                 </div>
                 <div class="setting-content">
                   <div class="setting-title">{{ t('settings.afterSales') }}</div>
                   <div class="setting-desc">{{ t('settings.afterSalesDesc') }}</div>
                 </div>
               </div>
-              <span class="iconify setting-arrow" data-icon="mdi:chevron-right"></span>
+              <SettingsGlyph class="setting-glyph setting-arrow" name="chevron" />
             </button>
           </div>
         </div>
@@ -74,13 +75,13 @@
           <div class="settings-group">
             <button class="setting-item" @click="navigateToOperationManual">
               <div class="setting-info">
-                <div class="setting-icon manual-icon"><span class="iconify" data-icon="mdi:book-open-page-variant-outline"></span></div>
+                <div class="setting-icon manual-icon" :style="{ backgroundColor: settingsIconBackground('book') }"><SettingsGlyph class="setting-glyph" name="book" /></div>
                 <div class="setting-content">
                   <div class="setting-title">操作手册</div>
                   <div class="setting-desc">按类型查看操作手册</div>
                 </div>
               </div>
-              <span class="iconify setting-arrow" data-icon="mdi:chevron-right"></span>
+              <SettingsGlyph class="setting-glyph setting-arrow" name="chevron" />
             </button>
           </div>
         </div>
@@ -90,13 +91,13 @@
           <div class="settings-group">
             <button class="setting-item" @click="showSalesContactModal = true">
               <div class="setting-info">
-                <div class="setting-icon sales-icon"><span class="iconify" data-icon="mdi:phone-outline"></span></div>
+                <div class="setting-icon sales-icon" :style="{ backgroundColor: settingsIconBackground('phone') }"><SettingsGlyph class="setting-glyph" name="phone" /></div>
                 <div class="setting-content">
                   <div class="setting-title">销售联系</div>
                   <div class="setting-desc">联系人、电话和官方网站</div>
                 </div>
               </div>
-              <span class="iconify setting-arrow" data-icon="mdi:chevron-right"></span>
+              <SettingsGlyph class="setting-glyph setting-arrow" name="chevron" />
             </button>
           </div>
         </div>
@@ -106,29 +107,34 @@
           <div class="settings-group">
             <button class="setting-item" @click="showAbout">
               <div class="setting-info">
-                <div class="setting-icon">
-                  <span class="iconify" data-icon="mdi:information" style="color: #F59E0B;"></span>
+                <div class="setting-icon" :style="{ backgroundColor: settingsIconBackground('info') }">
+                  <SettingsGlyph class="setting-glyph" name="info" />
                 </div>
                 <div class="setting-content">
                   <div class="setting-title">{{ t('settings.about') }}</div>
                   <div class="setting-desc">{{ t('settings.aboutDesc') }}</div>
                 </div>
               </div>
-              <span class="iconify setting-arrow" data-icon="mdi:chevron-right"></span>
+              <SettingsGlyph class="setting-glyph setting-arrow" name="chevron" />
             </button>
           </div>
         </div>
 
+        <div class="settings-section mb-4"><div class="settings-group">
+          <button class="setting-item" type="button" @click="policy='user'"><div class="setting-info"><div class="setting-icon" :style="{ backgroundColor: settingsIconBackground('agreement') }"><SettingsGlyph name="agreement" /></div><div class="setting-title">{{t('login.userAgreement')}}</div></div><SettingsGlyph class="setting-arrow" name="chevron" /></button>
+          <button class="setting-item" type="button" @click="policy='privacy'"><div class="setting-info"><div class="setting-icon" :style="{ backgroundColor: settingsIconBackground('privacy') }"><SettingsGlyph name="privacy" /></div><div class="setting-title">{{t('login.privacyPolicy')}}</div></div><SettingsGlyph class="setting-arrow" name="chevron" /></button>
+        </div></div>
         <!-- 退出登录 -->
         <div class="logout-section">
           <button @click="handleLogout" class="logout-button">
-            <span class="iconify" data-icon="mdi:logout"></span>
+            <SettingsGlyph class="setting-glyph" name="logout" />
             {{ t('settings.logout') }}
           </button>
         </div>
+        <button type="button" class="delete-account-button" :disabled="deletingAccount" @click="handleDeleteAccount">{{t('settings.deleteAccount')}}</button>
       </div>
     </div>
-    
+    <PolicyDialog v-if="policy" :type="policy" @close="policy=null" />
     <!-- 底部导航栏 -->
     <BottomNavigation />
 
@@ -138,15 +144,17 @@
         <div class="modal-header">
           <h3 class="modal-title">{{ t('settings.profile') }}</h3>
           <button @click="showProfileModal = false" class="modal-close" :aria-label="t('common.close')">
-            <span class="iconify" data-icon="mdi:close" style="font-size: 20px;"></span>
+            <SettingsGlyph class="setting-glyph" name="close" />
           </button>
         </div>
         <div class="modal-body">
           <div class="profile-form">
-            <div class="profile-form-avatar"><span class="account-avatar">{{ user?.name?.slice(0, 1) || 'L' }}</span><span class="account-copy"><strong>{{ user?.name }}</strong><small>{{ user?.phone || user?.email }}</small></span></div>
+            <div class="profile-form-avatar">
+              <AvatarPicker v-model="profileForm.avatar" :name="profileForm.name" :disabled="isSavingProfile" @processing="isProcessingAvatar = $event" />
+            </div>
             <div class="form-group">
               <label class="form-label">{{ t('settings.name') }}</label>
-              <input v-model="profileForm.name" type="text" class="form-input" :placeholder="t('settings.inputName')" />
+              <input v-model="profileForm.name" type="text" maxlength="40" class="form-input" :placeholder="t('settings.inputName')" />
             </div>
             <div class="form-group">
               <label class="form-label">{{ t('settings.phone') }}</label>
@@ -156,8 +164,9 @@
               <label class="form-label">{{ t('settings.email') }}</label>
               <input v-model="profileForm.email" type="email" class="form-input" :placeholder="t('settings.inputEmail')" />
             </div>
+            <p v-if="profileError" class="profile-save-error" role="alert">{{ profileError }}</p>
             <div class="form-actions">
-              <button @click="saveProfile" class="save-btn" :disabled="isSavingProfile">
+              <button @click="saveProfile" class="save-btn" :disabled="isSavingProfile || isProcessingAvatar">
                 {{ isSavingProfile ? t('common.saving') : t('common.save') }}
               </button>
             </div>
@@ -172,7 +181,7 @@
         <div class="modal-header">
           <h3 class="modal-title">{{ t('settings.about') }}</h3>
           <button @click="showAboutModal = false" class="modal-close" :aria-label="t('common.close')">
-            <span class="iconify" data-icon="mdi:close" style="font-size: 20px;"></span>
+            <SettingsGlyph class="setting-glyph" name="close" />
           </button>
         </div>
         <div class="modal-body">
@@ -181,24 +190,24 @@
               <img :src="appLogo" class="about-logo" :alt="t('settings.appName')" />
             </div>
             <div class="app-info">
-              <h4 class="app-name">{{ t('settings.appName') }}</h4>
-              <div class="app-version">{{ t('settings.version') }} v1.0.0</div>
+              <h4 class="app-name">{{ releasedAppInfo.about.name }}</h4>
+              <div class="app-version">{{ releasedAppInfo.about.version }}</div>
               <div class="app-description">
-                {{ t('settings.appDescription') }}
+                {{ releasedAppInfo.about.description }}
               </div>
             </div>
             <div class="app-details">
               <div class="detail-item">
                 <span class="detail-label">{{ t('settings.developer') }}:</span>
-                <span class="detail-value">{{ t('settings.companyName') }}</span>
+                <span class="detail-value">{{ releasedAppInfo.about.company }}</span>
               </div>
               <div class="detail-item">
                 <span class="detail-label">{{ t('settings.releaseDate') }}:</span>
-                <span class="detail-value">2025年12月</span>
+                <span class="detail-value">{{ releasedAppInfo.about.releaseDate }}</span>
               </div>
               <div class="detail-item">
                 <span class="detail-label">{{ t('settings.techSupport') }}:</span>
-                <span class="detail-value">123456789</span>
+                <span class="detail-value">{{ releasedAppInfo.about.techSupport }}</span>
               </div>
             </div>
           </div>
@@ -211,12 +220,11 @@
       <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3 class="modal-title">销售联系</h3>
-          <button class="modal-close" type="button" :aria-label="t('common.close')" @click="showSalesContactModal = false">×</button>
+          <button class="modal-close" type="button" :aria-label="t('common.close')" @click="showSalesContactModal = false"><SettingsGlyph name="close" /></button>
         </div>
         <div class="modal-body sales-contact-body">
-          <div class="sales-contact-row"><span>销售联系人</span><strong>产品销售部</strong></div>
-          <div class="sales-contact-row"><span>联系电话</span><strong>400-000-0000</strong></div>
-          <div class="sales-contact-row"><span>官方网站</span><strong>www.liumada.com</strong></div>
+          <div v-for="person in releasedAppInfo.sales.salesPeople" :key="person.phone" class="sales-contact-row"><span>{{person.contact}}</span><a :href="'tel:'+person.phone.replace(/[^+\d]/g,'')">{{person.phone}}</a></div>
+          <div v-for="website in releasedAppInfo.sales.officialWebsites" :key="website" class="sales-contact-row"><span>{{t('settings.officialWebsite')}}</span><a :href="website" target="_blank" rel="noopener noreferrer">{{website}}</a></div>
         </div>
       </div>
     </div>
@@ -227,7 +235,7 @@
         <div class="action-sheet-header">
           <div class="action-sheet-title">{{ t('settings.selectLanguage') }}</div>
           <button @click="showLanguageModal = false" class="action-sheet-close" :aria-label="t('common.close')">
-            <span class="iconify" data-icon="mdi:close" style="font-size: 20px;"></span>
+            <SettingsGlyph class="setting-glyph" name="close" />
           </button>
         </div>
         <div class="language-list">
@@ -276,8 +284,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import { useRouter } from 'vue-router'
+import { releasedAppInfo } from '@/data/releasedContent'
+import PolicyDialog from '@/components/PolicyDialog.vue'
+import SettingsGlyph from '@/components/SettingsGlyph.vue'
+import { settingsIconBackground } from '@/components/settingsIconPalette'
+import AvatarPicker from '@/components/AvatarPicker.vue'
+import UserAvatar from '@/components/UserAvatar.vue'
+import { ref, reactive, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useAuth } from '@/composables/useAuth'
 import { useModal } from '@/composables/useModal'
@@ -288,16 +302,21 @@ import appLogo from '@/assets/img/logo.png'
 
 // Router and authentication
 const router = useRouter()
+const route = useRoute()
 const { t, locale } = useI18n()
-const { logout, user } = useAuth()
+const { logout, user, updateProfile, deleteAccount } = useAuth()
 const { showModal, modalOptions, confirm, alert, handleConfirm, handleCancel } = useModal()
 
 // Modal states
+const policy = ref<'user'|'privacy'|null>(null)
+const deletingAccount = ref(false)
 const showProfileModal = ref(false)
 const showAboutModal = ref(false)
 const showLanguageModal = ref(false)
 const showSalesContactModal = ref(false)
 const isSavingProfile = ref(false)
+const isProcessingAvatar = ref(false)
+const profileError = ref('')
 
 // Settings data
 const settings = reactive({
@@ -308,43 +327,52 @@ const settings = reactive({
 const profileForm = reactive({
   name: '',
   phone: '',
-  email: ''
+  email: '',
+  avatar: ''
 })
 
 // Language labels
 const languageLabels = {
   'zh-CN': '简体中文',
   'zh-TW': '繁体中文',
-  'en': 'English'
+  'en': 'English', ru: 'Русский', fr: 'français', th: 'แบบไทย', pt: 'Português', es: 'español', pl: 'Polski', ko: '한국어'
 }
 
 /**
  * Show profile
  */
 const showProfile = () => {
+  profileError.value = ''
+  isProcessingAvatar.value = false
   // Load data from user info
   if (user.value) {
     profileForm.name = user.value.name || ''
     profileForm.phone = user.value.phone || ''
     profileForm.email = user.value.email || ''
+    profileForm.avatar = user.value.avatar || ''
   }
   showProfileModal.value = true
 }
+
+watch(() => route.query.panel, panel => { if (panel === 'profile') showProfile() }, { immediate: true })
 
 /**
  * Save profile
  */
 const saveProfile = async () => {
+  if (isSavingProfile.value || isProcessingAvatar.value) return
+  profileError.value = ''
+  const name = profileForm.name.trim()
+  const email = profileForm.email.trim()
+  if (!name) { profileError.value = t('avatar.nameRequired'); return }
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { profileError.value = t('avatar.emailInvalid'); return }
   isSavingProfile.value = true
   try {
-    // Simulate save process
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    // Here you can call API to save user info
+    updateProfile({ name, email, avatar: profileForm.avatar })
     showProfileModal.value = false
-    await alert(t('settings.successSaved') || '保存成功', t('common.success'))
-  } catch (error) {
-    await alert(t('settings.errorSave') || '保存失败', t('common.error'))
+    await alert(t('settings.successSaved'), t('common.success'))
+  } catch {
+    profileError.value = t('avatar.saveError')
   } finally {
     isSavingProfile.value = false
   }
@@ -383,6 +411,16 @@ const navigateToOperationManual = () => {
 /**
  * Handle logout
  */
+const handleDeleteAccount = async () => {
+  if (deletingAccount.value) return
+  if (!await confirm(t('settings.deleteAccountWarning'), t('settings.deleteAccount'))) return
+  if (!await confirm(t('settings.deleteAccountConfirmAgain'), t('settings.deleteAccountConfirmTitle'))) return
+  deletingAccount.value = true
+  try { await deleteAccount(); await router.replace('/login') }
+  catch { await alert(t('settings.deleteAccountFailed')) }
+  finally { deletingAccount.value = false }
+}
+
 const handleLogout = async () => {
   const confirmed = await confirm(t('settings.confirmLogout'), t('settings.logout'))
   if (confirmed) {
@@ -397,6 +435,15 @@ const handleLogout = async () => {
 </script>
 
 <style scoped>
+.delete-account-button{display:block;width:100%;min-height:44px;margin:8px 0 16px;border:0;background:transparent;color:#b91c1c;font-size:13px}
+.sales-contact-row a{color:#2563eb;overflow-wrap:anywhere;text-align:right;font-size:13px}
+
+.profile-save-error { margin: 0 0 14px; color: #b91c1c; font-size: 12px; line-height: 1.6; }
+/* Use the local Iconfont close glyph instead of the shared legacy CSS icon. */
+.workspace-page.legacy-settings-page.workspace-dialogs :is(.modal-close, .action-sheet-close)::before { content: none; }
+.workspace-page.legacy-settings-page.workspace-dialogs :is(.modal-close, .action-sheet-close) > .settings-glyph { display: inline-block; width: 20px; height: 20px; font-size: 20px; }
+.settings-workspace .setting-glyph { flex-shrink: 0; }
+
 .settings-workspace { padding-bottom: 20px; }
 .settings-account { display: flex; align-items: center; gap: 13px; width: 100%; padding: 22px 20px; margin-bottom: 16px; text-align: left; background: white; border: 0; border-bottom: 1px solid #e9ebef; }
 .settings-account .account-avatar { width: 52px; height: 52px; flex-basis: 52px; font-size: 21px; }
@@ -406,12 +453,12 @@ const handleLogout = async () => {
 .settings-workspace .setting-item:hover { background: #fafbfc; }
 .settings-workspace .setting-item:active { transform: none; }
 .settings-workspace .setting-info, .settings-workspace .setting-content { min-width: 0; }
-.settings-workspace .setting-icon { width: 34px; height: 34px; margin-right: 12px; font-size: 21px; border-radius: 8px; background: #f3f5f8; text-shadow: none; }
-.settings-workspace .manual-icon { background: #fdf0ef; color: #bf5d55; }
-.settings-workspace .sales-icon { background: #eaf6f1; color: #2c8969; }
+.settings-workspace .setting-icon { width: 38px; height: 38px; margin-right: 12px; border-radius: 10px; background: #eff6ff; text-shadow: none; }
+.settings-workspace .manual-icon { background: #eff6ff; }
+.settings-workspace .sales-icon { background: #eff6ff; }
 .settings-workspace .setting-title { font-size: 14px; font-weight: 550; margin-bottom: 3px; line-height: 1.5; overflow-wrap: anywhere; }
 .settings-workspace .setting-desc { font-size: 11px; color: #8a9099; line-height: 1.5; overflow-wrap: anywhere; }
-.settings-workspace .setting-arrow { flex: 0 0 18px; font-size: 18px; }
+.settings-workspace :is(.setting-arrow, .row-chevron) { flex: 0 0 18px; width: 18px; height: 18px; }
 .settings-workspace .logout-section { margin: 22px 20px 0; }
 .settings-workspace .logout-button { height: 44px; border: 1px solid #e7e9ee; border-radius: 8px; background: #fff; box-shadow: none; color: #b95151; font-size: 13px; font-weight: 500; }
 .settings-workspace .logout-button:active { background: #fdf0ef; }

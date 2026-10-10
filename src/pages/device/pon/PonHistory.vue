@@ -95,7 +95,7 @@
 import { onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import historyIcon from '@/assets/icons/pon-meter/ui/history.png'
+import historyIcon from '@/assets/icons/iconfont/smart-otdr/timer.svg'
 import PonPageShell from './PonPageShell.vue'
 import { usePonDevice } from './usePonDevice'
 import { convertPonPower, formatPonFrequency, usePonPowerMeterState, type PonPowerUnit } from './usePonPowerMeterState'

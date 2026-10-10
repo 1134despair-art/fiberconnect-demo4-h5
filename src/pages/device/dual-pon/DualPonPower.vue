@@ -17,13 +17,17 @@
       </section>
 
       <section v-if="state.persisted.powerMode === 'pon'" class="control-section threshold-matrix">
-        <header><div><h2>{{ t('dualPon.channelParameters') }}</h2><small>{{ t('dualPon.channelParametersHint') }}</small></div><button type="button" @click="restoreThresholds">{{ t('dualPon.restore') }}</button></header>
+        <header><div><h2>{{ t('dualPon.channelParameters') }}</h2></div><button type="button" @click="restoreThresholds">{{ t('dualPon.restore') }}</button></header>
+        <div class="instrument-matrix-scroll" role="region" :aria-label="t('dualPon.channelParameters')" tabindex="0">
+          <div class="instrument-matrix">
         <div class="matrix-row matrix-head"><span>{{ t('dualPon.wavelength') }}</span><span>{{ t('dualPon.reference') }}</span><span>{{ t('dualPon.alarmThreshold') }}</span><span>{{ t('dualPon.lowerThreshold') }}</span></div>
         <div v-for="wavelength in ponWavelengths" :key="`threshold-${wavelength}`" class="matrix-row">
           <strong>{{ wavelength }}nm</strong>
           <label><input v-model.number="state.persisted.thresholds[wavelength].reference" type="number" step="0.1" /><span>dBm</span></label>
           <label><input v-model.number="state.persisted.thresholds[wavelength].alarm" type="number" step="0.1" /><span>dBm</span></label>
           <label><input v-model.number="state.persisted.thresholds[wavelength].low" type="number" step="0.1" /><span>dBm</span></label>
+        </div>
+          </div>
         </div>
       </section>
 
@@ -48,7 +52,7 @@
         </section>
 
         <section class="control-section calibration">
-          <button class="section-toggle" type="button" @click="showCalibration = !showCalibration"><span><strong>{{ t('dualPon.manualCalibration') }}</strong><small>{{ t('dualPon.calibrationHint') }}</small></span><i>{{ showCalibration ? '−' : '+' }}</i></button>
+          <button class="section-toggle" type="button" @click="showCalibration = !showCalibration"><span><strong>{{ t('dualPon.manualCalibration') }}</strong></span><i>{{ showCalibration ? '−' : '+' }}</i></button>
           <div v-if="showCalibration" class="calibration-body">
             <div class="calibration-value"><button type="button" @click="changeCalibration(-.05)">−</button><strong>{{ calibrationOffset.toFixed(2) }} <span>dB</span></strong><button type="button" @click="changeCalibration(.05)">+</button></div>
             <button class="reset-link" type="button" @click="resetCalibration">{{ t('dualPon.resetWavelength') }}</button>
@@ -74,7 +78,7 @@ import DualPonPageShell from './DualPonPageShell.vue'
 import DualPonFunctionNav from './DualPonFunctionNav.vue'
 import { DUAL_PON_OPM_WAVELENGTHS, DUAL_PON_WAVELENGTHS, useDualPonState, type DualPonOpmWavelength, type DualPonPowerMode, type DualPonPowerUnit, type DualPonWavelength } from './useDualPonState'
 import { useDualPonDevice } from './useDualPonDevice'
-import recordsIcon from '@/assets/app/icons/device/records.png'
+import recordsIcon from '@/assets/icons/iconfont/smart-otdr/records.svg'
 
 const router = useRouter(); const { t } = useI18n(); const { deviceId, device } = useDualPonDevice(); const state = useDualPonState(deviceId.value)
 const modes: DualPonPowerMode[] = ['pon', 'opm']; const units: DualPonPowerUnit[] = ['dBm', 'mW', 'uW']; const ponWavelengths = DUAL_PON_WAVELENGTHS; const opmWavelengths = DUAL_PON_OPM_WAVELENGTHS
@@ -136,19 +140,19 @@ onBeforeUnmount(state.stopPower)
 .feedback { bottom: 92px; }
 .pon-channel__value { display: grid; grid-template-columns: minmax(0,1fr) auto auto; align-items: baseline; gap: 4px; padding: 0 12px 0 8px; }
 .pon-channel__value strong { text-align: right; }
-.pon-channel__value b { align-self: center; min-width: 38px; padding: 4px 5px; border-radius: 999px; background: #dcfce7; color: #15803d; font-size: 9px; text-align: center; }
+.pon-channel__value b { align-self: center; min-width: 38px; padding: 4px 5px; border-radius: 999px; background: #dcfce7; color: #15803d; font-size:12px; text-align: center; }
 .pon-channel__value b.is-low,.pon-channel__value b.is-high,.pon-channel__value b.is-fall { background: #fee2e2; color: #b91c1c; }
-.control-section header small { display: block; margin-top: 3px; color: ui.$sub; font-size: 10px; }
+.control-section header small { display: block; margin-top: 3px; color: ui.$sub; font-size:12px; }
 .control-section header > button { @include ui.reset-button; min-height: 44px; padding: 0 4px; color: ui.$primary; font-size: 11px; font-weight: 700; }
 .reference-actions { display: flex; gap: 4px; }
-.reference-actions button { padding: 0 8px; font-size: 10px; }
+.reference-actions button { padding: 0 8px; font-size:12px; }
 .reference-actions button:last-child { background: #f8fafc; color: ui.$sub; }
 .threshold-matrix { padding: 0; }
 .threshold-matrix > header { padding: 9px 12px 7px; }
 .matrix-row { display: grid; grid-template-columns: 58px repeat(3,minmax(0,1fr)); gap: 5px; align-items: center; padding: 6px 8px; border-top: 1px solid ui.$border; }
-.matrix-head { padding-top: 7px; padding-bottom: 5px; color: ui.$sub; font-size: 9px; text-align: center; }
-.matrix-row > strong { font-size: 10px; }
+.matrix-head { padding-top: 7px; padding-bottom: 5px; color: ui.$sub; font-size:12px; text-align: center; }
+.matrix-row > strong { font-size:12px; }
 .matrix-row label { display: flex; align-items: center; min-width: 0; overflow: hidden; border: 1px solid ui.$border; border-radius: 7px; background: #f8fafc; }
-.matrix-row input { width: 100%; min-width: 0; height: 34px; padding: 0 1px 0 3px; border: 0; outline: 0; background: transparent; color: ui.$text; font-size: 10px; text-align: right; }
+.matrix-row input { width: 100%; min-width: 0; height: 34px; padding: 0 1px 0 3px; border: 0; outline: 0; background: transparent; color: ui.$text; font-size:12px; text-align: right; }
 .matrix-row label span { padding-right: 3px; color: ui.$sub; font-size: 8px; }
 </style>

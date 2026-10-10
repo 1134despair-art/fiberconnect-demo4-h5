@@ -18,7 +18,7 @@
       @click="$emit('select', event.id)"
     >
       <div class="event-head">
-        <span class="event-name">{{ event.name }}</span>
+        <span class="event-name"><OtdrEventSymbol :type="event.type" compact />{{ event.name }}</span>
         <span class="event-status" :class="event.pass ? 'pass' : 'fail'">
           {{ event.pass ? t('deviceDetail.smartOtdrConclusionPass') : t('deviceDetail.smartOtdrConclusionFail') }}
         </span>
@@ -31,6 +31,7 @@
 </template>
 
 <script setup lang="ts">
+import OtdrEventSymbol from './OtdrEventSymbol.vue'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { OtdrEventItem } from './smartOtdrTypes'

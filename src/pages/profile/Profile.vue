@@ -2,7 +2,7 @@
   <div class="app-container legacy-app-page workspace-page workspace-secondary profile-page">
     <!-- 顶部标题栏 -->
     <WorkspaceHeader :title="t('profile.title')" @back="router.push('/settings')">
-      <button @click="handleLogout" class="profile-logout" :aria-label="t('profile.logout')" :title="t('profile.logout')"><span class="iconify" data-icon="mdi:logout"></span></button>
+      <button @click="handleLogout" class="profile-logout" :aria-label="t('profile.logout')" :title="t('profile.logout')"><LocalIcon class="iconify" name="mdi:logout" /></button>
     </WorkspaceHeader>
     
     <!-- 主内容区域 -->
@@ -12,9 +12,9 @@
         <div class="profile-header mb-4">
           <div class="profile-content">
             <div class="avatar-container">
-              <img :src="user?.avatar" :alt="user?.name" class="profile-avatar" />
-              <button class="avatar-edit-btn">
-                <span class="iconify" data-icon="mdi:camera"></span>
+              <UserAvatar :src="user?.avatar" :name="user?.name" class="profile-avatar" />
+              <button class="avatar-edit-btn" type="button" :aria-label="t('avatar.change')" @click="openAvatarEditor">
+                <img :src="cameraIcon" alt="" />
               </button>
             </div>
             <div class="profile-info">
@@ -22,15 +22,15 @@
               <p class="profile-title" v-if="user?.title">{{ user?.title }}</p>
               <div class="profile-meta">
                 <span class="meta-item" v-if="user?.phone">
-                  <span class="iconify" data-icon="mdi:phone"></span>
+                  <LocalIcon class="iconify" name="mdi:phone" />
                   {{ user?.phone }}
                 </span>
                 <span class="meta-item" v-if="user?.email">
-                  <span class="iconify" data-icon="mdi:email"></span>
+                  <LocalIcon class="iconify" name="mdi:email" />
                   {{ user?.email }}
                 </span>
                 <span class="meta-item">
-                  <span class="iconify" data-icon="mdi:account"></span>
+                  <LocalIcon class="iconify" name="mdi:account" />
                   {{ user?.role }}
                 </span>
               </div>
@@ -62,7 +62,7 @@
               class="stat-item"
             >
               <div class="stat-icon" :style="{ backgroundColor: stat.color }">
-                <span class="iconify" :data-icon="stat.icon"></span>
+                <LocalIcon class="iconify" :name="stat.icon" />
               </div>
               <div class="stat-info">
                 <div class="stat-value">{{ stat.value }}</div>
@@ -83,13 +83,13 @@
               @click="handleMenuClick(menu)"
             >
               <div class="menu-icon" :style="{ backgroundColor: menu.color }">
-                <span class="iconify" :data-icon="menu.icon"></span>
+                <LocalIcon class="iconify" :name="menu.icon" />
               </div>
               <div class="menu-info">
                 <div class="menu-title">{{ menu.title }}</div>
                 <div class="menu-desc">{{ menu.description }}</div>
               </div>
-              <span class="iconify menu-arrow" data-icon="mdi:chevron-right"></span>
+              <LocalIcon class="iconify menu-arrow" name="mdi:chevron-right" />
             </div>
           </div>
         </div>
@@ -104,7 +104,7 @@
               class="activity-item"
             >
               <div class="activity-icon" :style="{ backgroundColor: activity.color }">
-                <span class="iconify" :data-icon="activity.icon"></span>
+                <LocalIcon class="iconify" :name="activity.icon" />
               </div>
               <div class="activity-content">
                 <div class="activity-title">{{ activity.title }}</div>
@@ -116,13 +116,25 @@
       </div>
     </div>
     
+    <dialog ref="avatarDialog" class="profile-avatar-dialog" @close="avatarEditorOpen = false" :aria-label="t('avatar.change')" @click.self="avatarDialog?.close()">
+      <h2>{{ t('avatar.change') }}</h2>
+      <AvatarPicker v-if="avatarEditorOpen" v-model="avatarDraft" :name="user?.name || ''" :external-error="avatarSaveError" @processing="avatarProcessing = $event" />
+      <div class="profile-avatar-actions">
+        <button type="button" @click="avatarDialog?.close()">{{ t('avatar.cancel') }}</button>
+        <button type="button" :disabled="avatarProcessing" @click="saveAvatar">{{ t('avatar.save') }}</button>
+      </div>
+    </dialog>
     <!-- 底部导航栏 -->
     <BottomNavigation />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import LocalIcon from '@/components/LocalIcon.vue'
+import { ref, computed, nextTick } from 'vue'
+import AvatarPicker from '@/components/AvatarPicker.vue'
+import UserAvatar from '@/components/UserAvatar.vue'
+import cameraIcon from '@/assets/icons/iconfont/device/camera.svg'
 import { useAuth } from '@/composables/useAuth'
 import { useRouter } from 'vue-router'
 import { useModal } from '@/composables/useModal'
@@ -132,10 +144,28 @@ import WorkspaceHeader from '@/components/WorkspaceHeader.vue'
 import '@/styles/subpages.css'
 
 // 获取用户信息
-const { user, logout } = useAuth()
+const { user, logout, updateProfile } = useAuth()
 const router = useRouter()
 const { confirm } = useModal()
 const { t } = useI18n()
+const avatarDialog = ref<HTMLDialogElement | null>(null)
+const avatarDraft = ref('')
+const avatarEditorOpen = ref(false)
+const avatarProcessing = ref(false)
+const avatarSaveError = ref('')
+const openAvatarEditor = async () => {
+  avatarDraft.value = user.value?.avatar || ''
+  avatarSaveError.value = ''
+  avatarProcessing.value = false
+  avatarEditorOpen.value = true
+  await nextTick()
+  avatarDialog.value?.showModal()
+}
+const saveAvatar = () => {
+  if (avatarProcessing.value) return
+  try { updateProfile({ avatar: avatarDraft.value }); avatarDialog.value?.close() }
+  catch { avatarSaveError.value = t('avatar.saveError') }
+}
 
 // 个人统计数据
 const personalStats = computed(() => [
@@ -281,6 +311,15 @@ const handleLogout = async () => {
 </script>
 
 <style scoped>
+.avatar-edit-btn img { width: 16px; height: 16px; filter: brightness(0) invert(1); }
+.profile-avatar-dialog { width: min(360px, calc(100vw - 32px)); padding: 22px; margin: auto; border: 1px solid #e2e8f0; border-radius: 16px; background: #fff; box-sizing: border-box; }
+.profile-avatar-dialog::backdrop { background: #17263c66; }
+.profile-avatar-dialog h2 { margin: 0 0 24px; color: #17263c; font-size: 18px; }
+.profile-avatar-actions { display: flex; gap: 12px; margin-top: 24px; }
+.profile-avatar-actions button { flex: 1; min-height: 44px; border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; color: #475569; font-size: 14px; cursor: pointer; }
+.profile-avatar-actions button:last-child { color: #fff; background: #2563eb; border-color: #2563eb; }
+.profile-avatar-actions button:disabled { opacity: .5; }
+
 .profile-logout { width: 36px; height: 36px; display: grid; place-items: center; border: 0; background: #fff; color: #af6262; font-size: 20px; }
 .profile-page .p-4 { padding: 0 0 20px; }
 .profile-page .profile-header { border-radius: 0; box-shadow: none; margin: 0 0 14px; }

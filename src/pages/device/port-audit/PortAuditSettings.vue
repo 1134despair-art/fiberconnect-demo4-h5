@@ -9,6 +9,7 @@
     </div>
 
     <DeviceSettingDialog
+      contained
       :open="activeDialog !== null"
       :title="dialogTitle"
       :description="dialogDescription"
@@ -26,19 +27,19 @@
       </dl>
 
       <div v-else-if="activeDialog === 'buzzer'" class="setting-options">
-        <button class="setting-option" :class="{ active: draftToggle }" type="button" @click="draftToggle = true">{{ t('portAudit.outputOn') }}</button>
-        <button class="setting-option" :class="{ active: !draftToggle }" type="button" @click="draftToggle = false">{{ t('portAudit.outputOff') }}</button>
+        <button class="setting-option" :class="{ active: draftToggle }" :aria-pressed="draftToggle" type="button" @click="draftToggle = true">{{ t('portAudit.outputOn') }}</button>
+        <button class="setting-option" :class="{ active: !draftToggle }" :aria-pressed="!draftToggle" type="button" @click="draftToggle = false">{{ t('portAudit.outputOff') }}</button>
       </div>
 
       <div v-else-if="activeDialog === 'shutdown'" class="setting-options">
-        <button v-for="minutes in autoOptions" :key="minutes" class="setting-option" :class="{ active: draftShutdown === minutes }" type="button" @click="draftShutdown = minutes">
+        <button v-for="minutes in autoOptions" :key="minutes" class="setting-option" :class="{ active: draftShutdown === minutes }" :aria-pressed="draftShutdown === minutes" type="button" @click="draftShutdown = minutes">
           {{ minutes === 0 ? t('portAudit.never') : t('portAudit.minutes', { count: minutes }) }}
         </button>
       </div>
 
       <div v-else-if="activeDialog === 'language'" class="setting-options">
-        <button class="setting-option" :class="{ active: draftLanguage === 'zh-CN' }" type="button" @click="draftLanguage = 'zh-CN'">{{ t('portAudit.simplifiedChinese') }}</button>
-        <button class="setting-option" :class="{ active: draftLanguage === 'en' }" type="button" @click="draftLanguage = 'en'">{{ t('portAudit.english') }}</button>
+        <button class="setting-option" :class="{ active: draftLanguage === 'zh-CN' }" :aria-pressed="draftLanguage === 'zh-CN'" type="button" @click="draftLanguage = 'zh-CN'">{{ t('portAudit.simplifiedChinese') }}</button>
+        <button class="setting-option" :class="{ active: draftLanguage === 'en' }" :aria-pressed="draftLanguage === 'en'" type="button" @click="draftLanguage = 'en'">{{ t('portAudit.english') }}</button>
       </div>
 
       <div v-else-if="activeDialog === 'upgrade'" class="upgrade-dialog">
@@ -78,13 +79,6 @@ import PortAuditPageShell from './PortAuditPageShell.vue'
 import PortAuditFunctionNav from './PortAuditFunctionNav.vue'
 import { usePortAuditDevice } from './usePortAuditDevice'
 import { usePortAuditState, type PortAuditAutoShutdown } from './usePortAuditState'
-import bluetoothIcon from '@/assets/icons/port-audit/bluetooth.svg'
-import networkIcon from '@/assets/icons/port-audit/network.svg'
-import buzzerIcon from '@/assets/icons/port-audit/buzzer.svg'
-import timerIcon from '@/assets/app/icons/device/timer.png'
-import languageIcon from '@/assets/app/icons/profile/language.png'
-import uploadIcon from '@/assets/icons/port-audit/upload.svg'
-import infoIcon from '@/assets/app/icons/profile/info.png'
 
 type SettingDialog = 'bluetooth' | 'buzzer' | 'shutdown' | 'language' | 'upgrade' | 'info'
 
@@ -110,17 +104,17 @@ const upgradeButtonText = computed(() => state.runtime.upgradeStatus === 'checki
 
 const settingSections = computed<DeviceSettingSection[]>(() => [
   { key: 'hardware', title: t('pon.hardwareMenu'), items: [
-    { key: 'shutdown', label: t('portAudit.autoShutdown'), value: shutdownLabel.value, icon: timerIcon },
-    { key: 'language', label: t('portAudit.deviceLanguage'), value: languageLabel.value, icon: languageIcon },
-    { key: 'cellular', label: t('portAudit.cellularSettings'), description: t('portAudit.cellularHint'), value: state.persisted.cellularEnabled ? t('portAudit.outputOn') : t('portAudit.outputOff'), icon: networkIcon },
-    { key: 'buzzer', label: t('portAudit.buzzer'), description: t('portAudit.buzzerHint'), value: state.persisted.buzzerEnabled ? t('portAudit.outputOn') : t('portAudit.outputOff'), icon: buzzerIcon }
+    { key: 'shutdown', label: t('portAudit.autoShutdown'), value: shutdownLabel.value, iconName: 'timer' },
+    { key: 'language', label: t('portAudit.deviceLanguage'), value: languageLabel.value, iconName: 'translate' },
+    { key: 'buzzer', label: t('portAudit.buzzer'), value: state.persisted.buzzerEnabled ? t('portAudit.outputOn') : t('portAudit.outputOff'), iconName: 'buzzer' }
   ] },
-  { key: 'connection', title: t('pon.bluetoothControl'), items: [
-    { key: 'bluetooth', label: t('portAudit.bluetooth'), description: device.value?.name || '', icon: bluetoothIcon, badge: connected.value ? t('pon.online') : t('pon.offline'), badgeTone: connected.value ? 'success' : 'warning' }
+  { key: 'connection', title: t('portAudit.connectionSettings'), items: [
+    { key: 'bluetooth', label: t('portAudit.bluetooth'), description: device.value?.name || '', iconName: 'bluetooth', badge: connected.value ? t('pon.online') : t('pon.offline'), badgeTone: connected.value ? 'success' : 'warning' },
+    { key: 'cellular', label: t('portAudit.cellularSettings'), value: state.persisted.cellularEnabled ? t('portAudit.outputOn') : t('portAudit.outputOff'), iconName: 'cellular' }
   ] },
   { key: 'information', title: t('pon.deviceInformation'), items: [
-    { key: 'upgrade', label: t('portAudit.bluetoothUpgrade'), description: t('portAudit.upgradeHint'), value: currentVersion.value, icon: uploadIcon, badge: state.runtime.upgradeStatus === 'ready' ? t('portAudit.updateReady') : undefined, badgeTone: 'warning' },
-    { key: 'info', label: t('portAudit.productInfo'), description: `${device.value?.model || 'PCA-100'} · ${device.value?.productBatch || 'PCA-202607-A01'}`, value: currentVersion.value, icon: infoIcon }
+    { key: 'upgrade', label: t('portAudit.bluetoothUpgrade'), description: t('portAudit.upgradeHint'), value: currentVersion.value, iconName: 'upload', badge: state.runtime.upgradeStatus === 'ready' ? t('portAudit.updateReady') : undefined, badgeTone: 'warning' },
+    { key: 'info', label: t('portAudit.productInfo'), description: `${device.value?.model || 'PCA-100'} · ${device.value?.productBatch || 'PCA-202607-A01'}`, value: currentVersion.value, iconName: 'info' }
   ] }
 ])
 
@@ -162,7 +156,7 @@ const upgradeAction = () => {
 @use './portAuditUi.scss' as ui;
 @use '../components/deviceSettingsControls.scss';
 .settings-page { @include ui.page-padding; padding-bottom: 22px; }
-.connection-badge { min-width: 42px; padding: 4px 6px; border-radius: 999px; background: #fef3c7; color: #b45309; font-size: 10px; font-weight: 700; text-align: center; white-space: nowrap; }
+.connection-badge { min-width: 42px; padding: 4px 6px; border-radius: 999px; background: #fef3c7; color: #b45309; font-size:12px; font-weight: 700; text-align: center; white-space: nowrap; }
 .connection-badge.online { background: #dcfce7; color: #15803d; }
 .settings-toast { bottom: 92px; }
 .upgrade-note { margin: 12px 0 0; color: ui.$audit-sub; font-size: 11px; line-height: 1.5; }

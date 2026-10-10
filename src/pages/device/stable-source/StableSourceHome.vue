@@ -33,8 +33,7 @@
           <strong>{{ t('stableSource.controlTitle') }}</strong>
           <span class="meter-channel">{{ state.persisted.selectedWavelength }} <small>nm</small></span>
         </header>
-        <div class="meter-wavelength">{{ state.persisted.selectedWavelength }} nm</div>
-        <div class="meter-reading">
+                <div class="meter-reading">
           <strong>{{ correctedPower }}</strong><span>dBm</span>
         </div>
         <div class="meter-status" :class="{ emitting: state.runtime.outputStatus === 'emitting' }">
@@ -96,9 +95,9 @@ import { computed, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useAuth, type Device } from '@/composables/useAuth'
-import flashlightIcon from '@/assets/icons/pon-meter/ui/flashlight.png'
-import bluetoothIcon from '@/assets/icons/pon-meter/ui/bluetooth.png'
-import batteryIcon from '@/assets/icons/pon-meter/ui/battery.png'
+import flashlightIcon from '@/assets/icons/iconfont/smart-otdr/flashlight.svg'
+import bluetoothIcon from '@/assets/icons/iconfont/smart-otdr/bluetooth.svg'
+import batteryIcon from '@/assets/icons/iconfont/smart-otdr/battery.svg'
 import StableSourceFunctionNav from './StableSourceFunctionNav.vue'
 import StableSourcePageShell from './StableSourcePageShell.vue'
 import { formatStableSourceMode, resolveStableSourceCapabilities, useStableSourceState } from './useStableSourceState'
@@ -168,7 +167,7 @@ onUnmounted(() => {
 .offline-band { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border: 1px solid #fed7aa; border-radius: 10px; background: #fff7ed; }
 .offline-band strong, .offline-band span { display: block; }
 .offline-band strong { color: #9a3412; font-size: 12px; }
-.offline-band span { margin-top: 2px; color: #c2410c; font-size: 10px; }
+.offline-band span { margin-top: 2px; color: #c2410c; font-size:12px; }
 .offline-band button { @include ui.button-reset; min-height: 38px; padding: 0 10px; border: 1px solid #fed7aa; border-radius: 8px; background: #fff; color: #9a3412; font-size: 11px; font-weight: 700; }
 
 .home-meter { @include ui.button-reset; width: 100%; overflow: hidden; padding: 0; border: 1px solid #dbe7f5; border-radius: 12px; background: #fff; color: ui.$source-text; box-shadow: 0 8px 22px rgba(37, 99, 235, .08); text-align: initial; }
@@ -199,16 +198,16 @@ onUnmounted(() => {
 .spec-strip div { min-width: 0; padding: 9px 5px; border-right: 1px solid ui.$source-border; text-align: center; }
 .spec-strip div:last-child { border-right: 0; }
 .spec-strip span, .spec-strip strong { display: block; }
-.spec-strip span { color: ui.$source-text-sub; font-size: 9px; }
+.spec-strip span { color: ui.$source-text-sub; font-size:12px; }
 .spec-strip strong { margin-top: 4px; font-size: 11px; @include ui.numeric; }
 
 .device-status-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: hidden; border: 1px solid ui.$source-border; border-radius: 10px; background: #fff; }
 .device-status-strip button, .device-status-strip > div { @include ui.button-reset; position: relative; min-width: 0; min-height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 6px 4px; border-right: 1px solid ui.$source-border; text-align: center; }
 .device-status-strip > :last-child { border-right: 0; }
 .device-status-strip img { width: 19px; height: 19px; object-fit: contain; }
-.device-status-strip span { color: ui.$source-text-sub; font-size: 9px; }
-.device-status-strip strong { max-width: 100%; overflow: hidden; color: ui.$source-primary; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
-.device-status-strip small { position: absolute; right: 6px; bottom: 4px; color: ui.$source-text-sub; font-size: 9px; }
+.device-status-strip span { color: ui.$source-text-sub; font-size:12px; }
+.device-status-strip strong { max-width: 100%; overflow: hidden; color: ui.$source-primary; font-size:12px; text-overflow: ellipsis; white-space: nowrap; }
+.device-status-strip small { position: absolute; right: 6px; bottom: 4px; color: ui.$source-text-sub; font-size:12px; }
 .device-status-strip button.active { background: ui.$source-primary-soft; }
 .device-status-strip .low strong { color: #c2410c; }
 .feedback-toast { position: fixed; left: 50%; bottom: 28px; z-index: 95; max-width: 300px; transform: translateX(-50%); padding: 9px 13px; border-radius: 8px; background: rgba(15,23,42,.94); color: #fff; font-size: 11px; text-align: center; }

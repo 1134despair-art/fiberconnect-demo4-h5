@@ -4,7 +4,7 @@
     <!-- 顶部标题栏 -->
     <header class="header">
       <button @click="goBack" class="back-btn">
-        ← {{ $t('common.back') }}
+        <DeviceIcon name="back" style="font-size: 18px; vertical-align: middle" /> {{ $t('common.back') }}
       </button>
       <div class="page-title">{{ $t('device.otdr.title') }}</div>
     </header>
@@ -30,7 +30,7 @@
 
               <canvas ref="waveformCanvas" class="waveform-canvas"></canvas>
               <div v-if="isMeasuring && waveformData.length === 0" class="waveform-loading">
-                <span class="iconify spin-icon" data-icon="mdi:loading"></span>
+                <DeviceIcon class="iconify spin-icon" name="mdi:loading" />
                 <div v-if="otdrSettings.mode === 'avg' && avgRemaining > 0" class="loading-text">
                   {{ avgRemaining }}s
                 </div>
@@ -141,7 +141,7 @@
               <div class="legacy-wave-wrap">
                 <canvas ref="waveformCanvas" class="legacy-wave-canvas"></canvas>
                 <div v-if="isMeasuring && waveformData.length === 0" class="legacy-wave-loading">
-                  <span class="iconify spin-icon" data-icon="mdi:loading"></span>
+                  <DeviceIcon class="iconify spin-icon" name="mdi:loading" />
                   <div v-if="otdrSettings.mode === 'avg' && avgRemaining > 0" class="loading-text">
                     {{ avgRemaining }}s
                   </div>
@@ -258,13 +258,13 @@
                   <div class="legacy-history-time">{{ item.time }}</div>
                   <div class="legacy-history-actions">
                     <button class="legacy-icon-btn danger" @click="deleteRecord(item.id)">
-                      <span class="iconify" data-icon="mdi:trash-can-outline"></span>
+                      <DeviceIcon class="iconify" name="mdi:trash-can-outline" />
                     </button>
                     <button class="legacy-icon-btn" @click="openRecord(item)">
-                      <span class="iconify" data-icon="mdi:folder-open-outline"></span>
+                      <DeviceIcon class="iconify" name="mdi:folder-open-outline" />
                     </button>
                     <button class="legacy-icon-btn" @click="viewRecord(item)">
-                      <span class="iconify" data-icon="mdi:image-outline"></span>
+                      <DeviceIcon class="iconify" name="mdi:image-outline" />
                     </button>
                   </div>
                 </div>
@@ -324,6 +324,7 @@
 </template>
 
 <script setup lang="ts">
+import DeviceIcon from '@/components/DeviceIcon.vue'
 import { ref, reactive, computed, onUnmounted, onMounted, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'

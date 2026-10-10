@@ -23,13 +23,14 @@
       </section>
     </div>
 
-    <div v-if="confirmingClear" class="dialog-backdrop" @click.self="confirmingClear = false"><section class="dialog" role="alertdialog" aria-modal="true"><h2>{{ t('portAudit.clearRecords') }}</h2><p>{{ t('portAudit.clearRecordsConfirm') }}</p><div><button type="button" @click="confirmingClear = false">{{ t('common.cancel') }}</button><button class="danger" type="button" @click="clearRecords">{{ t('common.confirm') }}</button></div></section></div>
+    <div v-if="confirmingClear" v-smart-otdr-overlay class="dialog-backdrop" @click.self="confirmingClear = false"><section class="dialog" role="alertdialog" aria-modal="true"><h2>{{ t('portAudit.clearRecords') }}</h2><p>{{ t('portAudit.clearRecordsConfirm') }}</p><div><button type="button" @click="confirmingClear = false">{{ t('common.cancel') }}</button><button class="danger" type="button" @click="clearRecords">{{ t('common.confirm') }}</button></div></section></div>
     <div v-if="feedback" class="feedback" role="status">{{ feedback }}</div>
     <template #footer><PortAuditFunctionNav :device-id="deviceId" active="audit" /></template>
   </PortAuditPageShell>
 </template>
 
 <script setup lang="ts">
+import { vSmartOtdrOverlay } from '@/directives/smartOtdrOverlay'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -38,9 +39,9 @@ import PortAuditPageShell from './PortAuditPageShell.vue'
 import PortAuditFunctionNav from './PortAuditFunctionNav.vue'
 import { usePortAuditDevice } from './usePortAuditDevice'
 import { usePortAuditState } from './usePortAuditState'
-import bluetoothIcon from '@/assets/app/icons/connection/bluetooth.png'
-import rfidIcon from '@/assets/app/icons/device/rfid.png'
-import uploadIcon from '@/assets/app/icons/device/upload.png'
+import bluetoothIcon from '@/assets/icons/iconfont/smart-otdr/bluetooth.svg'
+import rfidIcon from '@/assets/icons/iconfont/instrument/rfid.svg'
+import uploadIcon from '@/assets/icons/iconfont/smart-otdr/upload.svg'
 
 const router = useRouter(); const { t, locale } = useI18n(); const { updateDevice } = useAuth()
 const { deviceId, device } = usePortAuditDevice(); const state = usePortAuditState(deviceId.value)

@@ -1,5 +1,6 @@
 <template>
   <div
+    v-smart-otdr-overlay
     class="smart-otdr-dialog-mask"
     :class="{ 'smart-otdr-dialog-mask--landscape': layout === 'landscape' }"
     @click.self="emit('close')"
@@ -13,7 +14,7 @@
     >
       <header class="smart-otdr-dialog__header">
         <div class="smart-otdr-dialog__title">{{ title }}</div>
-        <button class="smart-otdr-dialog__close" type="button" @click="emit('close')">
+        <button v-if="showClose" class="smart-otdr-dialog__close" type="button" @click="emit('close')">
           {{ closeText }}
         </button>
       </header>
@@ -30,6 +31,7 @@
 </template>
 
 <script setup lang="ts">
+import { vSmartOtdrOverlay } from '@/directives/smartOtdrOverlay'
 import { computed } from 'vue'
 
 import {
@@ -42,12 +44,14 @@ const props = withDefaults(
   defineProps<{
     title: string
     closeText?: string
+    showClose?: boolean
     maxWidth?: number | string
     maxHeight?: string
     layout?: 'default' | 'landscape'
   }>(),
   {
     closeText: '关闭',
+    showClose: true,
     maxWidth: SMART_OTDR_SHELL_MAX_WIDTH,
     maxHeight: SMART_OTDR_DIALOG_MAX_HEIGHT,
     layout: 'default'
@@ -173,4 +177,9 @@ const dialogStyle = computed(() => ({
     border-radius: 10px;
   }
 }
+
+.smart-otdr-dialog-mask.smart-otdr-overlay-bound .smart-otdr-dialog { width:min(100%,var(--smart-otdr-dialog-width,375px));border-radius:12px;overflow:hidden; }
+.smart-otdr-dialog-mask.smart-otdr-overlay-bound .smart-otdr-dialog__content { flex:1 1 auto;min-height:0; }
+.smart-otdr-dialog-mask.smart-otdr-overlay-bound .smart-otdr-dialog__header { min-height:60px;padding:8px 16px; }
+.smart-otdr-dialog-mask.smart-otdr-overlay-bound .smart-otdr-dialog__footer { padding:12px 16px; }
 </style>

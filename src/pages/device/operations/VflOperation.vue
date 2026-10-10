@@ -2,10 +2,7 @@
   <PortableOtdrVfl v-if="isPortableOtdr && currentDevice" :device="currentDevice" />
   <SmartOtdrVfl v-else-if="isSmartOtdr && currentDevice" :device="currentDevice" />
   <div v-else class="app-container legacy-operation-page">
-    <header class="header">
-      <button class="back-btn" type="button" @click="goBack">← {{ t('common.back') }}</button>
-      <div class="page-title">{{ $t('device.vfl.title') }}</div>
-    </header>
+    <WorkspaceHeader :title="$t('device.vfl.title')" @back="goBack" />
 
     <div class="content-flex hide-scrollbar">
       <div class="page-body">
@@ -96,7 +93,7 @@
 
           <div v-if="usageRecords.length === 0" class="empty-records">
             <div class="empty-icon">
-              <span class="iconify" data-icon="mdi:history"></span>
+              <DeviceIcon class="iconify" name="mdi:history" />
             </div>
             <div class="empty-text">{{ $t('device.fusionRecords.empty') }}</div>
           </div>
@@ -118,7 +115,7 @@
                 </div>
               </div>
               <button type="button" class="delete-icon-btn" @click="deleteRecord(record.id)">
-                <span class="iconify" data-icon="fluent:delete-24-regular"></span>
+                <DeviceIcon class="iconify" name="fluent:delete-24-regular" />
               </button>
             </div>
           </div>
@@ -170,13 +167,15 @@
 </template>
 
 <script setup lang="ts">
+import WorkspaceHeader from '@/components/WorkspaceHeader.vue'
+import DeviceIcon from '@/components/DeviceIcon.vue'
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuth, type Device } from '@/composables/useAuth'
 import { useI18n } from 'vue-i18n'
 import { useModal } from '@/composables/useModal'
-import vflActiveImg from '@/assets/img/vfl-active-v2.png'
-import vflDisabledImg from '@/assets/img/vfl-disabled-v2.png'
+import vflActiveImg from '@/assets/icons/iconfont/device/vfl-active.svg'
+import vflDisabledImg from '@/assets/icons/iconfont/device/vfl-disabled.svg'
 import SmartOtdrVfl from './SmartOtdrVfl.vue'
 import PortableOtdrVfl from '../portable-otdr/PortableOtdrVfl.vue'
 
@@ -944,4 +943,14 @@ onUnmounted(() => {
     grid-template-columns: 1fr;
   }
 }
+/* Shared mobile instrument rhythm, retaining each hardware operation. */
+.app-container.legacy-operation-page {background:#f7f9fc;}
+.legacy-operation-page :is(.settings-card,.stats-card,.records-card,.actions-panel,.status-card,.wavelength-card,.control-card,.maintenance-item) {border:1px solid #d8e2ef;border-radius:12px;background:#fff;box-shadow:none;}
+.legacy-operation-page :is(.p-4,.actions-wrap) {padding:14px;}
+.legacy-operation-page button {min-height:44px;min-width:44px;border-radius:8px;font-family:inherit;}
+.legacy-operation-page :is(.setting-label,.item-desc,.record-count) {font-size:13px;line-height:1.5;}
+.legacy-operation-page .setting-item {gap:12px;flex-wrap:wrap;}
+.legacy-operation-page .setting-control {min-width:0;max-width:100%;}
+.legacy-operation-page .section-title {font-size:15px;}
+.legacy-operation-page button:focus-visible {outline:2px solid #2563eb;outline-offset:2px;}
 </style>

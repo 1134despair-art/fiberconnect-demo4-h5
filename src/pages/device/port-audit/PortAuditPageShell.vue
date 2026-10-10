@@ -1,6 +1,6 @@
 <template>
   <div :class="standalone ? 'app-container port-audit-page-app' : 'audit-shell-host'">
-    <div class="audit-shell">
+    <div class="audit-shell instrument-ui">
       <div class="audit-shell__status" aria-hidden="true">
         <strong>{{ currentTime }}</strong>
         <span><img :src="bluetoothIcon" alt="" /><i></i><i></i><i></i><img :src="batteryIcon" alt="" /></span>
@@ -17,11 +17,12 @@
 </template>
 
 <script setup lang="ts">
+import '../components/instrumentUi.scss'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import backIcon from '@/assets/icons/port-audit/back.svg'
-import bluetoothIcon from '@/assets/icons/port-audit/bluetooth.svg'
-import batteryIcon from '@/assets/icons/port-audit/battery.svg'
+import backIcon from '@/assets/icons/iconfont/smart-otdr/back.svg'
+import bluetoothIcon from '@/assets/icons/iconfont/smart-otdr/bluetooth.svg'
+import batteryIcon from '@/assets/icons/iconfont/smart-otdr/battery.svg'
 defineProps<{ title: string; subtitle?: string; standalone?: boolean }>()
 const emit = defineEmits<{ back: [] }>()
 const { t } = useI18n()
@@ -38,7 +39,7 @@ onBeforeUnmount(() => { if (clockTimer) window.clearInterval(clockTimer) })
 .app-container.port-audit-page-app { width: min(375px, calc(100vw - 24px)); max-width: 375px; box-sizing: border-box; border-radius: 22px; background: ui.$audit-bg; }
 .audit-shell { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden; background: ui.$audit-bg; }
 .audit-shell__status { height: 24px; display: flex; align-items: center; justify-content: space-between; padding: 0 13px; background: #fff; color: ui.$audit-text; flex: 0 0 auto; }
-.audit-shell__status strong { font-size: 10px; font-weight: 750; }
+.audit-shell__status strong { font-size:12px; font-weight: 750; }
 .audit-shell__status span { height: 16px; display: flex; align-items: flex-end; gap: 2px; color: ui.$audit-primary; }
 .audit-shell__status span img { width: 13px; height: 13px; object-fit: contain; }
 .audit-shell__status span img:last-child { width: 17px; }

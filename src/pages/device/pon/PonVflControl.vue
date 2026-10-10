@@ -19,7 +19,7 @@
 
         <section class="mode-section">
           <h2>{{ t('pon.outputMode') }}</h2>
-          <p>{{ t('pon.outputModeHint') }}</p>
+
           <div class="mode-grid" role="radiogroup" :aria-label="t('pon.outputMode')">
             <button
               v-for="mode in modes"
@@ -44,7 +44,7 @@
         <div v-if="feedback" class="feedback-toast" role="status">{{ feedback }}</div>
       </main>
 
-      <div v-if="pendingMode" class="confirm-layer" role="presentation">
+      <div v-if="pendingMode" v-smart-otdr-overlay class="confirm-layer" role="presentation">
         <button class="confirm-mask" type="button" :aria-label="t('common.cancel')" @click="pendingMode = null"></button>
         <section role="alertdialog" aria-modal="true" :aria-label="t('pon.safetyConfirmTitle')">
           <span>LASER</span>
@@ -61,14 +61,15 @@
 </template>
 
 <script setup lang="ts">
+import { vSmartOtdrOverlay } from '@/directives/smartOtdrOverlay'
 import { computed, onUnmounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import vflIcon from '@/assets/icons/pon-meter/ui/vfl.png'
-import powerIcon from '@/assets/icons/pon-meter/ui/power-off.png'
-import pulse1HzIcon from '@/assets/icons/pon-meter/ui/pulse-1hz.png'
-import pulse2HzIcon from '@/assets/icons/pon-meter/ui/pulse-2hz.png'
-import continuousWaveIcon from '@/assets/icons/pon-meter/ui/continuous-wave.png'
+import vflIcon from '@/assets/icons/iconfont/smart-otdr/vfl.svg'
+import powerIcon from '@/assets/icons/iconfont/smart-otdr/poweroff.svg'
+import pulse1HzIcon from '@/assets/icons/iconfont/smart-otdr/pulse.svg'
+import pulse2HzIcon from '@/assets/icons/iconfont/smart-otdr/pulse-fast.svg'
+import continuousWaveIcon from '@/assets/icons/iconfont/smart-otdr/cw.svg'
 import PonFunctionNav from './PonFunctionNav.vue'
 import PonPageShell from './PonPageShell.vue'
 import { usePonDevice } from './usePonDevice'
@@ -134,8 +135,8 @@ onUnmounted(() => { if (feedbackTimer) window.clearTimeout(feedbackTimer) })
 .offline-banner { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px; border: 1px solid #fed7aa; border-radius: 10px; background: #fff7ed; }
 .offline-banner strong, .offline-banner span { display: block; }
 .offline-banner strong { color: #9a3412; font-size: 11px; }
-.offline-banner span { margin-top: 2px; color: #c2410c; font-size: 10px; }
-.offline-banner button { @include ui.secondary-button; min-height: 38px; padding: 0 8px; color: #9a3412; font-size: 10px; }
+.offline-banner span { margin-top: 2px; color: #c2410c; font-size:12px; }
+.offline-banner button { @include ui.secondary-button; min-height: 38px; padding: 0 8px; color: #9a3412; font-size:12px; }
 
 .laser-stage { min-height: 218px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-bottom: 1px solid #e6edf7; background: transparent; }
 .laser-mark { width: 72px; height: 72px; display: grid; place-items: center; }
@@ -143,12 +144,12 @@ onUnmounted(() => { if (feedbackTimer) window.clearTimeout(feedbackTimer) })
 .laser-stage.active .laser-mark img { filter: brightness(0) saturate(100%) invert(26%) sepia(98%) saturate(3117%) hue-rotate(348deg) brightness(101%) contrast(91%); transform: scale(1.04); }
 .laser-stage > strong { margin-top: 8px; color: ui.$pon-text; font-size: 24px; line-height: 1; @include ui.metric-number; }
 .laser-stage > strong small { font-size: 12px; font-weight: 500; }
-.output-status { min-width: 96px; margin-top: 12px; padding: 5px 10px; border-radius: 999px; background: #eef2f7; color: ui.$pon-text-sub; font-size: 10px; text-align: center; }
+.output-status { min-width: 96px; margin-top: 12px; padding: 5px 10px; border-radius: 999px; background: #eef2f7; color: ui.$pon-text-sub; font-size:12px; text-align: center; }
 .laser-stage.active .output-status { background: #fef2f2; color: #dc2626; }
 
 .mode-section h2, .mode-section p { margin: 0; }
 .mode-section h2 { color: ui.$pon-text; font-size: 14px; }
-.mode-section p { margin-top: 4px; color: ui.$pon-text-sub; font-size: 10px; }
+.mode-section p { margin-top: 4px; color: ui.$pon-text-sub; font-size:12px; }
 .mode-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
 .mode-grid button { @include ui.button-reset; min-width: 0; min-height: 86px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border: 1px solid #e1e9f4; border-radius: 10px; background: #ffffff; color: ui.$pon-text; box-shadow: 0 4px 12px rgba(37,99,235,.05); }
 .mode-grid button:last-child { grid-column: 2; }
@@ -163,7 +164,7 @@ onUnmounted(() => { if (feedbackTimer) window.clearTimeout(feedbackTimer) })
 .confirm-layer { position: absolute; inset: 0; z-index: 100; display: grid; place-items: center; padding: 20px; }
 .confirm-mask { position: absolute; inset: 0; border: 0; background: rgba(15,23,42,.55); }
 .confirm-layer section { position: relative; width: min(100%, 320px); box-sizing: border-box; padding: 20px; border-radius: 12px; background: #ffffff; text-align: center; box-shadow: 0 20px 48px rgba(15,23,42,.24); }
-.confirm-layer section > span { display: inline-grid; min-width: 58px; height: 28px; place-items: center; border: 2px solid #dc2626; border-radius: 999px; color: #dc2626; font-size: 10px; font-weight: 800; }
+.confirm-layer section > span { display: inline-grid; min-width: 58px; height: 28px; place-items: center; border: 2px solid #dc2626; border-radius: 999px; color: #dc2626; font-size:12px; font-weight: 800; }
 .confirm-layer h2 { margin: 12px 0 0; font-size: 16px; }
 .confirm-layer p { margin: 7px 0 17px; color: ui.$pon-text-sub; font-size: 11px; line-height: 1.5; }
 .confirm-layer section > div { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
